@@ -7,12 +7,15 @@ class Buff:
         character.buff.append(self)
         self.target = character
         self.use_num = use_num
-        self.observe_list=[]
+        self.observing_list=[]
 
-    def atk_buff(self, caster: PlayerCard, target: PlayerCard, damage: int, type: int, element_type: int):
+    def observing(self, observed_event):
+        self.observing_list.append(observed_event)
+
+    def atk_buff(self, caster: PlayerCard, target: PlayerCard, damage: int, atk_type: str):
         return damage
 
-    def hit_buff(self, caster: PlayerCard, target: PlayerCard, damage: int, type: int, element_type: int):
+    def hit_buff(self, caster: PlayerCard, target: PlayerCard, damage: int, atk_type: str):
         return damage
 
     def hit_event(self): pass
@@ -29,7 +32,8 @@ class Buff:
 
     def remove(self):
         self.target.buff.remove(self)
-        for events
+        for events in self.observing_list:
+            events.remove(self)
 
 
 # 재생 버프
@@ -46,7 +50,14 @@ class Reincarnation(Buff):
         self.used(1)
 
 class Curse(Buff):
-    def __init__(self):
-        super().__init__(-1)
-        self.stack=1
+    def __init__(self, target:PlayerCard):
+        super().__init__(target, -1)
+        self.stack=0
 
+    def add_Curse(self, num):
+        self.stack+=num
+        if self.stack>=5:
+            self.stack -= 5
+            self.target.hp -= 4
+            if self.target.hp<=0:
+                self.target.die()

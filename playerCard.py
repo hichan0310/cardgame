@@ -23,14 +23,17 @@ class PlayerCard(Cell):
         self.__observers_move: list[Buff] = []
         self.shield = 0
 
-    def register_hit(self, observer):
+    def register_hit(self, observer:Buff):
         self.__observers_hit.append(observer)
+        observer.observing(self.__observers_hit)
 
-    def register_attack(self, observer):
+    def register_attack(self, observer:Buff):
         self.__observers_attack.append(observer)
+        observer.observing(self.__observers_attack)
 
-    def register_die(self, observer):
+    def register_die(self, observer:Buff):
         self.__observers_die.append(observer)
+        observer.observing(self.__observers_die)
 
     def hit(self, damage):
         self.shield -= damage
