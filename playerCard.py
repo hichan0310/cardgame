@@ -35,19 +35,19 @@ class PlayerCard(Cell):
         self.__observers_die.append(observer)
         observer.observing(self.__observers_die)
 
-    def hit(self, damage):
-        self.shield -= damage
-        if self.shield < 0:
-            self.hp += self.shield
-            self.shield = 0
+    def hit(self, damage, caster, atk_type):
+        for b in self.buff:
+            damage=b.hit_buff(caster, self, damage, atk_type)
         if self.hp <= 0:
             self.die()
         for observer in self.__observers_hit:
-            observer.hit_event()
+            observer.hit_event(caster)
 
-    def attack(self, target):
+    def attack(self, damage, target, atk_type):
+        for b in self.buff:
+            damage=b.atk_buff(self, target, damage, atk_type)
         for observer in self.__observers_attack:
-            observer.attack_event()
+            observer.attack_event(target)
 
     def die(self):
         for observer in self.__observers_die:

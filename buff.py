@@ -18,8 +18,8 @@ class Buff:
     def hit_buff(self, caster: PlayerCard, target: PlayerCard, damage: int, atk_type: str):
         return damage
 
-    def hit_event(self): pass
-    def attack_event(self): pass
+    def hit_event(self, caster:PlayerCard): pass
+    def attack_event(self, target:PlayerCard): pass
     def die_event(self): pass
     def move_event(self): pass
     def turnover_event(self): pass
