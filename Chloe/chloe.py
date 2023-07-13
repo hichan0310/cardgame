@@ -23,7 +23,9 @@ class Sprout_of_blue(Skill):
         target.heal(1)
 
     def execute(self, caster, targets):
+        print("스킬 푸른 새싹의 execute 함수 호출됨")
         for target in targets:
+            print(target.name)
             target.heal(1)
 
 
@@ -41,9 +43,12 @@ class Sprout_of_earth(Skill):
         self.skill_image_path = "./Chloe/skill_image/sprout_of_earth.png"
 
     def execute(self, caster, targets):
+        print("스킬 대지의 새싹의 execute 함수 호출됨")
         for target in targets:
+            print(target.name)
             target.heal(3)
             target.quick_move=True
+        print()
 
 
 

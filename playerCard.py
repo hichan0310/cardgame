@@ -15,7 +15,7 @@ class PlayerCard(Cell):
         self.hp: int
         self.max_energy: int
         self.buff: list[Buff]=[]
-        self.skills, self.max_hp, self.max_energy, self.img_path = deepcopy(characters_info[character_num])
+        self.name, self.skills, self.max_hp, self.max_energy, self.img_path = deepcopy(characters_info[character_num])
         self.skills=[]+self.skills
         if self.img_path!=None:
             self.image=pygame.image.load(self.img_path)
@@ -26,7 +26,6 @@ class PlayerCard(Cell):
         self.__observers_die: list[Buff] = []
         self.__observers_move: list[Buff] = []
         self.shield = 0
-        self.quick_move=False
 
     def register_hit(self, observer: Buff):
         self.__observers_hit.append(observer)
@@ -64,5 +63,4 @@ class PlayerCard(Cell):
         self.hp = min(self.max_hp, self.hp + heal_amount)
 
     def click(self):
-        print("스킬 목록 : ", end='')
-        print(*map(lambda a:a.name, self.skills), sep=', ')
+        pass

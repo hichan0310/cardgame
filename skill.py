@@ -16,9 +16,12 @@ class Skill:
         for target in targets:
             self.execute_one(caster, target)
 
-    def atk_range(self, pos):
+    def execute_range(self, pos):
         return [(i + 1, 1) for i in range(5)] + \
                [(i + 1, 2) for i in range(5)] + \
                [(i + 1, 3) for i in range(5)] + \
                [(i + 1, 4) for i in range(5)] + \
                [(i + 1, 5) for i in range(5)]
+
+    def atk_range(self, caster_pos, pos):
+        return [pos]

@@ -72,7 +72,7 @@ class SkillMoreExplaination:
 
         image = pygame.image.load(self.image_path)
         image = pygame.transform.scale(image, (80, 80))
-        pos = (SCREEN_WIDTH/2 + 40 - 40, SCREEN_HEIGHT - 60 - 35 - 60)
+        pos = (SCREEN_WIDTH / 2 + 40 - 40, SCREEN_HEIGHT - 60 - 35 - 60)
         screen.blit(image, pos)
 
 
@@ -95,8 +95,11 @@ class SkillSelectBar:
             self.explainationbar.draw(screen)
 
 
+
+
 class GameMap:
     def __init__(self, screen):
+        self.selected_skill_range = []
         self.screen = screen
         self.group = pygame.sprite.Group()
         self.gameBoard: list[list[Cell]] = [[Cell(
@@ -128,6 +131,10 @@ class GameMap:
             observer.turnover_event(self)
 
     def move_card(self, pos1, pos2):
+        if self.gameBoard[pos1[0]][pos1[1]].quick_move:
+            self.gameBoard[pos1[0]][pos1[1]].quick_move = False
+        else:
+            self.cost.minus(1)
         self.gameBoard[pos1[0]][pos1[1]], self.gameBoard[pos2[0]][pos2[1]] = (
             self.gameBoard[pos2[0]][pos2[1]],
             self.gameBoard[pos1[0]][pos1[1]]
@@ -136,7 +143,6 @@ class GameMap:
             self.gameBoard[pos2[0]][pos2[1]].pos_center,
             self.gameBoard[pos1[0]][pos1[1]].pos_center
         )
-        self.cost.minus(1)
         self.gameBoard[pos1[0]][pos1[1]].update_location()
         self.gameBoard[pos2[0]][pos2[1]].update_location()
 
@@ -152,12 +158,15 @@ class GameMap:
         )
 
     def draw(self):
+        if self.selected_skill is not None:
+            for j, i in self.selected_skill_range:
+                pygame.draw.rect(self.screen, "#777777", [30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i-(CELL_WIDTH-10)/2, 30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j-CELL_HEIGHT/2, CELL_WIDTH-10, CELL_HEIGHT])
         self.group.draw(self.screen)
         self.skill_select.group.draw(self.screen)
         self.skill_select.draw(self.screen)
 
     def click(self, pos):
-        if self.selected_card == None:
+        if self.selected_card is None:
             for i in range(1, 6):
                 for j in range(1, 6):
                     if (pos[0] - CARD_WIDTH / 2 < self.gameBoard[i][j].pos_center[0] < pos[0] + CARD_WIDTH / 2
@@ -176,10 +185,27 @@ class GameMap:
                     if (pos[0] - CARD_WIDTH / 2 < self.gameBoard[i][j].pos_center[0] < pos[0] + CARD_WIDTH / 2
                             and pos[1] - CARD_HEIGHT / 2 < self.gameBoard[i][j].pos_center[1] < pos[
                                 1] + CARD_HEIGHT / 2):
-                        if self.selected_card in [(i+1, j), (i-1, j), (i, j+1), (i, j-1)]:
-                            self.move_card((i, j), self.selected_card)
+                        if self.selected_card in [(i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)] and self.selected_skill is None:
+                            self.move_card(self.selected_card, (i, j))
                             self.skill_select = SkillSelectBar([])
                             self.selected_card = None
+                            return
+                        if self.selected_skill is not None and (i, j) in self.selected_skill_range:
+                            if self.cost.cost<self.selected_skill.cost:
+                                print("cost 부족")
+                                self.selected_card=None
+                                self.selected_skill=None
+                                self.selected_skill_range=[]
+                                self.skill_select = SkillSelectBar([])
+                                return
+                            caster=self.gameBoard[self.selected_card[0]][self.selected_card[1]]
+                            targets=list(map(lambda a:self.gameBoard[a[0]][a[1]], self.selected_skill.atk_range(self.selected_card, (i, j))))
+                            self.cost.minus(self.selected_skill.cost)
+                            self.selected_skill.execute(caster, targets)
+                            self.selected_card=None
+                            self.selected_skill=None
+                            self.selected_skill_range=[]
+                            self.skill_select = SkillSelectBar([])
                             return
                         self.skill_select = SkillSelectBar([])
                         self.selected_card = None
@@ -190,10 +216,12 @@ class GameMap:
                     1] + SKILL_HEIGHT / 2:
                     self.skill_select.explainationbar = SkillMoreExplaination(self.skill_select.skills[i])
                     self.selected_skill = self.skill_select.skills[i]
+                    self.selected_skill_range = self.selected_skill.execute_range(self.selected_card)
                     return
             if self.selected_skill is None:
                 self.skill_select = SkillSelectBar([])
                 self.selected_card = None
                 return
             self.selected_skill = None
+            self.selected_skill_range=[]
             self.skill_select.explainationbar = None
