@@ -1,33 +1,24 @@
-import playerCard
-from main import game_board
+import pygame
+from settings import *
 
 
 class Skill:
     def __init__(self, cost):
         self.cost = cost
+        self.name = "empty skill"
+        self.explaination = "no explaination"
+        self.skill_image_path = "./Chloe/skill_image/sprout_of_blue.png"
 
-    def execute(self, caster: tuple[int, int], target: tuple[int, int]):
-        game_board.cost-=self.cost
+    def execute_one(self, caster, target):
+        pass
 
+    def execute(self, caster, targets):
+        for target in targets:
+            self.execute_one(caster, target)
 
-# 푸른 새싹
-class sprout_of_blue(Skill):
-    def __init__(self):
-        super().__init__(2)
-        self.name = "푸른 새싹"
-        self.explaination = "바로 옆에 있는 대상에게 스킬을 시전하면 아군은 체력 +1, 적군은 체력 -1"
-
-    def execute_range(self, pos):
-        return list(filter(
-            lambda p: 0 < p[0] < 6 and 0 < p[1] < 6,
-            [(pos[0] + 1, pos[1]), (pos[0] - 1, pos[1]), (pos[0], pos[1] + 1), (pos[0], pos[1] - 1)]
-        ))
-
-    def execute(self, caster: tuple[int, int], target: tuple[int, int]):
-        game_board.gameBoard[target[0]][target[1]].heal(1)
-
-
-# 대지의 새싹
-class sprout_of_earth(Skill):
-    def __init__(self):
-        super().__init__(3)
+    def atk_range(self, pos):
+        return [(i + 1, 1) for i in range(5)] + \
+               [(i + 1, 2) for i in range(5)] + \
+               [(i + 1, 3) for i in range(5)] + \
+               [(i + 1, 4) for i in range(5)] + \
+               [(i + 1, 5) for i in range(5)]
