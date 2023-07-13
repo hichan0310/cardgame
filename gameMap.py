@@ -109,7 +109,7 @@ class GameMap:
         self.__observers_turnover: list[Buff] = []
         self.__observers_move: list[Buff] = []
         self.__observers_turnstart: list[Buff] = []
-        self.cost = CostBar(self.group, 10)
+        self.cost = CostBar(self.group, 20)
         self.selected_card = None
         self.skill_select = SkillSelectBar([])
         self.selected_skill = None
@@ -131,10 +131,15 @@ class GameMap:
             observer.turnover_event(self)
 
     def move_card(self, pos1, pos2):
+        try:self.gameBoard[pos1[0]][pos1[1]].move(pos1)
+        except:return
         if self.gameBoard[pos1[0]][pos1[1]].quick_move:
             self.gameBoard[pos1[0]][pos1[1]].quick_move = False
-        else:
+        elif self.cost.cost>=1:
             self.cost.minus(1)
+        else:
+            print("cost 부족")
+            return
         self.gameBoard[pos1[0]][pos1[1]], self.gameBoard[pos2[0]][pos2[1]] = (
             self.gameBoard[pos2[0]][pos2[1]],
             self.gameBoard[pos1[0]][pos1[1]]
@@ -145,6 +150,9 @@ class GameMap:
         )
         self.gameBoard[pos1[0]][pos1[1]].update_location()
         self.gameBoard[pos2[0]][pos2[1]].update_location()
+        for observer in self.__observers_move:
+            observer.move_event(self.gameBoard[pos2[0]][pos2[1]], pos2)
+
 
     def heal(self, pos, heal_amount):
         self.gameBoard[pos[0]][pos[1]].heal(heal_amount)
@@ -175,7 +183,7 @@ class GameMap:
                         self.gameBoard[i][j].click()
                         self.selected_card = (i, j)
                         try:
-                            self.skill_select = SkillSelectBar(self.gameBoard[i][j].skills)
+                            self.skill_select = SkillSelectBar(self.gameBoard[i][j].skills+[self.gameBoard[i][j].specialSkill])
                         except:
                             self.skill_select = SkillSelectBar([])
                             self.selected_card = None
@@ -201,9 +209,9 @@ class GameMap:
                             caster=self.gameBoard[self.selected_card[0]][self.selected_card[1]]
                             targets=list(map(lambda a:self.gameBoard[a[0]][a[1]], self.selected_skill.atk_range(self.selected_card, (i, j))))
                             self.cost.minus(self.selected_skill.cost)
-                            self.selected_skill.execute(caster, targets)
-                            self.selected_card=None
-                            self.selected_skill=None
+                            self.selected_skill.execute(caster, targets, self.selected_card, self.selected_skill.atk_range(self.selected_card, (i, j)))
+                            self.selected_card = None
+                            self.selected_skill = None
                             self.selected_skill_range=[]
                             self.skill_select = SkillSelectBar([])
                             return

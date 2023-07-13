@@ -1,8 +1,10 @@
-from skill import Skill
+from skill import Skill, SpecialSkill
 from buff import Buff
 from Chloe.chloe import *
+from Tania.tania import *
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from main import game_board
 
 # self.skills, self.max_hp, self.max_energy, self.buff, img_path
-characters_info:list[str, tuple[list[Skill], int, int, str]]=[
-    ("Chloe", [Sprout_of_blue(), Sprout_of_earth()], 10, 4, "./Chloe/chloe_card.png")
-]

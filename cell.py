@@ -22,6 +22,12 @@ class Cell(pygame.sprite.Sprite):
     def click(self):
         pass
 
+    def hit(self, damage, caster, atk_type):
+        pass
+
+    def penetrateHit(self, damage, caster):
+        pass
+
     def update_location(self):
         self.rect = self.image.get_rect(center=self.pos_center)
         self.mask = pygame.mask.from_surface(self.image)
