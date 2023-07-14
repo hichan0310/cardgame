@@ -78,8 +78,8 @@ class PlayerCard(Cell):
         observer.observing(self.__observers_curse)
 
     def curse_explode(self, caster):
-        for observer in self.__observers_curse:
-            observer.curse_event(caster, self, self.game_board)
+        for i in range(len(self.__observers_curse)):
+            self.__observers_curse[0].curse_event(caster, self, self.game_board)
 
     def hit(self, damage, caster, atk_type):
         for b in self.buff:

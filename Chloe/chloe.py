@@ -44,6 +44,7 @@ class SproutOfEarth(Skill):
         self.skill_image_path = "./Chloe/skill_image/sprout_of_earth.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos):
+        caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             target.heal(3)
             target.quick_move = True
@@ -87,4 +88,4 @@ class SproutOfReincarnation(SpecialSkill):
 
     def execute(self, caster, targets, caster_pos, targets_pos):
         for target in targets:
-            target.buff.append(Reincarnation(target, 7, target.game_board))
+            Reincarnation(target, 7, target.game_board)

@@ -18,7 +18,7 @@ characters_info: list[str, tuple[list[Skill], SpecialSkill, int, int, str]] = [
      "./Chloe/chloe_card.png"],
     ["Tania", [StraightCut(game_board), FlameShuriken(game_board)], FlameSward(game_board), 10, 5,
      "./Tania/tania_card.png"],
-    ["Lucifer", [CurseArrow(game_board)], CommingApocalypse(game_board), 10, 4,
+    ["Lucifer", [CurseArrow(game_board), ExplodeCurse(game_board)], CommingApocalypse(game_board), 10, 4,
      "./Lucifer/lucifer_card.png"]
 ]
 

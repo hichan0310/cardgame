@@ -91,8 +91,9 @@ class FlameShuriken(Skill):
     def execute(self, caster, targets, caster_pos, targets_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
-            caster.attack(3, target, "skill")
-            target.buff.append(Burn(target, 1, target.game_board))
+            if target.name!="empty cell":
+                caster.attack(3, target, "skill")
+                Burn(target, 1, target.game_board)
 
 
 
