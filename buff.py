@@ -1,6 +1,6 @@
 class Buff:
     def __init__(self, character, use_num, game_board):
-        self.game_board=game_board
+        self.game_board = game_board
         character.buff.append(self)
         self.target = character
         self.use_num = use_num
@@ -42,11 +42,6 @@ class Buff:
         self.target.buff.remove(self)
         for events in self.observing_list:
             events.remove(self)
-
-
-
-
-
 
 
 # 재생 버프

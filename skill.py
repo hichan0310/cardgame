@@ -1,10 +1,6 @@
-import pygame
-from settings import *
-
-
 class Skill:
     def __init__(self, cost, game_board):
-        self.game_board=game_board
+        self.game_board = game_board
         self.cost = cost
         self.name = "empty skill"
         self.explaination = [

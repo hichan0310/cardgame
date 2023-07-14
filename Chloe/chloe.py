@@ -13,7 +13,7 @@ class SproutOfBlue(Skill):
         super().__init__(2, game_board)
         self.name = "푸른 새싹"
         self.explaination = [
-            "cose : 2",
+            "cost : 2",
             "바로 앞 또는 옆에 있는 대상에게 스킬을 시전하여 1의 피해를 준다. "
         ]
         self.skill_image_path = "./Chloe/skill_image/sprout_of_blue.png"
@@ -27,7 +27,6 @@ class SproutOfBlue(Skill):
     def execute(self, caster, targets, caster_pos, targets_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
-            print(target.name)
             target.heal(1)
 
 
@@ -46,29 +45,25 @@ class SproutOfEarth(Skill):
 
     def execute(self, caster, targets, caster_pos, targets_pos):
         for target in targets:
-            print(target.name)
             target.heal(3)
             target.quick_move = True
-        print()
-
 
 
 # 재생 버프
 class Reincarnation(Buff):
-    def __init__(self, character:"PlayerCard", count: int, game_board):
+    def __init__(self, character: "PlayerCard", count: int, game_board):
         super().__init__(character, count, game_board)
         character.register_move(self)
 
-
-    def move_event(self, player: "PlayerCard", pos: tuple[int, int]):
+    def move_event(self, player: "PlayerCard", pos: tuple[int, int], game_board):
         x, y = pos
+        print(x,y)
         self.game_board.heal((x + 1, y), 1)
         self.game_board.heal((x, y + 1), 1)
         self.game_board.heal((x - 1, y), 1)
         self.game_board.heal((x, y - 1), 1)
         player.heal(1)
         self.used(1)
-
 
 
 # 재생의 씨앗
@@ -82,7 +77,7 @@ class SproutOfReincarnation(SpecialSkill):
             "재생 상태에서 위치 이동을 하면 자기 자신과 바로 위, 아래, 옆에 있는 아군의 체력을 1만큼 회복한다. ",
             "이 상태는 7번 위치 이동 이후 사라지며 중첩이 가능하다. "
         ]
-        self.skill_image_path = "./Chloe/skill_image/sprout_of_blue.png"
+        self.skill_image_path = "./Chloe/skill_image/sprout_of_reincarnation.png"
 
     def execute_range(self, pos):
         if self.energy == self.max_energy:
