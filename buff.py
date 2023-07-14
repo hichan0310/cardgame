@@ -1,5 +1,6 @@
 class Buff:
-    def __init__(self, character, use_num, game_board):
+    def __init__(self, character, use_num, game_board, name):
+        self.name=name
         self.game_board = game_board
         character.buff.append(self)
         self.target = character
@@ -33,6 +34,9 @@ class Buff:
     def turnstart_event(self, game_board):
         pass
 
+    def curse_event(self, caster, target, game_board):
+        pass
+
     def used(self, num):
         self.use_num -= num
         if self.use_num == 0:
@@ -47,15 +51,4 @@ class Buff:
 # 재생 버프
 
 
-class Curse(Buff):
-    def __init__(self, target):
-        super().__init__(target, -1)
-        self.stack = 0
 
-    def add_curse(self, num):
-        self.stack += num
-        if self.stack >= 5:
-            self.stack -= 5
-            self.target.hp -= 4
-            if self.target.hp <= 0:
-                self.target.die()

@@ -16,6 +16,9 @@ class Cell(pygame.sprite.Sprite):
         self.quick_move = False
         if not visible: self.image.set_alpha(0)
 
+    def curse_explode(self, caster):
+        pass
+
     def heal(self, heal_amount):
         pass
 

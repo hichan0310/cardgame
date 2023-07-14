@@ -52,7 +52,7 @@ class SproutOfEarth(Skill):
 # 재생 버프
 class Reincarnation(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
-        super().__init__(character, count, game_board)
+        super().__init__(character, count, game_board, "재생")
         character.register_move(self)
 
     def move_event(self, player: "PlayerCard", pos: tuple[int, int], game_board):

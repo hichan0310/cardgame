@@ -21,6 +21,7 @@ class PlayerCard(Cell):
             self.image = pygame.image.load(self.img_path)
             self.image = pygame.transform.scale(self.image, CARD_SIZE)
         self.hp = self.max_hp
+        self.__observers_curse: list[Buff] = []
         self.__observers_hit: list[Buff] = []
         self.__observers_attack: list[Buff] = []
         self.__observers_die: list[Buff] = []
@@ -71,6 +72,14 @@ class PlayerCard(Cell):
     def register_move(self, observer: Buff):
         self.__observers_move.append(observer)
         observer.observing(self.__observers_move)
+
+    def register_curse(self, observer: Buff):
+        self.__observers_curse.append(observer)
+        observer.observing(self.__observers_curse)
+
+    def curse_explode(self, caster):
+        for observer in self.__observers_curse:
+            observer.curse_event(caster, self, self.game_board)
 
     def hit(self, damage, caster, atk_type):
         for b in self.buff:
