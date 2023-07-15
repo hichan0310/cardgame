@@ -36,7 +36,7 @@ class CurseArrow(Skill):
              (1, pos[1]), (2, pos[1]), (3, pos[1]), (4, pos[1]), (5, pos[1])]
         ))
 
-    def execute(self, caster:"PlayerCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]]):
+    def execute(self, caster:"PlayerCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]], execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             if target.name!="empty cell":
@@ -60,7 +60,7 @@ class ExplodeCurse(Skill):
     def atk_range(self, caster_pos:tuple[int, int], pos:tuple[int, int]):
         return list(filter(lambda a:a!=caster_pos, [(i+1, j+1) for i in range(5) for j in range(5)]))
 
-    def execute(self, caster:"PlayerCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]]):
+    def execute(self, caster:"PlayerCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]], execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             target.curse_explode(caster)
@@ -89,7 +89,7 @@ class CommingApocalypse(SpecialSkill):
         ]
         self.skill_image_path = "./Lucifer/skill_image/comming_apocalypse.png"
 
-    def execute(self, caster:"PlayerCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]]):
+    def execute(self, caster:"PlayerCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]], execute_pos):
         caster.specialSkill.energy=0
         for target in targets:
             target.buff.append(DoomsdayProphecy(target, 3, target.game_board))

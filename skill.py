@@ -11,7 +11,7 @@ class Skill:
     def execute_one(self, caster, target):
         pass
 
-    def execute(self, caster, targets, caster_pos, targets_pos):
+    def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:
             self.execute_one(caster, target)
 

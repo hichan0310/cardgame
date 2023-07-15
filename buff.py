@@ -46,9 +46,3 @@ class Buff:
         self.target.buff.remove(self)
         for events in self.observing_list:
             events.remove(self)
-
-
-# 재생 버프
-
-
-

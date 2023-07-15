@@ -229,7 +229,8 @@ class GameMap:
                                                self.selected_skill.atk_range(self.selected_card, (i, j))))
                             self.cost.minus(self.selected_skill.cost)
                             self.selected_skill.execute(caster, targets, self.selected_card,
-                                                        self.selected_skill.atk_range(self.selected_card, (i, j)))
+                                                        self.selected_skill.atk_range(self.selected_card, (i, j)),
+                                                        (i, j))
                             self.selected_card = None
                             self.selected_skill = None
                             self.selected_skill_range = []

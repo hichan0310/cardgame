@@ -43,7 +43,7 @@ def end(*_):
 def main(*_):
     game_board.add_character(characters_info[0], (3, 3), "#00FF00")
     game_board.add_character(characters_info[1], (3, 4), "#FF0000")
-    game_board.add_character(characters_info[2], (1, 1), "#FF00FF")
+    game_board.add_character(characters_info[2], (3, 2), "#FF00FF")
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
