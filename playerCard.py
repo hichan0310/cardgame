@@ -4,6 +4,8 @@ from skill import Skill
 from buff import Buff
 from cell import Cell
 from settings import *
+from graphic_manager import motion_draw
+import random
 
 
 class PlayerCard(Cell):
@@ -37,8 +39,9 @@ class PlayerCard(Cell):
             center=(self.pos_center[0] + CARD_WIDTH / 2, self.pos_center[1] - CARD_HEIGHT / 2), radius=20)
         pygame.draw.line(
             screen, self.color,
-            (self.pos_center[0]+CARD_WIDTH/2-5, self.pos_center[1]+CARD_HEIGHT/2),
-            (self.pos_center[0]+CARD_WIDTH/2-5, self.pos_center[1]+CARD_HEIGHT/2-(CARD_HEIGHT-32)*self.specialSkill.energy/self.specialSkill.max_energy),
+            (self.pos_center[0] + CARD_WIDTH / 2 - 5, self.pos_center[1] + CARD_HEIGHT / 2),
+            (self.pos_center[0] + CARD_WIDTH / 2 - 5, self.pos_center[1] + CARD_HEIGHT / 2 - (
+                        CARD_HEIGHT - 32) * self.specialSkill.energy / self.specialSkill.max_energy),
             10
         )
         pygame.draw.circle(
@@ -85,6 +88,17 @@ class PlayerCard(Cell):
         for b in self.buff:
             damage = b.hit_buff(caster, self, damage, atk_type)
         self.hp -= damage
+        a = random.random() * 2 - 1
+        b = random.random() * 2 - 1
+        for _ in range(10):
+            def temp_func(screen, pos, i):
+                damage_font = pygame.font.Font("./D2Coding.ttf", 40)
+                damage_text = damage_font.render(str(-damage), True, "#FFFFFF", "#000000")
+                damage_text_rect = damage_text.get_rect(
+                    center=(pos[0], pos[1] - 60 + 50 / i))
+                screen.blit(damage_text, damage_text_rect)
+
+            motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 10, self.pos_center[1] + b * 10), _ + 1))
         if self.hp <= 0:
             self.die()
         for observer in self.__observers_hit:
@@ -92,6 +106,17 @@ class PlayerCard(Cell):
 
     def penetrateHit(self, damage, caster):
         self.hp -= damage
+        a = random.random() * 2 - 1
+        b = random.random() * 2 - 1
+        for _ in range(10):
+            def temp_func(screen, pos, i):
+                damage_font = pygame.font.Font("./D2Coding.ttf", 30)
+                damage_text = damage_font.render("관통 " + str(-damage), True, "#FFFFFF", "#000000")
+                damage_text_rect = damage_text.get_rect(
+                    center=(pos[0], pos[1] - 60 + 50 / i))
+                screen.blit(damage_text, damage_text_rect)
+
+            motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
         if self.hp <= 0:
             self.die()
         for observer in self.__observers_hit:
@@ -111,7 +136,19 @@ class PlayerCard(Cell):
         self.dead = True
 
     def heal(self, heal_amount):
+        hp_before=self.hp
         self.hp = min(self.max_hp, self.hp + heal_amount)
+        a = random.random() * 2 - 1
+        b = random.random() * 2 - 1
+        for _ in range(10):
+            def temp_func(screen, pos, i):
+                damage_font = pygame.font.Font("./D2Coding.ttf", 30)
+                damage_text = damage_font.render('+'+str(self.hp-hp_before), True, "#FFFFFF", "#000000")
+                damage_text_rect = damage_text.get_rect(
+                    center=(pos[0], pos[1] - 60 + 50 / i))
+                screen.blit(damage_text, damage_text_rect)
+
+            motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
 
     def move(self, pos):
         for observer in self.__observers_move:

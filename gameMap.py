@@ -76,13 +76,13 @@ class SkillMoreExplaination:
         pos = (SCREEN_WIDTH / 2 + 40 - 40, SCREEN_HEIGHT - 60 - 35 - 60)
         screen.blit(image, pos)
 
-        i=0
+        i = 0
         for t in self.explaination:
             font = pygame.font.Font("./D2Coding.ttf", 20)
             text = font.render(t, True, "#FFFFFF")
-            text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150+i*25, left=SCREEN_WIDTH / 2 + 140)
+            text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 25, left=SCREEN_WIDTH / 2 + 140)
             screen.blit(text, text_rect)
-            i+=1
+            i += 1
 
 
 class SkillSelectBar:
@@ -138,10 +138,6 @@ class GameMap:
             observer.turnover_event(self)
 
     def move_card(self, pos1, pos2):
-        try:
-            self.gameBoard[pos1[0]][pos1[1]].move(pos1)
-        except:
-            return
         if self.gameBoard[pos1[0]][pos1[1]].quick_move:
             self.gameBoard[pos1[0]][pos1[1]].quick_move = False
         elif self.cost.cost >= 1:
@@ -161,6 +157,10 @@ class GameMap:
         self.gameBoard[pos2[0]][pos2[1]].update_location()
         for observer in self.__observers_move:
             observer.move_event(self.gameBoard[pos2[0]][pos2[1]], pos2, self)
+        try:
+            self.gameBoard[pos2[0]][pos2[1]].move(pos2)
+        except:
+            return
 
     def heal(self, pos, heal_amount):
         self.gameBoard[pos[0]][pos[1]].heal(heal_amount)

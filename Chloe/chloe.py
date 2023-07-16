@@ -58,7 +58,6 @@ class Reincarnation(Buff):
 
     def move_event(self, player: "PlayerCard", pos: tuple[int, int], game_board):
         x, y = pos
-        print(x,y)
         self.game_board.heal((x + 1, y), 1)
         self.game_board.heal((x, y + 1), 1)
         self.game_board.heal((x - 1, y), 1)
@@ -87,5 +86,6 @@ class SproutOfReincarnation(SpecialSkill):
             return []
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
+        caster.specialSkill.energy=0
         for target in targets:
             Reincarnation(target, 7, target.game_board)

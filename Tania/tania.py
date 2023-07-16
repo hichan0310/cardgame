@@ -53,7 +53,6 @@ class StraightCut(Skill):
     def execute(self, caster: "PlayerCard", targets: "list[PlayerCard]", caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target_pos in targets_pos:
-            caster.attack(1, self.game_board.gameBoard[target_pos[0]][target_pos[1]], "normal attack")
             self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], self.game_board.gameBoard[target_pos[0]][
                 target_pos[1]] = (
                 self.game_board.gameBoard[target_pos[0]][target_pos[1]],
@@ -66,6 +65,7 @@ class StraightCut(Skill):
             )
             self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].update_location()
             self.game_board.gameBoard[target_pos[0]][target_pos[1]].update_location()
+            caster.attack(1, self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], "normal attack")
             caster_pos = target_pos
 
 
