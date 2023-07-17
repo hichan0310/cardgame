@@ -92,5 +92,6 @@ class CommingApocalypse(SpecialSkill):
     def execute(self, caster:"PlayerCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]], execute_pos):
         caster.specialSkill.energy=0
         for target in targets:
-            target.buff.append(DoomsdayProphecy(target, 3, target.game_board))
+            try:DoomsdayProphecy(target, 3, target.game_board)
+            except:pass
 

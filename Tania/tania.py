@@ -98,7 +98,8 @@ class FlameShuriken(Skill):
         for target in targets:
             if target.name != "empty cell":
                 caster.attack(3, target, "skill")
-                Burn(target, 1, target.game_board)
+                try:Burn(target, 1, target.game_board)
+                except:pass
 
 
 class FlameSward(SpecialSkill):

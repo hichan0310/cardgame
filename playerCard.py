@@ -9,25 +9,32 @@ import random
 
 
 class PlayerCard(Cell):
-    def __init__(self, character_params: int, pos: tuple[int, int], game_board, color, group):
+    def __init__(self, character_params, pos: tuple[int, int], game_board, color, group):
         super().__init__(pos, True, game_board, group)
         self.color = color
-        self.game_board = game_board
         self.skills: list[Skill]
         self.hp: int
         self.max_energy: int
         self.buff: list[Buff] = []
-        self.name, self.skills, self.specialSkill, self.max_hp, self.max_energy, self.img_path = character_params
+        self.passive: list[Buff] = []
+        self.name, self.skills, self.specialSkill, self.max_hp, self.max_energy, self.passive, self.img_path = character_params
+        t = []
+        for passive_buff in self.passive:
+            t.append(passive_buff(self, game_board))
+        self.passive = t
         self.skills = [] + self.skills
         if self.img_path is not None:
             self.image = pygame.image.load(self.img_path)
             self.image = pygame.transform.scale(self.image, CARD_SIZE)
         self.hp = self.max_hp
-        self.__observers_curse: list[Buff] = []
-        self.__observers_hit: list[Buff] = []
-        self.__observers_attack: list[Buff] = []
-        self.__observers_die: list[Buff] = []
-        self.__observers_move: list[Buff] = []
+        self.__observers_curse: list[Buff, Cell] = []
+        self.__observers_hit: list[Buff, Cell] = []
+        self.__observers_attack: list[Buff, Cell] = []
+        self.__observers_die: list[Buff, Cell] = []
+        self.__observers_move: list[Buff, Cell] = []
+        self.__observers_normal_attack: list[Buff, Cell] = []
+        self.__observers_skill: list[Buff, Cell] = []
+        self.__observers_special_skill: list[Buff, Cell] = []
         self.shield = 0
         self.dead = False
 
@@ -41,7 +48,7 @@ class PlayerCard(Cell):
             screen, self.color,
             (self.pos_center[0] + CARD_WIDTH / 2 - 5, self.pos_center[1] + CARD_HEIGHT / 2),
             (self.pos_center[0] + CARD_WIDTH / 2 - 5, self.pos_center[1] + CARD_HEIGHT / 2 - (
-                        CARD_HEIGHT - 32) * self.specialSkill.energy / self.specialSkill.max_energy),
+                    CARD_HEIGHT - 32) * self.specialSkill.energy / self.specialSkill.max_energy),
             10
         )
         pygame.draw.circle(
@@ -60,25 +67,37 @@ class PlayerCard(Cell):
             center=(self.pos_center[0] + CARD_WIDTH / 2, self.pos_center[1] - CARD_HEIGHT / 2 + 31))
         screen.blit(hp_text, hp_text_rect)
 
-    def register_hit(self, observer: Buff):
+    def register_hit(self, observer: "Buff, Cell"):
         self.__observers_hit.append(observer)
         observer.observing(self.__observers_hit)
 
-    def register_attack(self, observer: Buff):
+    def register_attack(self, observer: "Buff, Cell"):
         self.__observers_attack.append(observer)
         observer.observing(self.__observers_attack)
 
-    def register_die(self, observer: Buff):
+    def register_die(self, observer: "Buff, Cell"):
         self.__observers_die.append(observer)
         observer.observing(self.__observers_die)
 
-    def register_move(self, observer: Buff):
+    def register_move(self, observer: "Buff, Cell"):
         self.__observers_move.append(observer)
         observer.observing(self.__observers_move)
 
-    def register_curse(self, observer: Buff):
+    def register_curse(self, observer: "Buff, Cell"):
         self.__observers_curse.append(observer)
         observer.observing(self.__observers_curse)
+
+    def register_normal_attack(self, observer: "Buff, Cell"):
+        self.__observers_normal_attack.append(observer)
+        observer.observing(self.__observers_normal_attack)
+
+    def register_skill(self, observer: "Buff, Cell"):
+        self.__observers_skill.append(observer)
+        observer.observing(self.__observers_skill)
+
+    def register_special_skill(self, observer: "Buff, Cell"):
+        self.__observers_normal_attack.append(observer)
+        observer.observing(self.__observers_special_skill)
 
     def curse_explode(self, caster):
         for i in range(len(self.__observers_curse)):
@@ -125,9 +144,19 @@ class PlayerCard(Cell):
     def attack(self, damage, target, atk_type):
         for b in self.buff:
             damage = b.atk_buff(self, target, damage, atk_type)
-        target.hit(damage, self, 'normal')
-        for observer in self.__observers_attack:
-            observer.attack_event(self, target, self.game_board)
+        target.hit(damage, self, 'normal attack')
+        if atk_type == "normal attack":
+            for observer in self.__observers_normal_attack:
+                observer.normal_attack_event(self, target, self.game_board)
+        elif atk_type == "skill":
+            for observer in self.__observers_skill:
+                observer.skill_event(self, target, self.game_board)
+        elif atk_type == "special skill":
+            for observer in self.__observers_special_skill:
+                observer.special_skill_event(self, target, self.game_board)
+        else:
+            for observer in self.__observers_attack:
+                observer.attack_event(self, target, self.game_board)
 
     def die(self):
         for observer in self.__observers_die:
@@ -136,14 +165,14 @@ class PlayerCard(Cell):
         self.dead = True
 
     def heal(self, heal_amount):
-        hp_before=self.hp
+        hp_before = self.hp
         self.hp = min(self.max_hp, self.hp + heal_amount)
         a = random.random() * 2 - 1
         b = random.random() * 2 - 1
         for _ in range(10):
             def temp_func(screen, pos, i):
                 damage_font = pygame.font.Font("./D2Coding.ttf", 30)
-                damage_text = damage_font.render('+'+str(self.hp-hp_before), True, "#FFFFFF", "#000000")
+                damage_text = damage_font.render('+' + str(self.hp - hp_before), True, "#FFFFFF", "#000000")
                 damage_text_rect = damage_text.get_rect(
                     center=(pos[0], pos[1] - 60 + 50 / i))
                 screen.blit(damage_text, damage_text_rect)

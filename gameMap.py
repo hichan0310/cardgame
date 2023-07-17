@@ -104,6 +104,7 @@ class SkillSelectBar:
             self.explainationbar.draw(screen)
 
 
+
 class GameMap:
     def __init__(self, screen):
         self.selected_skill_range = []
@@ -172,6 +173,10 @@ class GameMap:
             self, color,
             self.group
         )
+
+    def add_summons(self, pos, summons):
+        self.gameBoard[pos[0]][pos[1]] = summons
+
 
     def draw(self):
         if self.selected_skill is not None:

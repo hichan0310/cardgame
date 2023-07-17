@@ -37,6 +37,15 @@ class Buff:
     def curse_event(self, caster, target, game_board):
         pass
 
+    def normal_attack_event(self, caster, target, game_board):
+        pass
+
+    def skill_event(self, caster, target, game_board):
+        pass
+
+    def special_skill_event(self, caster, target, game_board):
+        pass
+
     def used(self, num):
         self.use_num -= num
         if self.use_num == 0:
