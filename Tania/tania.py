@@ -71,7 +71,7 @@ class StraightCut(Skill):
 
 class Burn(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
-        super().__init__(character, count, game_board, "화상")
+        super().__init__(character, count, game_board, "화상", "./Tania/burn.png")
         game_board.register_turnover(self)
 
     def turnover_event(self, game_board):

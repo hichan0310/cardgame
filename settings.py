@@ -23,3 +23,6 @@ SKILL_SIZE = (SKILL_WIDTH, SKILL_HEIGHT)
 def transform_pos(pos):
     j, i=pos
     return (30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i, 30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j)
+
+BUFF_WIDTH = 120
+BUFF_HEIGHT = 160

@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class Curse(Buff):
     def __init__(self, character:"PlayerCard", game_board:"GameMap"):
-        super().__init__(character, -1, game_board, "저주")
+        super().__init__(character, -1, game_board, "저주", "./Lucifer/curse.png")
         character.register_curse(self)
 
     def curse_event(self, caster:"PlayerCard", target:"PlayerCard", game_board:"GameMap"):
@@ -68,7 +68,7 @@ class ExplodeCurse(Skill):
 
 class DoomsdayProphecy(Buff):
     def __init__(self, character:"PlayerCard", count:int, game_board:"GameMap"):
-        super().__init__(character, count, game_board, "종말의 예언")
+        super().__init__(character, count, game_board, "종말의 예언", "./Lucifer/doomsday_prophecy.png")
         game_board.register_turnover(self)
 
     def turnover_event(self, game_board:"GameMap"):

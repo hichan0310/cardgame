@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class BaseInstability(Buff):
     def __init__(self, character: "PlayerCard", game_board):
-        super().__init__(character, -1, game_board, "기반 불안정")
+        super().__init__(character, -1, game_board, "기반 불안정", "./Petra/base_instability.png")
         self.destroyed = 0
 
     def turret_die_event(self):

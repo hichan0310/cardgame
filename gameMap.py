@@ -104,7 +104,6 @@ class SkillSelectBar:
             self.explainationbar.draw(screen)
 
 
-
 class GameMap:
     def __init__(self, screen):
         self.selected_skill_range = []
@@ -177,7 +176,6 @@ class GameMap:
     def add_summons(self, pos, summons):
         self.gameBoard[pos[0]][pos[1]] = summons
 
-
     def draw(self):
         if self.selected_skill is not None:
             for j, i in self.selected_skill_range:
@@ -191,6 +189,12 @@ class GameMap:
         for cells in self.gameBoard:
             for cell in cells:
                 cell.draw_hp_energy(self.screen)
+
+        if self.selected_card is not None:
+            for i in range(len((self.gameBoard[self.selected_card[0]][self.selected_card[1]]).buff)):
+                self.gameBoard[self.selected_card[0]][self.selected_card[1]].buff[i].draw(
+                    (SCREEN_WIDTH / 2 + (BUFF_WIDTH + 20) * i, SCREEN_HEIGHT / 2 - 30),
+                    self.screen)
 
     def click(self, pos):
         if motion_draw.motion_playing():

@@ -6,6 +6,7 @@ class Cell(pygame.sprite.Sprite):
     def __init__(self, pos_center, visible, game_board, group):
         super().__init__(group)
         self.name = "empty cell"
+        self.buff = []
         self.pos_center = pos_center
         self.game_board = game_board
         self.item = None
