@@ -27,14 +27,11 @@ class PlayerCard(Cell):
             self.image = pygame.image.load(self.img_path)
             self.image = pygame.transform.scale(self.image, CARD_SIZE)
         self.hp = self.max_hp
-        self.__observers_curse: list[Buff, Cell] = []
-        self.__observers_hit: list[Buff, Cell] = []
-        self.__observers_attack: list[Buff, Cell] = []
-        self.__observers_die: list[Buff, Cell] = []
-        self.__observers_move: list[Buff, Cell] = []
-        self.__observers_normal_attack: list[Buff, Cell] = []
-        self.__observers_skill: list[Buff, Cell] = []
-        self.__observers_special_skill: list[Buff, Cell] = []
+        self.observers_curse: list[Buff, Cell] = []
+        self.observers_hit: list[Buff, Cell] = []
+        self.observers_attack: list[Buff, Cell] = []
+        self.observers_die: list[Buff, Cell] = []
+        self.observers_move: list[Buff, Cell] = []
         self.shield = 0
         self.dead = False
 
@@ -68,40 +65,28 @@ class PlayerCard(Cell):
         screen.blit(hp_text, hp_text_rect)
 
     def register_hit(self, observer: "Buff, Cell"):
-        self.__observers_hit.append(observer)
-        observer.observing(self.__observers_hit)
+        self.observers_hit.append(observer)
+        observer.observing(self.observers_hit)
 
     def register_attack(self, observer: "Buff, Cell"):
-        self.__observers_attack.append(observer)
-        observer.observing(self.__observers_attack)
+        self.observers_attack.append(observer)
+        observer.observing(self.observers_attack)
 
     def register_die(self, observer: "Buff, Cell"):
-        self.__observers_die.append(observer)
-        observer.observing(self.__observers_die)
+        self.observers_die.append(observer)
+        observer.observing(self.observers_die)
 
     def register_move(self, observer: "Buff, Cell"):
-        self.__observers_move.append(observer)
-        observer.observing(self.__observers_move)
+        self.observers_move.append(observer)
+        observer.observing(self.observers_move)
 
     def register_curse(self, observer: "Buff, Cell"):
-        self.__observers_curse.append(observer)
-        observer.observing(self.__observers_curse)
-
-    def register_normal_attack(self, observer: "Buff, Cell"):
-        self.__observers_normal_attack.append(observer)
-        observer.observing(self.__observers_normal_attack)
-
-    def register_skill(self, observer: "Buff, Cell"):
-        self.__observers_skill.append(observer)
-        observer.observing(self.__observers_skill)
-
-    def register_special_skill(self, observer: "Buff, Cell"):
-        self.__observers_normal_attack.append(observer)
-        observer.observing(self.__observers_special_skill)
+        self.observers_curse.append(observer)
+        observer.observing(self.observers_curse)
 
     def curse_explode(self, caster):
-        for i in range(len(self.__observers_curse)):
-            self.__observers_curse[0].curse_event(caster, self, self.game_board)
+        for i in range(len(self.observers_curse)):
+            self.observers_curse[0].curse_event(caster, self, self.game_board)
 
     def hit(self, damage, caster, atk_type):
         for b in self.buff:
@@ -120,7 +105,7 @@ class PlayerCard(Cell):
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 10, self.pos_center[1] + b * 10), _ + 1))
         if self.hp <= 0:
             self.die()
-        for observer in self.__observers_hit:
+        for observer in self.observers_hit:
             observer.hit_event(caster, self, self.game_board, atk_type)
 
     def penetrateHit(self, damage, caster, atk_type="penetrate hit"):
@@ -138,28 +123,16 @@ class PlayerCard(Cell):
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
         if self.hp <= 0:
             self.die()
-        for observer in self.__observers_hit:
+        for observer in self.observers_hit:
             observer.hit_event(caster, self, self.game_board, atk_type)
 
     def attack(self, damage, target, atk_type):
         for b in self.buff:
             damage = b.atk_buff(self, target, damage, atk_type)
         target.hit(damage, self, 'normal attack')
-        if atk_type == "normal attack":
-            for observer in self.__observers_normal_attack:
-                observer.normal_attack_event(self, target, self.game_board)
-        elif atk_type == "skill":
-            for observer in self.__observers_skill:
-                observer.skill_event(self, target, self.game_board)
-        elif atk_type == "special skill":
-            for observer in self.__observers_special_skill:
-                observer.special_skill_event(self, target, self.game_board)
-        else:
-            for observer in self.__observers_attack:
-                observer.attack_event(self, target, self.game_board)
 
     def die(self):
-        for observer in self.__observers_die:
+        for observer in self.observers_die:
             observer.die_event(self, self.game_board)
         self.image.fill("#000000")
         self.dead = True
@@ -180,7 +153,7 @@ class PlayerCard(Cell):
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
 
     def move(self, pos):
-        for observer in self.__observers_move:
+        for observer in self.observers_move:
             observer.move_event(self, pos, self.game_board)
 
     def click(self):

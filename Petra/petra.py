@@ -31,15 +31,16 @@ class StoneTurret(Summons):
         super().__init__(3, pos, game_board, group, petra, "./Petra/turret_img.png")
         self.name = "petra turret"
         self.base_instability = base_instability
-        petra.register_normal_attack(self)
+        petra.register_attack(self)
 
     def die(self):
         self.base_instability.turret_die_event()
         super().die()
 
-    def normal_attack_event(self, caster, target, game_board):
-        if not self.dead:
-            target.hit(1, caster, "turret")
+    def attack_event(self, caster, target, game_board, atk_type):
+        if atk_type=="normal attack":
+            if not self.dead:
+                target.hit(1, caster, "turret")
 
 
 class CrackOfEarth(Skill):
@@ -57,6 +58,8 @@ class CrackOfEarth(Skill):
         for target in targets:
             if target.name != "empty cell":
                 caster.attack(1, target, "normal attack")
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "normal attack")
 
 
 class SummonTurret(Skill):
@@ -97,7 +100,10 @@ class BaseCollapse(SpecialSkill):
         self.skill_image_path = "./Petra/skill_image/base_collapse.png"
 
     def execute_range(self, pos):
-        return [pos]
+        if self.energy == self.max_energy:
+            return [pos]
+        else:
+            return []
 
     def atk_range(self, caster_pos, pos):
         t = [(i + 1, 1) for i in range(5)] + \
@@ -112,3 +118,5 @@ class BaseCollapse(SpecialSkill):
             caster.attack(2, target, "special skill")
         caster.passive[0].destroyed = 0
         caster.specialSkill.energy = 0
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "special skill")

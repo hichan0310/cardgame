@@ -52,7 +52,7 @@ class Cell(pygame.sprite.Sprite):
     def hit_event(self, caster, target, game_board):
         pass
 
-    def attack_event(self, caster, target, game_board):
+    def attack_event(self, caster, targets, game_board, atk_type):
         pass
 
     def die_event(self, player, game_board):
@@ -68,13 +68,4 @@ class Cell(pygame.sprite.Sprite):
         pass
 
     def curse_event(self, caster, target, game_board):
-        pass
-
-    def normal_attack_event(self, caster, target, game_board):
-        pass
-
-    def skill_event(self, caster, target, game_board):
-        pass
-
-    def special_skill_event(self, caster, target, game_board):
         pass

@@ -25,7 +25,7 @@ characters_info: list[str, tuple[list[Skill], SpecialSkill, int, int, list[Buff]
      "./Lucifer/lucifer_card.png"],
     ["Petra", [CrackOfEarth(game_board), SummonTurret(game_board)], BaseCollapse(game_board), 20, 4, [BaseInstability],
      "./Petra/petra_card.png"],
-    ["Gidon", [BloodyBlow(game_board), VengeanceEyes(game_board)], UnfinishedRage(game_board), 20, 4, [],
+    ["Gidon", [BloodyBlow(game_board), VengeanceEye(game_board)], UnfinishedRage(game_board), 20, 4, [],
      "./Gidon/gidon_card.png"],
     ["Astin", [StarFall(game_board), NightSky(game_board)], StarRain(game_board), 20, 5, [],
      "./Astin/astin_card.png"]

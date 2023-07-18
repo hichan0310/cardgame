@@ -37,7 +37,7 @@ class Buff:
     def hit_event(self, caster, target, game_board, atk_type):
         pass
 
-    def attack_event(self, caster, target, game_board):
+    def attack_event(self, caster, targets, game_board, atk_type):
         pass
 
     def die_event(self, player, game_board):
@@ -53,15 +53,6 @@ class Buff:
         pass
 
     def curse_event(self, caster, target, game_board):
-        pass
-
-    def normal_attack_event(self, caster, target, game_board):
-        pass
-
-    def skill_event(self, caster, target, game_board):
-        pass
-
-    def special_skill_event(self, caster, target, game_board):
         pass
 
     def used(self, num):

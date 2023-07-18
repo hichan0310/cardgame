@@ -15,6 +15,8 @@ class Curse(Buff):
 
     def curse_event(self, caster:"PlayerCard", target:"PlayerCard", game_board:"GameMap"):
         caster.attack(2, self.target, "skill")
+        for observer in caster.observers_attack:
+            observer.attack_event(self, [target], self.game_board, "skill")
         self.remove()
 
 
@@ -42,6 +44,8 @@ class CurseArrow(Skill):
             if target.name!="empty cell":
                 caster.attack(1, target, "normal attack")
                 Curse(target, target.game_board)
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "normal attack")
 
 class ExplodeCurse(Skill):
     def __init__(self, game_board:"GameMap"):
@@ -89,9 +93,21 @@ class CommingApocalypse(SpecialSkill):
         ]
         self.skill_image_path = "./Lucifer/skill_image/comming_apocalypse.png"
 
+    def execute_range(self, pos):
+        if self.energy == self.max_energy:
+            return [(i + 1, 1) for i in range(5)] + \
+               [(i + 1, 2) for i in range(5)] + \
+               [(i + 1, 3) for i in range(5)] + \
+               [(i + 1, 4) for i in range(5)] + \
+               [(i + 1, 5) for i in range(5)]
+        else:
+            return []
+
     def execute(self, caster:"PlayerCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]], execute_pos):
         caster.specialSkill.energy=0
         for target in targets:
             try:DoomsdayProphecy(target, 3, target.game_board)
             except:pass
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "special skill")
 

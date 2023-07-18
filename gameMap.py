@@ -78,9 +78,9 @@ class SkillMoreExplaination:
 
         i = 0
         for t in self.explaination:
-            font = pygame.font.Font("./D2Coding.ttf", 20)
+            font = pygame.font.Font("./D2Coding.ttf", 14)
             text = font.render(t, True, "#FFFFFF")
-            text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 25, left=SCREEN_WIDTH / 2 + 140)
+            text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19, left=SCREEN_WIDTH / 2 + 140)
             screen.blit(text, text_rect)
             i += 1
 
@@ -113,9 +113,9 @@ class GameMap:
             (30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i, 30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j),
             not (i == 0 or i == 6 or j == 0 or j == 6), self, self.group)
             for i in range(7)] for j in range(7)]
-        self.__observers_turnover: list[Buff] = []
-        self.__observers_move: list[Buff] = []
-        self.__observers_turnstart: list[Buff] = []
+        self.observers_turnover: list[Buff] = []
+        self.observers_move: list[Buff] = []
+        self.observers_turnstart: list[Buff] = []
         self.cost = CostBar(self.group, 100)
         self.selected_card = None
         self.skill_select = SkillSelectBar([])
@@ -125,16 +125,16 @@ class GameMap:
         self.gameBoard[pos[0]][pos[1]].item = item
 
     def register_turnover(self, observer):
-        self.__observers_turnover.append(observer)
+        self.observers_turnover.append(observer)
 
     def register_turnstart(self, observer):
-        self.__observers_turnstart.append(observer)
+        self.observers_turnstart.append(observer)
 
     def register_move(self, observer):
-        self.__observers_move.append(observer)
+        self.observers_move.append(observer)
 
     def turnover(self):
-        for observer in self.__observers_turnover:
+        for observer in self.observers_turnover:
             observer.turnover_event(self)
 
     def move_card(self, pos1, pos2):
@@ -155,7 +155,7 @@ class GameMap:
         )
         self.gameBoard[pos1[0]][pos1[1]].update_location()
         self.gameBoard[pos2[0]][pos2[1]].update_location()
-        for observer in self.__observers_move:
+        for observer in self.observers_move:
             observer.move_event(self.gameBoard[pos2[0]][pos2[1]], pos2, self)
         try:
             self.gameBoard[pos2[0]][pos2[1]].move(pos2)

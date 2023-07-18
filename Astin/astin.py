@@ -24,6 +24,8 @@ class StarFall(Skill):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             caster.attack(1, target, "normal attack")
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "normal attack")
 
 
 class CurtainOfNightSky(Buff):
@@ -78,7 +80,10 @@ class StarRain(SpecialSkill):
         self.skill_image_path="./Petra/skill_image/base_collapse.png"
 
     def execute_range(self, pos):
-        return [pos]
+        if self.energy == self.max_energy:
+            return [pos]
+        else:
+            return []
 
     def atk_range(self, caster_pos, pos):
         t = [(i + 1, 1) for i in range(5)] + \
@@ -91,8 +96,14 @@ class StarRain(SpecialSkill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:
             caster.attack(1, target, "special skill")
+            for observer in caster.observers_attack:
+                observer.attack_event(self, targets, self.game_board, "special skill")
             caster.attack(1, target, "special skill")
+            for observer in caster.observers_attack:
+                observer.attack_event(self, targets, self.game_board, "special skill")
             caster.attack(1, target, "special skill")
+            for observer in caster.observers_attack:
+                observer.attack_event(self, targets, self.game_board, "special skill")
         caster.specialSkill.energy=0
 
 

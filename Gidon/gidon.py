@@ -19,7 +19,7 @@ class BloodyBlow(Skill):
             "cost : 2",
             "전방에 검을 휘둘러 1의 광역 피해를 가한다. "
         ]
-        self.skill_image_path = "./Tania/skill_image/straight_cut.png"
+        self.skill_image_path = "./Gidon/skill_image/bloody_blow.png"
 
     def execute_range(self, pos):
         return list(filter(
@@ -57,22 +57,25 @@ class BloodyBlow(Skill):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             caster.attack(1, target, "normal attack")
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "normal attack")
 
 
 class BloodRage(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
         super().__init__(character, count, game_board, "피의 분노", "./Tania/burn.png")
-        game_board.register_turnover(self)
+        character.register_attack(self)
 
     def atk_buff(self, caster, target, damage: int, atk_type: str):
         if atk_type == "normal attack":
             return damage + min(caster.max_hp - caster.hp, 5)
         return damage
 
-    def normal_attack_event(self, caster, target, game_board):
-        self.used(1)
+    def attack_event(self, caster, target, game_board, atk_type):
+        if atk_type=="normal attack":
+            self.used(1)
 
-class VengeanceEyes(Skill):
+class VengeanceEye(Skill):
     def __init__(self, game_board):
         super().__init__(2, game_board)
         self.name="복수의 눈빛"
@@ -84,7 +87,7 @@ class VengeanceEyes(Skill):
             "자신의 체력이 2 이하일 경우 체력이 감소하지 않는다. "
             "이 스킬로 필살기 에너지를 채울 수 없다. "
         ]
-        self.skill_image_path="./Chloe/skill_image/sprout_of_earth.png"
+        self.skill_image_path="./Gidon/skill_image/vengeance_eye.png"
 
     def execute_range(self, pos):
         return [pos]
@@ -94,6 +97,8 @@ class VengeanceEyes(Skill):
             if target.hp>2:
                 target.penetrateHit(1, caster)
             BloodRage(target, 2, target.game_board)
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "skill")
 
 
 class UnfinishedRage(SpecialSkill):
@@ -104,14 +109,21 @@ class UnfinishedRage(SpecialSkill):
             "cost : 4, energy : 4",
             "바로 앞의 적을 지정하여 15의 피해를 준다. "
         ]
+        self.skill_image_path="./Gidon/skill_image/unfinished_rage.png"
+
     def execute_range(self, pos):
-        return list(filter(
-            lambda p: 0 < p[0] < 6 and 0 < p[1] < 6,
-            [(pos[0] + 1, pos[1]), (pos[0] - 1, pos[1]), (pos[0], pos[1] + 1), (pos[0], pos[1] - 1)]
-        ))
+        if self.energy == self.max_energy:
+            return list(filter(
+                lambda p: 0 < p[0] < 6 and 0 < p[1] < 6,
+                [(pos[0] + 1, pos[1]), (pos[0] - 1, pos[1]), (pos[0], pos[1] + 1), (pos[0], pos[1] - 1)]
+            ))
+        else:
+            return []
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:
             caster.attack(15, target, "special skill")
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "special skill")
 
 

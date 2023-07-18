@@ -68,6 +68,8 @@ class StraightCut(Skill):
             self.game_board.gameBoard[target_pos[0]][target_pos[1]].update_location()
             caster.attack(1, self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], "normal attack")
             caster_pos = target_pos
+        for observer in caster.observers_attack:
+            observer.attack_event(self, targets, self.game_board, "normal attack")
 
 
 class Burn(Buff):
@@ -187,6 +189,8 @@ class FlameShuriken(Skill):
 
             def temp_damage(screen, *_):
                 caster.attack(1, target, "skill")
+                for observer in caster.observers_attack:
+                    observer.attack_event(self, targets, self.game_board, "skill")
 
             try:
                 Burn(target, 1, target.game_board)
@@ -289,6 +293,8 @@ class FlameSward(SpecialSkill):
                                        (img, (img_position[0] - img_size[0] / 2, img_position[1] - img_size[1] / 2)))
             for target in targets:
                 target.penetrateHit(damage, caster)
+            for observer in caster.observers_attack:
+                observer.attack_event(self, targets, self.game_board, "penetrate hit")
 
         motion_draw.add_motion(temp_func, 80, (4, ))
         motion_draw.add_motion(temp_func, 60, (3, ))
