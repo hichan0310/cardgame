@@ -121,25 +121,25 @@ class PlayerCard(Cell):
         if self.hp <= 0:
             self.die()
         for observer in self.__observers_hit:
-            observer.hit_event(caster, self, self.game_board)
+            observer.hit_event(caster, self, self.game_board, atk_type)
 
-    def penetrateHit(self, damage, caster):
+    def penetrateHit(self, damage, caster, atk_type="penetrate hit"):
         self.hp -= damage
         a = random.random() * 2 - 1
         b = random.random() * 2 - 1
-        for _ in range(10):
+        for _ in range(20):
             def temp_func(screen, pos, i):
                 damage_font = pygame.font.Font("./D2Coding.ttf", 30)
                 damage_text = damage_font.render("관통 " + str(-damage), True, "#FFFFFF", "#000000")
                 damage_text_rect = damage_text.get_rect(
-                    center=(pos[0], pos[1] - 60 + 50 / i))
+                    center=(pos[0], pos[1] - 60 + 50 / i*2))
                 screen.blit(damage_text, damage_text_rect)
 
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
         if self.hp <= 0:
             self.die()
         for observer in self.__observers_hit:
-            observer.hit_event(caster, self, self.game_board)
+            observer.hit_event(caster, self, self.game_board, atk_type)
 
     def attack(self, damage, target, atk_type):
         for b in self.buff:

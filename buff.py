@@ -34,7 +34,7 @@ class Buff:
     def hit_buff(self, caster, target, damage: int, atk_type: str):
         return damage
 
-    def hit_event(self, caster, target, game_board):
+    def hit_event(self, caster, target, game_board, atk_type):
         pass
 
     def attack_event(self, caster, target, game_board):
