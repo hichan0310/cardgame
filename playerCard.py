@@ -109,12 +109,12 @@ class PlayerCard(Cell):
         self.hp -= damage
         a = random.random() * 2 - 1
         b = random.random() * 2 - 1
-        for _ in range(10):
+        for _ in range(20):
             def temp_func(screen, pos, i):
                 damage_font = pygame.font.Font("./D2Coding.ttf", 40)
                 damage_text = damage_font.render(str(-damage), True, "#FFFFFF", "#000000")
                 damage_text_rect = damage_text.get_rect(
-                    center=(pos[0], pos[1] - 60 + 50 / i))
+                    center=(pos[0], pos[1] - 60 + 50 / i*2))
                 screen.blit(damage_text, damage_text_rect)
 
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 10, self.pos_center[1] + b * 10), _ + 1))
