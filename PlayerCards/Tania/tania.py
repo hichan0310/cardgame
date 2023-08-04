@@ -20,7 +20,7 @@ class StraightCut(Skill):
             "직선상의 모든 적을 관통하며 1의 피해를 주고 맵의 끝으로 이동한다. ",
             "지나간 자리에 있는 적을 모두 한 칸씩 당긴다. "
         ]
-        self.skill_image_path = "./Tania/skill_image/straight_cut.png"
+        self.skill_image_path = "./PlayerCards/Tania/skill_image/straight_cut.png"
 
     def execute_range(self, pos):
         return list(filter(
@@ -68,13 +68,13 @@ class StraightCut(Skill):
             self.game_board.gameBoard[target_pos[0]][target_pos[1]].update_location()
             caster.attack(1, self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], "normal attack")
             caster_pos = target_pos
-        for observer in caster.observers_attack:
+        for observer in caster.observers_attack[::-1]:
             observer.attack_event(self, targets, self.game_board, "normal attack")
 
 
 class Burn(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
-        super().__init__(character, count, game_board, "화상", "./Tania/burn.png")
+        super().__init__(character, count, game_board, "화상", "./PlayerCards/Tania/burn.png")
         game_board.register_turnover(self)
 
     def turnover_event(self, game_board):
@@ -94,7 +94,7 @@ class FlameShuriken(Skill):
             "화상 효과가 부여된 적은 턴 종료 시 체력이 1 감소한다. ",
             "화상 효과는 중첩될 수 있다. "
         ]
-        self.skill_image_path = "./Tania/skill_image/flame_shuriken.png"
+        self.skill_image_path = "./PlayerCards/Tania/skill_image/flame_shuriken.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
@@ -111,7 +111,7 @@ class FlameShuriken(Skill):
                     dy = p2[1] - p1[1]
                     t = i * 5 / sqrt(dx ** 2 + dy ** 2)
                     img_pos = (p1[0] + t * dx - 60, p1[1] + t * dy - 60)
-                    image = pygame.image.load("./Tania/skill_motion/flame_shuriken/0.png")
+                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 15
                     if dx > 0: angle += 180
@@ -127,7 +127,7 @@ class FlameShuriken(Skill):
                     dy = p2[1] - p1[1]
                     t = 100 / sqrt(dx ** 2 + dy ** 2)
                     img_pos = (p1[0] + t * dx - 60, p1[1] + t * dy - 60)
-                    image = pygame.image.load("./Tania/skill_motion/flame_shuriken/0.png")
+                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 15
                     if dx > 0: angle += 180
@@ -145,7 +145,7 @@ class FlameShuriken(Skill):
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
                     img_pos = (p1[0] + t * dx - 60, p1[1] + t * dy - 60)
-                    image = pygame.image.load("./Tania/skill_motion/flame_shuriken/0.png")
+                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
@@ -161,7 +161,7 @@ class FlameShuriken(Skill):
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
                     img_pos = (p1[0] + t * dx - 60, p1[1] + t * dy - 60)
-                    image = pygame.image.load("./Tania/skill_motion/flame_shuriken/0.png")
+                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
@@ -177,7 +177,7 @@ class FlameShuriken(Skill):
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
                     img_pos = (p1[0] + t * dx - 50, p1[1] + t * dy - 50)
-                    image = pygame.image.load("./Tania/skill_motion/flame_shuriken/0.png")
+                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (100, 100))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
@@ -189,7 +189,7 @@ class FlameShuriken(Skill):
 
             def temp_damage(screen, *_):
                 caster.attack(1, target, "skill")
-                for observer in caster.observers_attack:
+                for observer in caster.observers_attack[::-1]:
                     observer.attack_event(self, targets, self.game_board, "skill")
 
             try:
@@ -211,7 +211,7 @@ class FlameSward(SpecialSkill):
             "전방에 넓은 범위에 불의 칼날을 휘둘러 3의 관통 피해를 2번 입힌다. ",
             "관통 피해는 버프를 통해서 피해가 오르거나 내려가지 않는다. "
         ]
-        self.skill_image_path = "./Tania/skill_image/flame_sward.png"
+        self.skill_image_path = "./PlayerCards/Tania/skill_image/flame_sward.png"
 
     def execute_range(self, pos):
         if self.max_energy == self.energy:
@@ -255,8 +255,8 @@ class FlameSward(SpecialSkill):
         execute_pos_real = transform_pos(execute_pos)
         caster_pos_real = transform_pos(caster_pos)
         for i in range(40):
-            img1 = pygame.image.load(f"./Tania/skill_motion/flame_sward/14.png")
-            img2 = pygame.image.load(f"./Tania/skill_motion/flame_sward/14.png")
+            img1 = pygame.image.load(f"./PlayerCards/Tania/skill_motion/flame_sward/14.png")
+            img2 = pygame.image.load(f"./PlayerCards/Tania/skill_motion/flame_sward/14.png")
             img1 = pygame.transform.rotate(img1, 270)
             img2 = pygame.transform.rotate(img2, 90)
             img1 = pygame.transform.scale(img1, (((39 - i) * 40), 2 * ((39 - i) * 40) / 3))
@@ -275,7 +275,7 @@ class FlameSward(SpecialSkill):
 
         def temp_func(screen, damage):
             for i in range(30):
-                img = pygame.image.load(f"./Tania/skill_motion/flame_sward/{min(i, 14)}.png")
+                img = pygame.image.load(f"./PlayerCards/Tania/skill_motion/flame_sward/{min(i, 14)}.png")
                 if caster_pos[0] > execute_pos[0]:
                     img = pygame.transform.rotate(img, 270)
                     img_position = (execute_pos_real[0], execute_pos_real[1] - i * 30)

@@ -16,7 +16,7 @@ class SproutOfBlue(Skill):
             "cost : 2",
             "바로 앞 또는 옆에 있는 대상에게 스킬을 시전하여 1의 피해를 준다. "
         ]
-        self.skill_image_path = "./Chloe/skill_image/fast_growth.png"
+        self.skill_image_path = "./PlayerCards/Chloe/skill_image/fast_growth.png"
 
     def execute_range(self, pos):
         return list(filter(
@@ -41,7 +41,7 @@ class SproutOfEarth(Skill):
             "빠른 이동 상태에서 다음 이동 시 사용하는 cost가 1 감소한다. ",
             "빠른 이동 상태는 중첩될 수 없다. "
         ]
-        self.skill_image_path = "./Chloe/skill_image/sprout_of_blue.png"
+        self.skill_image_path = "./PlayerCards/Chloe/skill_image/sprout_of_blue.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
@@ -53,7 +53,7 @@ class SproutOfEarth(Skill):
 # 재생 버프
 class Reincarnation(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
-        super().__init__(character, count, game_board, "재생", "./Chloe/reincarnation.png")
+        super().__init__(character, count, game_board, "재생", "./PlayerCards/Chloe/reincarnation.png")
         character.register_move(self)
 
     def move_event(self, player: "PlayerCard", pos: tuple[int, int], game_board):
@@ -77,7 +77,7 @@ class SproutOfReincarnation(SpecialSkill):
             "재생 상태에서 위치 이동을 하면 자기 자신과 바로 위, 아래, 옆에 있는 아군의 체력을 1만큼 회복한다. ",
             "이 상태는 7번 위치 이동 이후 사라지며 중첩이 가능하다. "
         ]
-        self.skill_image_path = "./Chloe/skill_image/blessing_world_tree.png"
+        self.skill_image_path = "./PlayerCards/Chloe/skill_image/blessing_world_tree.png"
 
     def execute_range(self, pos):
         if self.energy == self.max_energy:

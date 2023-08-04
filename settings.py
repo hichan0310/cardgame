@@ -14,15 +14,20 @@ CARD_SIZE = (CARD_WIDTH, CARD_HEIGHT)
 
 FPS = 60
 
-
 SKILL_WIDTH = 200
 SKILL_HEIGHT = 160
 SKILL_SIZE = (SKILL_WIDTH, SKILL_HEIGHT)
 
+
 # 게임판 위 위치를 실제 위치로 변환
 def transform_pos(pos):
-    j, i=pos
+    j, i = pos
     return (30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i, 30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j)
+
 
 BUFF_WIDTH = 120
 BUFF_HEIGHT = 160
+
+FLAG_EMPTY = 0
+FLAG_PLAYER_TEAM = 1
+FLAG_ENEMY_TEAM = 2

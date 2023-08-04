@@ -19,7 +19,7 @@ class BloodyBlow(Skill):
             "cost : 2",
             "전방에 검을 휘둘러 1의 광역 피해를 가한다. "
         ]
-        self.skill_image_path = "./Gidon/skill_image/bloody_blow.png"
+        self.skill_image_path = "./PlayerCards/Gidon/skill_image/bloody_blow.png"
 
     def execute_range(self, pos):
         return list(filter(
@@ -57,13 +57,13 @@ class BloodyBlow(Skill):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             caster.attack(1, target, "normal attack")
-        for observer in caster.observers_attack:
+        for observer in caster.observers_attack[::-1]:
             observer.attack_event(self, targets, self.game_board, "normal attack")
 
 
 class BloodRage(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
-        super().__init__(character, count, game_board, "피의 분노", "./Tania/burn.png")
+        super().__init__(character, count, game_board, "피의 분노", "./PlayerCards/Tania/burn.png")
         character.register_attack(self)
 
     def atk_buff(self, caster, target, damage: int, atk_type: str):
@@ -87,7 +87,7 @@ class VengeanceEye(Skill):
             "자신의 체력이 2 이하일 경우 체력이 감소하지 않는다. "
             "이 스킬로 필살기 에너지를 채울 수 없다. "
         ]
-        self.skill_image_path="./Gidon/skill_image/vengeance_eye.png"
+        self.skill_image_path="./PlayerCards/Gidon/skill_image/vengeance_eye.png"
 
     def execute_range(self, pos):
         return [pos]
@@ -109,7 +109,7 @@ class UnfinishedRage(SpecialSkill):
             "cost : 4, energy : 4",
             "바로 앞의 적을 지정하여 15의 피해를 준다. "
         ]
-        self.skill_image_path="./Gidon/skill_image/unfinished_rage.png"
+        self.skill_image_path="./PlayerCards/Gidon/skill_image/unfinished_rage.png"
 
     def execute_range(self, pos):
         if self.energy == self.max_energy:
@@ -121,6 +121,7 @@ class UnfinishedRage(SpecialSkill):
             return []
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
+        self.energy=0
         for target in targets:
             caster.attack(15, target, "special skill")
         for observer in caster.observers_attack:

@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class BaseInstability(Buff):
     def __init__(self, character: "PlayerCard", game_board):
-        super().__init__(character, -1, game_board, "기반 불안정", "./Petra/base_instability.png")
+        super().__init__(character, -1, game_board, "기반 불안정", "./PlayerCards/Petra/base_instability.png")
         self.destroyed = 0
 
     def turret_die_event(self):
@@ -28,7 +28,7 @@ class BaseInstability(Buff):
 class StoneTurret(Summons):
     def __init__(self, pos, game_board, group, petra: "PlayerCard", base_instability):
         pos = transform_pos(pos)
-        super().__init__(3, pos, game_board, group, petra, "./Petra/turret_img.png")
+        super().__init__(3, pos, game_board, group, petra, "./PlayerCards/Petra/turret_img.png")
         self.name = "petra turret"
         self.base_instability = base_instability
         petra.register_attack(self)
@@ -51,7 +51,7 @@ class CrackOfEarth(Skill):
             "cost : 2",
             "땅을 갈라서 1의 피해를 줍니다. ",
         ]
-        self.skill_image_path = "./Petra/skill_image/crack_of_earth.png"
+        self.skill_image_path = "./PlayerCards/Petra/skill_image/crack_of_earth.png"
 
     def execute(self, caster: "PlayerCard", targets: "list[PlayerCard]", caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
@@ -71,7 +71,7 @@ class SummonTurret(Skill):
             "일반 공격과 공명하는 바위 포탑을 소환합니다. ",
             "포탑은 3번 공격받으면 파괴되고 대지의 균열 발동 시 협동 공격으로 1의 피해를 가한다. "
         ]
-        self.skill_image_path = "./Petra/skill_image/summon_turret.png"
+        self.skill_image_path = "./PlayerCards/Petra/skill_image/summon_turret.png"
 
     def execute_range(self, pos):
         t = [(i + 1, 1) for i in range(5)] + \
@@ -97,7 +97,7 @@ class BaseCollapse(SpecialSkill):
             "cost : 4, energy : 4",
             "맵 전체에 기반 붕괴로 2의 피해를 가한다. "
         ]
-        self.skill_image_path = "./Petra/skill_image/base_collapse.png"
+        self.skill_image_path = "./PlayerCards/Petra/skill_image/base_collapse.png"
 
     def execute_range(self, pos):
         if self.energy == self.max_energy:

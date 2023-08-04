@@ -1,30 +1,27 @@
-import pygame.image
-
+from cell import *
 from skill import Skill
 from buff import Buff
-from cell import Cell
 from settings import *
-from graphic_manager import motion_draw
 import random
+from graphic_manager import motion_draw
 
 
-class PlayerCard(Cell):
+class EnemyCard(Cell):
     def __init__(self, character_params, pos: tuple[int, int], game_board, color, group):
         super().__init__(pos, True, game_board, group)
-        self.team=FLAG_PLAYER_TEAM
+        self.team=FLAG_ENEMY_TEAM
         self.color = color
         self.skills: list[Skill]
         self.hp: int
         self.max_energy: int
         self.buff: list[Buff] = []
         self.passive: list[Buff] = []
-        self.name, self.skills, self.specialSkill, self.max_hp, self.max_energy, self.passive, self.img_path = character_params
+        self.name, self.skills, self.max_hp, self.passive, self.img_path = character_params
         t = []
         for passive_buff in self.passive:
             t.append(passive_buff(self, game_board))
         self.passive = t
         self.skills = [*map(lambda a:a(game_board), self.skills)]
-        self.specialSkill=self.specialSkill(game_board)
         if self.img_path is not None:
             self.image = pygame.image.load(self.img_path)
             self.image = pygame.transform.scale(self.image, CARD_SIZE)
@@ -43,27 +40,11 @@ class PlayerCard(Cell):
         pygame.draw.circle(
             screen, color="#000000",
             center=(self.pos_center[0] + CARD_WIDTH / 2, self.pos_center[1] - CARD_HEIGHT / 2), radius=20)
-        pygame.draw.line(
-            screen, self.color,
-            (self.pos_center[0] + CARD_WIDTH / 2 - 5, self.pos_center[1] + CARD_HEIGHT / 2),
-            (self.pos_center[0] + CARD_WIDTH / 2 - 5, self.pos_center[1] + CARD_HEIGHT / 2 - (
-                    CARD_HEIGHT - 32) * self.specialSkill.energy / self.specialSkill.max_energy),
-            10
-        )
-        pygame.draw.circle(
-            screen, color="#000000",
-            center=(self.pos_center[0] + CARD_WIDTH / 2, self.pos_center[1] - CARD_HEIGHT / 2 + 31), radius=15)
 
         hp_font = pygame.font.Font("./D2Coding.ttf", 20)
         hp_text = hp_font.render(str(self.hp), True, "#FFFFFF")
         hp_text_rect = hp_text.get_rect(
             center=(self.pos_center[0] + CARD_WIDTH / 2, self.pos_center[1] - CARD_HEIGHT / 2))
-        screen.blit(hp_text, hp_text_rect)
-
-        hp_font = pygame.font.Font("./D2Coding.ttf", 15)
-        hp_text = hp_font.render(str(self.specialSkill.energy), True, "#FFFFFF")
-        hp_text_rect = hp_text.get_rect(
-            center=(self.pos_center[0] + CARD_WIDTH / 2, self.pos_center[1] - CARD_HEIGHT / 2 + 31))
         screen.blit(hp_text, hp_text_rect)
 
     def register_hit(self, observer: "Buff, Cell"):
@@ -155,8 +136,11 @@ class PlayerCard(Cell):
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
 
     def move(self, pos):
-        for observer in self.observers_move[::-1]:
+        for observer in self.observers_move:
             observer.move_event(self, pos, self.game_board)
 
     def click(self):
+        pass
+
+    def ai(self):
         pass

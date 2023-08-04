@@ -18,7 +18,7 @@ class StarFall(Skill):
             "cost : 2",
             "적 1명을 지정하여 별을 떨어트리고 피해를 입힌다. "
         ]
-        self.skill_image_path = "./Astin/astin_card.png"
+        self.skill_image_path = "./PlayerCards/Astin/astin_card.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
@@ -30,7 +30,7 @@ class StarFall(Skill):
 
 class CurtainOfNightSky(Buff):
     def __init__(self, character:"PlayerCard", count, game_board):
-        super().__init__(character, count, game_board, "밤하늘의 장막", "./Lucifer/doomsday_prophecy.png")
+        super().__init__(character, count, game_board, "밤하늘의 장막", "./PlayerCards/Lucifer/doomsday_prophecy.png")
         game_board.register_turnover(self)
         character.register_hit(self)
 
@@ -61,7 +61,7 @@ class NightSky(Skill):
             "적이 피해를 2번 받을 때마다 별이 떨어져서 관통 추가 피해 1을 가한다. ",
             "추가 피해는 관통 공격에 적용되지 않으며, 밤하늘의 장막 상태는 중첩이 가능하다. "
         ]
-        self.skill_image_path="./Tania/skill_image/straight_cut.png"
+        self.skill_image_path="./PlayerCards/Tania/skill_image/straight_cut.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
@@ -77,7 +77,7 @@ class StarRain(SpecialSkill):
             "cost : 4, energy : 5",
             "맵 전체에 유성우를 내려 적에게 1의 피해를 3번 가한다. "
         ]
-        self.skill_image_path="./Petra/skill_image/base_collapse.png"
+        self.skill_image_path="./PlayerCards/Petra/skill_image/base_collapse.png"
 
     def execute_range(self, pos):
         if self.energy == self.max_energy:

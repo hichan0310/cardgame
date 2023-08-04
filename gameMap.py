@@ -3,7 +3,9 @@ from buff import Buff
 from settings import *
 import pygame
 from playerCard import PlayerCard
+from enemy import EnemyCard
 from graphic_manager import motion_draw
+
 
 
 class CostBar(pygame.sprite.Sprite):
@@ -26,6 +28,13 @@ class CostBar(pygame.sprite.Sprite):
         self.image = pygame.Surface((40, (SCREEN_HEIGHT - 100) * min(self.cost, 10) / 10))
         self.rect = self.image.get_rect(centerx=830, bottom=SCREEN_HEIGHT - 15)
         self.image.fill((100, 100, 100))
+
+    def set(self, value:int):
+        self.cost=value
+        self.image = pygame.Surface((40, (SCREEN_HEIGHT - 100) * min(self.cost, 10) / 10))
+        self.rect = self.image.get_rect(centerx=830, bottom=SCREEN_HEIGHT - 15)
+        self.image.fill((100, 100, 100))
+
 
 
 class SkillExplaination(pygame.sprite.Sprite):
@@ -106,6 +115,7 @@ class SkillSelectBar:
 
 class GameMap:
     def __init__(self, screen):
+        self.turn=0
         self.selected_skill_range = []
         self.screen = screen
         self.group = pygame.sprite.Group()
@@ -116,7 +126,7 @@ class GameMap:
         self.observers_turnover: list[Buff] = []
         self.observers_move: list[Buff] = []
         self.observers_turnstart: list[Buff] = []
-        self.cost = CostBar(self.group, 100)
+        self.cost = CostBar(self.group, 10)
         self.selected_card = None
         self.skill_select = SkillSelectBar([])
         self.selected_skill = None
@@ -134,6 +144,7 @@ class GameMap:
         self.observers_move.append(observer)
 
     def turnover(self):
+        self.cost.set(10)
         for observer in self.observers_turnover:
             observer.turnover_event(self)
 
@@ -165,9 +176,17 @@ class GameMap:
     def heal(self, pos, heal_amount):
         self.gameBoard[pos[0]][pos[1]].heal(heal_amount)
 
-    def add_character(self, character_num, pos, color):
+    def add_character(self, character_info, pos, color):
         self.gameBoard[pos[0]][pos[1]] = PlayerCard(
-            character_num,
+            character_info,
+            self.gameBoard[pos[0]][pos[1]].pos_center,
+            self, color,
+            self.group
+        )
+
+    def add_enemy(self, enemy_info, pos, color):
+        self.gameBoard[pos[0]][pos[1]] = EnemyCard(
+            enemy_info,
             self.gameBoard[pos[0]][pos[1]].pos_center,
             self, color,
             self.group
@@ -207,12 +226,14 @@ class GameMap:
                                 1] + CARD_HEIGHT / 2):
                         self.gameBoard[i][j].click()
                         self.selected_card = (i, j)
-                        try:
+                        if self.gameBoard[i][j].team==FLAG_PLAYER_TEAM:
                             self.skill_select = SkillSelectBar(
-                                self.gameBoard[i][j].skills + [self.gameBoard[i][j].specialSkill])
-                        except:
+                                self.gameBoard[i][j].skills + [self.gameBoard[i][j].specialSkill]
+                            )
+                        else:
                             self.skill_select = SkillSelectBar([])
-                            self.selected_card = None
+                            if self.gameBoard[i][j].team==FLAG_EMPTY:
+                                self.selected_card = None
         else:
             for i in range(1, 6):
                 for j in range(1, 6):
@@ -224,6 +245,7 @@ class GameMap:
                             self.move_card(self.selected_card, (i, j))
                             self.skill_select = SkillSelectBar([])
                             self.selected_card = None
+                            self.turn+=1
                             return
                         if self.selected_skill is not None and (i, j) in self.selected_skill_range:
                             if self.cost.cost < self.selected_skill.cost:
@@ -240,6 +262,7 @@ class GameMap:
                             self.selected_skill.execute(caster, targets, self.selected_card,
                                                         self.selected_skill.atk_range(self.selected_card, (i, j)),
                                                         (i, j))
+                            self.turn+=1
                             self.selected_card = None
                             self.selected_skill = None
                             self.selected_skill_range = []
@@ -247,6 +270,7 @@ class GameMap:
                             return
                         self.skill_select = SkillSelectBar([])
                         self.selected_card = None
+                        self.selected_skill = None
                         return
             for i in range(len(self.skill_select.skills)):
                 p = self.skill_select.skill_sprites[i].pos_center

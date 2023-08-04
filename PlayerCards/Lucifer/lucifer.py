@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class Curse(Buff):
     def __init__(self, character:"PlayerCard", game_board:"GameMap"):
-        super().__init__(character, -1, game_board, "저주", "./Lucifer/curse.png")
+        super().__init__(character, -1, game_board, "저주", "./PlayerCards/Lucifer/curse.png")
         character.register_curse(self)
 
     def curse_event(self, caster:"PlayerCard", target:"PlayerCard", game_board:"GameMap"):
@@ -29,7 +29,7 @@ class CurseArrow(Skill):
             "직선 방향에 있는 적에게 화살을 날려서 적에게 1의 피해를 준다. ",
             "적에게 저주 버프를 준다. 이 버프는 중첩될 수 있다. "
         ]
-        self.skill_image_path = "./Lucifer/skill_image/curse_arrow.png"
+        self.skill_image_path = "./PlayerCards/Lucifer/skill_image/curse_arrow.png"
 
     def execute_range(self, pos:tuple[int, int]):
         return list(filter(
@@ -56,7 +56,7 @@ class ExplodeCurse(Skill):
             "적들의 저주를 모두 폭주시킨다. ",
             "1개의 저주 버프는 적에게 2씩 피해를 준다. "
         ]
-        self.skill_image_path = "./Lucifer/skill_image/explode_curse.png"
+        self.skill_image_path = "./PlayerCards/Lucifer/skill_image/explode_curse.png"
 
     def execute_range(self, pos:tuple[int, int]):
         return [pos]
@@ -72,7 +72,7 @@ class ExplodeCurse(Skill):
 
 class DoomsdayProphecy(Buff):
     def __init__(self, character:"PlayerCard", count:int, game_board:"GameMap"):
-        super().__init__(character, count, game_board, "종말의 예언", "./Lucifer/doomsday_prophecy.png")
+        super().__init__(character, count, game_board, "종말의 예언", "./PlayerCards/Lucifer/doomsday_prophecy.png")
         game_board.register_turnover(self)
 
     def turnover_event(self, game_board:"GameMap"):
@@ -91,7 +91,7 @@ class CommingApocalypse(SpecialSkill):
             "적군 1명을 지정하여 종말의 예언을 내린다. ",
             "앞으로 3턴동안 턴이 시작하고 끝날 때 저주 버프를 부여한다. "
         ]
-        self.skill_image_path = "./Lucifer/skill_image/comming_apocalypse.png"
+        self.skill_image_path = "./PlayerCards/Lucifer/skill_image/comming_apocalypse.png"
 
     def execute_range(self, pos):
         if self.energy == self.max_energy:
