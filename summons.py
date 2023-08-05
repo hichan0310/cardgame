@@ -24,17 +24,23 @@ class Summons(Cell):
         self.__observers_die: list[Buff, Cell] = []
 
     def die(self):
+        if self.dead:
+            return
         for observer in self.__observers_die:
             observer.die_event(self, self.game_board)
         self.image.fill("#000000")
         self.dead = True
 
     def hit(self, damage, caster, atk_type):
+        if self.dead:
+            return
         self.count -= 1
         if self.count == 0:
             self.die()
 
     def penetrateHit(self, damage, caster):
+        if self.dead:
+            return
         self.hit(damage, caster, "penetrate")
 
     def draw_hp_energy(self, screen):

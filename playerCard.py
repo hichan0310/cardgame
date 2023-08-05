@@ -98,7 +98,7 @@ class PlayerCard(Cell):
         self.hp -= damage
         a = random.random() * 2 - 1
         b = random.random() * 2 - 1
-        for _ in range(20):
+        for _ in range(15):
             def temp_func(screen, pos, i):
                 damage_font = pygame.font.Font("./D2Coding.ttf", 40)
                 damage_text = damage_font.render(str(-damage), True, "#FFFFFF", "#000000")
@@ -117,7 +117,7 @@ class PlayerCard(Cell):
         self.hp -= damage
         a = random.random() * 2 - 1
         b = random.random() * 2 - 1
-        for _ in range(20):
+        for _ in range(15):
             def temp_func(screen, pos, i):
                 damage_font = pygame.font.Font("./D2Coding.ttf", 30)
                 damage_text = damage_font.render("관통 " + str(-damage), True, "#FFFFFF", "#000000")
@@ -150,7 +150,7 @@ class PlayerCard(Cell):
         self.hp = min(self.max_hp, self.hp + heal_amount)
         a = random.random() * 2 - 1
         b = random.random() * 2 - 1
-        for _ in range(10):
+        for _ in range(8):
             def temp_func(screen, pos, i):
                 damage_font = pygame.font.Font("./D2Coding.ttf", 30)
                 damage_text = damage_font.render('+' + str(self.hp - hp_before), True, "#FFFFFF", "#000000")
