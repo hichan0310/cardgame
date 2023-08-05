@@ -163,7 +163,6 @@ class GameMap:
             self.gameBoard[pos2[0]][pos2[1]].pos_gameboard,
             self.gameBoard[pos1[0]][pos1[1]].pos_gameboard
         )
-
         self.gameBoard[pos1[0]][pos1[1]].update_location()
         self.gameBoard[pos2[0]][pos2[1]].update_location()
         for observer in self.observers_move:

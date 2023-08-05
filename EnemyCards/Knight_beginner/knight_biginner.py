@@ -71,6 +71,11 @@ class Sortie(Skill):
                 self.game_board.gameBoard[target_pos[0]][target_pos[1]].pos_center,
                 self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].pos_center
             )
+            self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].pos_gameboard, \
+            self.game_board.gameBoard[target_pos[0]][target_pos[1]].pos_gameboard = (
+                self.game_board.gameBoard[target_pos[0]][target_pos[1]].pos_gameboard,
+                self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].pos_gameboard
+            )
             self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].update_location()
             self.game_board.gameBoard[target_pos[0]][target_pos[1]].update_location()
             caster_pos = target_pos
