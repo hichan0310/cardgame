@@ -4,7 +4,7 @@ from settings import *
 
 class Buff:
     def __init__(self, character, use_num, game_board, name, img_path):
-        self.image_path=img_path
+        self.image_path = img_path
         self.name = name
         self.game_board = game_board
         character.buff.append(self)
@@ -17,7 +17,7 @@ class Buff:
                          [centerpos[0] - BUFF_WIDTH / 2, centerpos[1] - BUFF_HEIGHT / 2, BUFF_WIDTH, BUFF_HEIGHT])
         image = pygame.image.load(self.image_path)
         image = pygame.transform.scale(image, (80, 80))
-        pos = (centerpos[0]-40, centerpos[1]-40-30)
+        pos = (centerpos[0] - 40, centerpos[1] - 40 - 30)
         screen.blit(image, pos)
 
         font = pygame.font.Font("./D2Coding.ttf", 14)

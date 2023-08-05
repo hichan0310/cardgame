@@ -7,7 +7,6 @@ from enemy import EnemyCard
 from graphic_manager import motion_draw
 
 
-
 class CostBar(pygame.sprite.Sprite):
     def __init__(self, group, cost: int):
         super().__init__(group)
@@ -29,12 +28,11 @@ class CostBar(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(centerx=830, bottom=SCREEN_HEIGHT - 15)
         self.image.fill((100, 100, 100))
 
-    def set(self, value:int):
-        self.cost=value
+    def set(self, value: int):
+        self.cost = value
         self.image = pygame.Surface((40, (SCREEN_HEIGHT - 100) * min(self.cost, 10) / 10))
         self.rect = self.image.get_rect(centerx=830, bottom=SCREEN_HEIGHT - 15)
         self.image.fill((100, 100, 100))
-
 
 
 class SkillExplaination(pygame.sprite.Sprite):
@@ -115,13 +113,14 @@ class SkillSelectBar:
 
 class GameMap:
     def __init__(self, screen):
-        self.turn=0
+        self.turn = 0
+        self.turn_count = 0
         self.selected_skill_range = []
         self.screen = screen
         self.group = pygame.sprite.Group()
         self.gameBoard: list[list[Cell]] = [[Cell(
             (30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i, 30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j),
-            not (i == 0 or i == 6 or j == 0 or j == 6), self, self.group)
+            not (i == 0 or i == 6 or j == 0 or j == 6), self, self.group, (j, i))
             for i in range(7)] for j in range(7)]
         self.observers_turnover: list[Buff] = []
         self.observers_move: list[Buff] = []
@@ -130,6 +129,7 @@ class GameMap:
         self.selected_card = None
         self.skill_select = SkillSelectBar([])
         self.selected_skill = None
+        self.enemys = []
 
     def addItem(self, item, pos):
         self.gameBoard[pos[0]][pos[1]].item = item
@@ -144,18 +144,13 @@ class GameMap:
         self.observers_move.append(observer)
 
     def turnover(self):
-        self.cost.set(10)
+        print("asdfasdf")
         for observer in self.observers_turnover:
             observer.turnover_event(self)
+        self.cost.set(10)
+        self.turn_count += 1
 
     def move_card(self, pos1, pos2):
-        if self.gameBoard[pos1[0]][pos1[1]].quick_move:
-            self.gameBoard[pos1[0]][pos1[1]].quick_move = False
-        elif self.cost.cost >= 1:
-            self.cost.minus(1)
-        else:
-            print("cost 부족")
-            return
         self.gameBoard[pos1[0]][pos1[1]], self.gameBoard[pos2[0]][pos2[1]] = (
             self.gameBoard[pos2[0]][pos2[1]],
             self.gameBoard[pos1[0]][pos1[1]]
@@ -164,6 +159,11 @@ class GameMap:
             self.gameBoard[pos2[0]][pos2[1]].pos_center,
             self.gameBoard[pos1[0]][pos1[1]].pos_center
         )
+        self.gameBoard[pos1[0]][pos1[1]].pos_gameboard, self.gameBoard[pos2[0]][pos2[1]].pos_gameboard = (
+            self.gameBoard[pos2[0]][pos2[1]].pos_gameboard,
+            self.gameBoard[pos1[0]][pos1[1]].pos_gameboard
+        )
+
         self.gameBoard[pos1[0]][pos1[1]].update_location()
         self.gameBoard[pos2[0]][pos2[1]].update_location()
         for observer in self.observers_move:
@@ -173,6 +173,10 @@ class GameMap:
         except:
             return
 
+    def AI_execute(self):
+        for e in self.enemys:
+            e.ai.execute(e.pos_gameboard)
+
     def heal(self, pos, heal_amount):
         self.gameBoard[pos[0]][pos[1]].heal(heal_amount)
 
@@ -181,16 +185,18 @@ class GameMap:
             character_info,
             self.gameBoard[pos[0]][pos[1]].pos_center,
             self, color,
-            self.group
+            self.group, pos
         )
 
     def add_enemy(self, enemy_info, pos, color):
-        self.gameBoard[pos[0]][pos[1]] = EnemyCard(
+        temp = EnemyCard(
             enemy_info,
             self.gameBoard[pos[0]][pos[1]].pos_center,
             self, color,
-            self.group
+            self.group, pos
         )
+        self.gameBoard[pos[0]][pos[1]] = temp
+        self.enemys.append(temp)
 
     def add_summons(self, pos, summons):
         self.gameBoard[pos[0]][pos[1]] = summons
@@ -215,6 +221,18 @@ class GameMap:
                     (SCREEN_WIDTH / 2 + (BUFF_WIDTH + 20) * i, SCREEN_HEIGHT / 2 - 30),
                     self.screen)
 
+    def execute_skill(self, caster_pos, skill_num, execute_pos):
+        caster = self.gameBoard[caster_pos[0]][caster_pos[1]]
+        try:
+            selected_skill = caster.skills[skill_num]
+        except:
+            return False
+        targets = list(map(lambda a: self.gameBoard[a[0]][a[1]],
+                           selected_skill.atk_range(caster_pos, execute_pos)))
+        self.selected_skill.execute(caster, targets, caster_pos,
+                                    selected_skill.atk_range(caster_pos, execute_pos),
+                                    execute_pos)
+
     def click(self, pos):
         if motion_draw.motion_playing():
             return
@@ -226,13 +244,13 @@ class GameMap:
                                 1] + CARD_HEIGHT / 2):
                         self.gameBoard[i][j].click()
                         self.selected_card = (i, j)
-                        if self.gameBoard[i][j].team==FLAG_PLAYER_TEAM:
+                        if self.gameBoard[i][j].team == FLAG_PLAYER_TEAM:
                             self.skill_select = SkillSelectBar(
                                 self.gameBoard[i][j].skills + [self.gameBoard[i][j].specialSkill]
                             )
                         else:
                             self.skill_select = SkillSelectBar([])
-                            if self.gameBoard[i][j].team==FLAG_EMPTY:
+                            if self.gameBoard[i][j].team == FLAG_EMPTY:
                                 self.selected_card = None
         else:
             for i in range(1, 6):
@@ -245,7 +263,7 @@ class GameMap:
                             self.move_card(self.selected_card, (i, j))
                             self.skill_select = SkillSelectBar([])
                             self.selected_card = None
-                            self.turn+=1
+                            self.turn += 1
                             return
                         if self.selected_skill is not None and (i, j) in self.selected_skill_range:
                             if self.cost.cost < self.selected_skill.cost:
@@ -262,7 +280,7 @@ class GameMap:
                             self.selected_skill.execute(caster, targets, self.selected_card,
                                                         self.selected_skill.atk_range(self.selected_card, (i, j)),
                                                         (i, j))
-                            self.turn+=1
+                            self.turn += 1
                             self.selected_card = None
                             self.selected_skill = None
                             self.selected_skill_range = []

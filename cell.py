@@ -3,9 +3,10 @@ from settings import *
 
 
 class Cell(pygame.sprite.Sprite):
-    def __init__(self, pos_center, visible, game_board, group):
+    def __init__(self, pos_center, visible, game_board, group, pos_gameboard):
         super().__init__(group)
-        self.team=FLAG_EMPTY
+        self.pos_gameboard = pos_gameboard
+        self.team = FLAG_EMPTY
         self.name = "empty cell"
         self.buff = []
         self.pos_center = pos_center

@@ -6,7 +6,7 @@ import pygame
 class GraphicManager:
     def __init__(self):
         self.__graphics: list[list[Callable[[pygame.Surface, *Any], None]]] = []
-        self.__graphic_params:list[list[tuple[Any]]]=[]
+        self.__graphic_params: list[list[tuple[Any]]] = []
 
     def add_motion(self, drawer, after_frame, params):
         while len(self.__graphics) <= after_frame:
@@ -23,7 +23,7 @@ class GraphicManager:
             motion(screen, *params)
 
     def motion_playing(self):
-        return len(self.__graphics)!=0
+        return len(self.__graphics) != 0
 
 
 motion_draw = GraphicManager()

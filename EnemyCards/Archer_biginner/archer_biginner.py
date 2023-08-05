@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class Arrow(Skill):
-    def __init__(self, game_board:"GameMap"):
+    def __init__(self, game_board: "GameMap"):
         super().__init__(3, game_board)
         self.name = "정조준"
         self.explaination = [
@@ -18,9 +18,19 @@ class Arrow(Skill):
         ]
         self.skill_image_path = "./PlayerCards/Lucifer/skill_image/curse_arrow.png"
 
-    def execute(self, caster:"EnemyCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]], execute_pos):
+    def execute(self, caster: "EnemyCard", targets: "list[PlayerCard]", caster_pos: tuple[int, int],
+                targets_pos: list[tuple[int, int]], execute_pos):
         for target in targets:
-            if target.name!="empty cell":
+            if target.name != "empty cell":
                 caster.attack(2, target, "normal attack")
         for observer in caster.observers_attack[::-1]:
             observer.attack_event(self, targets, self.game_board, "normal attack")
+
+
+class AI_ArcherBiginner:
+    def __init__(self, game_board, character: "EnemyCard"):
+        self.game_board = game_board
+        self.character = character
+
+    def execute(self, pos):
+        print(self.character.name)

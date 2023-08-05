@@ -64,6 +64,11 @@ class StraightCut(Skill):
                 self.game_board.gameBoard[target_pos[0]][target_pos[1]].pos_center,
                 self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].pos_center
             )
+            self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].pos_gameboard, \
+            self.game_board.gameBoard[target_pos[0]][target_pos[1]].pos_gameboard = (
+                self.game_board.gameBoard[target_pos[0]][target_pos[1]].pos_gameboard,
+                self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].pos_gameboard
+            )
             self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].update_location()
             self.game_board.gameBoard[target_pos[0]][target_pos[1]].update_location()
             caster.attack(1, self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], "normal attack")
@@ -264,14 +269,13 @@ class FlameSward(SpecialSkill):
             motion_draw.add_motion(
                 lambda screen, img, pos: screen.blit(img, pos), i,
                 (img1, (caster_pos_real[0] - ((39 - i) * 40) / 2,
-                        caster_pos_real[1] - ((39 - i) * 40) / 3*2))
+                        caster_pos_real[1] - ((39 - i) * 40) / 3 * 2))
             )
             motion_draw.add_motion(
                 lambda screen, img, pos: screen.blit(img, pos), i,
                 (img2, (caster_pos_real[0] - ((39 - i) * 40) / 2,
                         caster_pos_real[1]))
             )
-
 
         def temp_func(screen, damage):
             for i in range(30):
@@ -296,5 +300,5 @@ class FlameSward(SpecialSkill):
             for observer in caster.observers_attack:
                 observer.attack_event(self, targets, self.game_board, "penetrate hit")
 
-        motion_draw.add_motion(temp_func, 80, (4, ))
-        motion_draw.add_motion(temp_func, 60, (3, ))
+        motion_draw.add_motion(temp_func, 80, (4,))
+        motion_draw.add_motion(temp_func, 60, (3,))

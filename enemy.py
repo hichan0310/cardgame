@@ -7,21 +7,22 @@ from graphic_manager import motion_draw
 
 
 class EnemyCard(Cell):
-    def __init__(self, character_params, pos: tuple[int, int], game_board, color, group):
-        super().__init__(pos, True, game_board, group)
-        self.team=FLAG_ENEMY_TEAM
+    def __init__(self, character_params, pos: tuple[int, int], game_board, color, group, pos_game_board):
+        super().__init__(pos, True, game_board, group, pos_game_board)
+        self.team = FLAG_ENEMY_TEAM
         self.color = color
         self.skills: list[Skill]
         self.hp: int
         self.max_energy: int
         self.buff: list[Buff] = []
         self.passive: list[Buff] = []
-        self.name, self.skills, self.max_hp, self.passive, self.img_path = character_params
+        self.name, self.skills, self.max_hp, self.passive, self.ai, self.img_path = character_params
         t = []
         for passive_buff in self.passive:
             t.append(passive_buff(self, game_board))
         self.passive = t
-        self.skills = [*map(lambda a:a(game_board), self.skills)]
+        self.skills = [*map(lambda a: a(game_board), self.skills)]
+        self.ai = self.ai(game_board, self)
         if self.img_path is not None:
             self.image = pygame.image.load(self.img_path)
             self.image = pygame.transform.scale(self.image, CARD_SIZE)
@@ -68,10 +69,12 @@ class EnemyCard(Cell):
         observer.observing(self.observers_curse)
 
     def curse_explode(self, caster):
+        if self.dead: return
         for i in range(len(self.observers_curse)):
             self.observers_curse[0].curse_event(caster, self, self.game_board)
 
     def hit(self, damage, caster, atk_type):
+        if self.dead: return
         for b in self.buff[::-1]:
             damage = b.hit_buff(caster, self, damage, atk_type)
         self.hp -= damage
@@ -82,7 +85,7 @@ class EnemyCard(Cell):
                 damage_font = pygame.font.Font("./D2Coding.ttf", 40)
                 damage_text = damage_font.render(str(-damage), True, "#FFFFFF", "#000000")
                 damage_text_rect = damage_text.get_rect(
-                    center=(pos[0], pos[1] - 60 + 50 / i*2))
+                    center=(pos[0], pos[1] - 60 + 50 / i * 2))
                 screen.blit(damage_text, damage_text_rect)
 
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 10, self.pos_center[1] + b * 10), _ + 1))
@@ -92,6 +95,7 @@ class EnemyCard(Cell):
             observer.hit_event(caster, self, self.game_board, atk_type)
 
     def penetrateHit(self, damage, caster, atk_type="penetrate hit"):
+        if self.dead: return
         self.hp -= damage
         a = random.random() * 2 - 1
         b = random.random() * 2 - 1
@@ -100,7 +104,7 @@ class EnemyCard(Cell):
                 damage_font = pygame.font.Font("./D2Coding.ttf", 30)
                 damage_text = damage_font.render("관통 " + str(-damage), True, "#FFFFFF", "#000000")
                 damage_text_rect = damage_text.get_rect(
-                    center=(pos[0], pos[1] - 60 + 50 / i*2))
+                    center=(pos[0], pos[1] - 60 + 50 / i * 2))
                 screen.blit(damage_text, damage_text_rect)
 
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
@@ -110,17 +114,20 @@ class EnemyCard(Cell):
             observer.hit_event(caster, self, self.game_board, atk_type)
 
     def attack(self, damage, target, atk_type):
+        if self.dead: return
         for b in self.buff[::-1]:
             damage = b.atk_buff(self, target, damage, atk_type)
         target.hit(damage, self, 'normal attack')
 
     def die(self):
+        if self.dead: return
         for observer in self.observers_die[::-1]:
             observer.die_event(self, self.game_board)
         self.image.fill("#000000")
         self.dead = True
 
     def heal(self, heal_amount):
+        if self.dead: return
         hp_before = self.hp
         self.hp = min(self.max_hp, self.hp + heal_amount)
         a = random.random() * 2 - 1
@@ -136,11 +143,9 @@ class EnemyCard(Cell):
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
 
     def move(self, pos):
+        if self.dead: return
         for observer in self.observers_move:
             observer.move_event(self, pos, self.game_board)
 
     def click(self):
-        pass
-
-    def ai(self):
         pass

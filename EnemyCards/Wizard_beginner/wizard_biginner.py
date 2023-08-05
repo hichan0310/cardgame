@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 class EnergyBall(Skill):
-    def __init__(self, game_board:"GameMap"):
+    def __init__(self, game_board: "GameMap"):
         super().__init__(3, game_board)
         self.name = "에너지볼"
         self.explaination = [
@@ -26,9 +26,19 @@ class EnergyBall(Skill):
              (pos[0] + 1, pos[1] - 1), (pos[0] + 1, pos[1]), (pos[0] + 1, pos[1] + 1), ]
         ))
 
-    def execute(self, caster:"EnemyCard", targets:"list[PlayerCard]", caster_pos:tuple[int, int], targets_pos:list[tuple[int, int]], execute_pos):
+    def execute(self, caster: "EnemyCard", targets: "list[PlayerCard]", caster_pos: tuple[int, int],
+                targets_pos: list[tuple[int, int]], execute_pos):
         for target in targets:
-            if target.name!="empty cell":
+            if target.name != "empty cell":
                 caster.attack(2, target, "normal attack")
         for observer in caster.observers_attack[::-1]:
             observer.attack_event(self, targets, self.game_board, "normal attack")
+
+
+class AI_WizardBiginner:
+    def __init__(self, game_board, character: "EnemyCard"):
+        self.game_board = game_board
+        self.character = character
+
+    def execute(self, pos):
+        print(self.character.name)

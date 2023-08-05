@@ -27,8 +27,8 @@ class BaseInstability(Buff):
 
 class StoneTurret(Summons):
     def __init__(self, pos, game_board, group, petra: "PlayerCard", base_instability):
-        pos = transform_pos(pos)
-        super().__init__(3, pos, game_board, group, petra, "./PlayerCards/Petra/turret_img.png")
+        pos_real = transform_pos(pos)
+        super().__init__(3, pos_real, game_board, group, petra, "./PlayerCards/Petra/turret_img.png", pos)
         self.name = "petra turret"
         self.base_instability = base_instability
         petra.register_attack(self)
@@ -37,10 +37,11 @@ class StoneTurret(Summons):
         self.base_instability.turret_die_event()
         super().die()
 
-    def attack_event(self, caster, target, game_board, atk_type):
-        if atk_type=="normal attack":
+    def attack_event(self, caster, targets, game_board, atk_type):
+        if atk_type == "normal attack":
             if not self.dead:
-                target.hit(1, caster, "turret")
+                for target in targets:
+                    target.hit(1, caster, "turret")
 
 
 class CrackOfEarth(Skill):
@@ -79,7 +80,7 @@ class SummonTurret(Skill):
             [(i + 1, 3) for i in range(5)] + \
             [(i + 1, 4) for i in range(5)] + \
             [(i + 1, 5) for i in range(5)]
-        return list(filter(lambda p:self.game_board.gameBoard[p[0]][p[1]].name=="empty cell", t))
+        return list(filter(lambda p: self.game_board.gameBoard[p[0]][p[1]].name == "empty cell", t))
 
     def execute(self, caster: "PlayerCard", targets: "list[PlayerCard]", caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
@@ -111,7 +112,7 @@ class BaseCollapse(SpecialSkill):
             [(i + 1, 3) for i in range(5)] + \
             [(i + 1, 4) for i in range(5)] + \
             [(i + 1, 5) for i in range(5)]
-        return list(filter(lambda p:p!=caster_pos, t))
+        return list(filter(lambda p: p != caster_pos, t))
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:

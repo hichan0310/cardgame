@@ -72,13 +72,14 @@ class BloodRage(Buff):
         return damage
 
     def attack_event(self, caster, target, game_board, atk_type):
-        if atk_type=="normal attack":
+        if atk_type == "normal attack":
             self.used(1)
+
 
 class VengeanceEye(Skill):
     def __init__(self, game_board):
         super().__init__(2, game_board)
-        self.name="복수의 눈빛"
+        self.name = "복수의 눈빛"
         self.explaination = [
             "cost : 2",
             "자신에게 1의 관통 피해를 가하고 자신에게 피의 분노 상태를 부여한다. ",
@@ -87,14 +88,14 @@ class VengeanceEye(Skill):
             "자신의 체력이 2 이하일 경우 체력이 감소하지 않는다. "
             "이 스킬로 필살기 에너지를 채울 수 없다. "
         ]
-        self.skill_image_path="./PlayerCards/Gidon/skill_image/vengeance_eye.png"
+        self.skill_image_path = "./PlayerCards/Gidon/skill_image/vengeance_eye.png"
 
     def execute_range(self, pos):
         return [pos]
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:
-            if target.hp>2:
+            if target.hp > 2:
                 target.penetrateHit(1, caster)
             BloodRage(target, 2, target.game_board)
         for observer in caster.observers_attack:
@@ -104,12 +105,12 @@ class VengeanceEye(Skill):
 class UnfinishedRage(SpecialSkill):
     def __init__(self, game_board):
         super().__init__(4, 4, game_board)
-        self.name="끝나지 않은 분노"
-        self.explaination=[
+        self.name = "끝나지 않은 분노"
+        self.explaination = [
             "cost : 4, energy : 4",
             "바로 앞의 적을 지정하여 15의 피해를 준다. "
         ]
-        self.skill_image_path="./PlayerCards/Gidon/skill_image/unfinished_rage.png"
+        self.skill_image_path = "./PlayerCards/Gidon/skill_image/unfinished_rage.png"
 
     def execute_range(self, pos):
         if self.energy == self.max_energy:
@@ -121,10 +122,8 @@ class UnfinishedRage(SpecialSkill):
             return []
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
-        self.energy=0
+        self.energy = 0
         for target in targets:
             caster.attack(15, target, "special skill")
         for observer in caster.observers_attack:
             observer.attack_event(self, targets, self.game_board, "special skill")
-
-

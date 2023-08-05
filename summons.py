@@ -11,14 +11,16 @@ if TYPE_CHECKING:
 
 
 class Summons(Cell):
-    def __init__(self, count: int, pos: tuple[int, int], game_board, group, summoner:"PlayerCard", img_path):
-        super().__init__(pos, True, game_board, group)
-        self.image=pygame.image.load(img_path)
+    def __init__(self, count: int, pos: tuple[int, int], game_board, group, summoner: "PlayerCard", img_path,
+                 pos_gameboard):
+        super().__init__(pos, True, game_board, group, pos_gameboard)
+        self.team = FLAG_SUMMONS
+        self.image = pygame.image.load(img_path)
         self.image = pygame.transform.scale(self.image, CARD_SIZE)
         self.name = "summons"
         self.count = count
         self.summoner = summoner
-        self.dead=False
+        self.dead = False
         self.__observers_die: list[Buff, Cell] = []
 
     def die(self):
@@ -28,8 +30,8 @@ class Summons(Cell):
         self.dead = True
 
     def hit(self, damage, caster, atk_type):
-        self.count-=1
-        if self.count==0:
+        self.count -= 1
+        if self.count == 0:
             self.die()
 
     def penetrateHit(self, damage, caster):
@@ -47,6 +49,3 @@ class Summons(Cell):
         hp_text_rect = hp_text.get_rect(
             center=(self.pos_center[0] + CARD_WIDTH / 2, self.pos_center[1] - CARD_HEIGHT / 2))
         screen.blit(hp_text, hp_text_rect)
-
-
-
