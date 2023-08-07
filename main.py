@@ -8,9 +8,9 @@ from PlayerCards.Lucifer.lucifer import *
 from PlayerCards.Petra.petra import *
 from PlayerCards.Gidon.gidon import *
 from PlayerCards.Astin.astin import *
-from EnemyCards.Knight_beginner.knight_biginner import *
-from EnemyCards.Archer_biginner.archer_biginner import *
-from EnemyCards.Wizard_beginner.wizard_biginner import *
+from EnemyCards.Knight_beginner.knight_beginner import *
+from EnemyCards.Archer_beginner.archer_beginner import *
+from EnemyCards.Wizard_beginner.wizard_beginner import *
 from EnemyCards.Shielder.shielder import *
 from graphic_manager import motion_draw
 
@@ -35,9 +35,9 @@ characters_info: list[str, tuple[list[Skill], SpecialSkill, int, int, list[Buff]
 
 enemies_info = [
     ["기사 견습생", [Sortie, PrepareDefence], 10, [], AI_KnightBiginner,
-     "./EnemyCards/Knight_beginner/knight_biginner_card.png"],
-    ["궁수 견습생", [Arrow], 7, [], AI_ArcherBiginner, "./EnemyCards/Archer_biginner/archer_biginner_card.png"],
-    ["마법사 견습생", [EnergyBall], 6, [], AI_WizardBiginner, "./EnemyCards/Wizard_beginner/wizard_biginner_card.png"]
+     "./EnemyCards/Knight_beginner/knight_beginner_card.png"],
+    ["궁수 견습생", [Arrow], 7, [], AI_ArcherBiginner, "./EnemyCards/Archer_beginner/archer_beginner_card.png"],
+    ["마법사 견습생", [EnergyBall], 6, [], AI_WizardBiginner, "./EnemyCards/Wizard_beginner/wizard_beginner_card.png"]
 ]
 
 
@@ -64,6 +64,7 @@ def main(p_info, e_info):
         game_board.add_character(characters_info[num], pos, color)
     for num, pos, color in e_info:
         game_board.add_enemy(enemies_info[num], pos, color)
+    ai_enemy_index=0
     while True:
         bg = pygame.image.load("./background.png")
         bg = pygame.transform.scale(bg, (1920, 1080))
@@ -77,9 +78,28 @@ def main(p_info, e_info):
                 if game_board.turn != 4:
                     game_board.click(event.pos)
         if game_board.turn == 4:
-            game_board.AI_execute()
-            game_board.turnover()
-            game_board.turn = 0
+            if len(game_board.enemys)>ai_enemy_index:
+                if not motion_draw.motion_playing():
+                    game_board.AI_execute(ai_enemy_index)
+                    ai_enemy_index+=1
+                game_board.draw()
+                draw_text(str(game_board.cost.cost), size=40, center=(830, 40), color=(0, 0, 0))
+                motion_draw.draw(screen)
+                pygame.display.update()
+                clock.tick(FPS)
+                continue
+            else:
+                if motion_draw.motion_playing():
+                    game_board.draw()
+                    draw_text(str(game_board.cost.cost), size=40, center=(830, 40), color=(0, 0, 0))
+                    motion_draw.draw(screen)
+                    pygame.display.update()
+                    clock.tick(FPS)
+                    continue
+                else:
+                    game_board.turnover()
+                    game_board.turn = 0
+                    ai_enemy_index=0
         game_board.draw()
         draw_text(str(game_board.cost.cost), size=40, center=(830, 40), color=(0, 0, 0))
         motion_draw.draw(screen)
@@ -88,7 +108,7 @@ def main(p_info, e_info):
 
 
 func = main
-params = ([(2, (1, 1), "#FF0000"),
+params = ([(1, (1, 1), "#FF0000"),
            (3, (1, 2), "#FF0000"),
            (4, (1, 3), "#FF0000"),
            (5, (1, 4), "#FF0000")],

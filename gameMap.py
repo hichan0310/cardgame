@@ -5,6 +5,7 @@ import pygame
 from playerCard import PlayerCard
 from enemy import EnemyCard
 from graphic_manager import motion_draw
+import random
 
 
 class CostBar(pygame.sprite.Sprite):
@@ -129,7 +130,7 @@ class GameMap:
         self.selected_card = None
         self.skill_select = SkillSelectBar([])
         self.selected_skill = None
-        self.enemys = []
+        self.enemys, self.players = [], []
 
     def addItem(self, item, pos):
         self.gameBoard[pos[0]][pos[1]].item = item
@@ -144,11 +145,12 @@ class GameMap:
         self.observers_move.append(observer)
 
     def turnover(self):
-        print("asdfasdf")
+        print("turnover")
         for observer in self.observers_turnover:
             observer.turnover_event(self)
         self.cost.set(10)
         self.turn_count += 1
+        random.shuffle(self.enemys)
 
     def move_card(self, pos1, pos2):
         self.gameBoard[pos1[0]][pos1[1]], self.gameBoard[pos2[0]][pos2[1]] = (
@@ -172,20 +174,21 @@ class GameMap:
         except:
             return
 
-    def AI_execute(self):
-        for e in self.enemys:
-            e.ai.execute(e.pos_gameboard)
+    def AI_execute(self, i):
+        self.enemys[i].ai.execute(self.enemys[i].pos_gameboard)
 
     def heal(self, pos, heal_amount):
         self.gameBoard[pos[0]][pos[1]].heal(heal_amount)
 
     def add_character(self, character_info, pos, color):
-        self.gameBoard[pos[0]][pos[1]] = PlayerCard(
+        temp = PlayerCard(
             character_info,
             self.gameBoard[pos[0]][pos[1]].pos_center,
             self, color,
             self.group, pos
         )
+        self.gameBoard[pos[0]][pos[1]]=temp
+        self.players.append(temp)
 
     def add_enemy(self, enemy_info, pos, color):
         temp = EnemyCard(

@@ -115,12 +115,13 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = i * 5 / sqrt(dx ** 2 + dy ** 2)
-                    img_pos = (p1[0] + t * dx - 60, p1[1] + t * dy - 60)
                     image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 15
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
+                    size=image.get_size()
+                    img_pos = (p1[0] + t * dx - size[0]/2, p1[1] + t * dy - size[1]/2)
                     screen.blit(image, img_pos)
 
                 motion_draw.add_motion(temp_move, i, (pos1, p1, i))
@@ -131,12 +132,13 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = 100 / sqrt(dx ** 2 + dy ** 2)
-                    img_pos = (p1[0] + t * dx - 60, p1[1] + t * dy - 60)
                     image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 15
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
+                    size=image.get_size()
+                    img_pos = (p1[0] + t * dx - size[0]/2, p1[1] + t * dy - size[1]/2)
                     screen.blit(image, img_pos)
 
                 motion_draw.add_motion(temp_move, i + 20, (pos1, p1, i + 20))
@@ -149,12 +151,13 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
-                    img_pos = (p1[0] + t * dx - 60, p1[1] + t * dy - 60)
                     image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
+                    size=image.get_size()
+                    img_pos = (p1[0] + t * dx - size[0]/2, p1[1] + t * dy - size[1]/2)
                     screen.blit(image, img_pos)
 
                 motion_draw.add_motion(temp_move, i1 + 60, (p1, pos2, i1))
@@ -165,12 +168,13 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
-                    img_pos = (p1[0] + t * dx - 60, p1[1] + t * dy - 60)
                     image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
                     image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
+                    size=image.get_size()
+                    img_pos = (p1[0] + t * dx - size[0]/2, p1[1] + t * dy - size[1]/2)
                     screen.blit(image, img_pos)
 
                 motion_draw.add_motion(temp_move, i2 + 60, (p2, pos2, i2))
@@ -181,12 +185,13 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
-                    img_pos = (p1[0] + t * dx - 50, p1[1] + t * dy - 50)
                     image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
-                    image = pygame.transform.scale(image, (100, 100))
+                    image = pygame.transform.scale(image, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
+                    size=image.get_size()
+                    img_pos = (p1[0] + t * dx - size[0]/2, p1[1] + t * dy - size[1]/2)
                     screen.blit(image, img_pos)
 
                 motion_draw.add_motion(temp_move, i3 + 60, (p3, pos2, i3))

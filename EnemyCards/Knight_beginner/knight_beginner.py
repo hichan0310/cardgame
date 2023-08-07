@@ -54,7 +54,6 @@ class Sortie(Skill):
         return result
 
     def execute(self, caster: "PlayerCard", targets: "list[PlayerCard]", caster_pos, targets_pos, execute_pos):
-        print(targets_pos, targets)
         for target_pos in targets_pos:
             if self.game_board.gameBoard[target_pos[0]][target_pos[1]].team==FLAG_PLAYER_TEAM:
                 caster.attack(1, self.game_board.gameBoard[target_pos[0]][target_pos[1]], "normal attack")
@@ -123,15 +122,21 @@ class AI_KnightBiginner:
         self.character = character
 
     def execute(self, pos):
-        print(self.character.name)
         temp = pos[0] + 1
         while temp < 6:
             if self.game_board.gameBoard[temp][pos[1]].team == FLAG_PLAYER_TEAM:
                 targets = list(map(lambda a: self.game_board.gameBoard[a[0]][a[1]],
                                    self.character.skills[0].atk_range(pos, (5, pos[1]))))
-                self.character.skills[0].execute(self.character, targets, pos,
-                                                 self.character.skills[0].atk_range(pos, (5, pos[1])),
-                                                 (5, pos[1]))
+                def temp(*_):
+                    self.character.skills[0].execute(self.character, targets, pos,
+                                                     self.character.skills[0].atk_range(pos, (5, pos[1])),
+                                                     (5, pos[1]))
+                motion_draw.add_motion(temp, 20, ())
+                img = pygame.image.load("./EnemyCards/Knight_beginner/preview/sortie.png")
+                for i in range(15):
+                    motion_draw.add_motion(lambda screen, a: screen.blit(img, (1-1.4**a, 0)), 14-i, (i, ))
+                for i in range(5):
+                    motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15+i, ())
                 return
             if self.game_board.gameBoard[temp][pos[1]].team != FLAG_EMPTY:
                 break
@@ -141,9 +146,17 @@ class AI_KnightBiginner:
             if self.game_board.gameBoard[pos[0]][temp].team == FLAG_PLAYER_TEAM:
                 targets = list(map(lambda a: self.game_board.gameBoard[a[0]][a[1]],
                                    self.character.skills[0].atk_range(pos, (pos[0], 5))))
-                self.character.skills[0].execute(self.character, targets, pos,
-                                                 self.character.skills[0].atk_range(pos, (pos[0], 5)),
-                                                 (pos[0], 5))
+                def temp(*_):
+                    self.character.skills[0].execute(self.character, targets, pos,
+                                                     self.character.skills[0].atk_range(pos, (pos[0], 5)),
+                                                     (5, pos[1]))
+                motion_draw.add_motion(temp, 20, ())
+                img = pygame.image.load("./EnemyCards/Knight_beginner/preview/sortie.png")
+                for i in range(15):
+                    motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)),
+                                           14 - i, (i, ))
+                for i in range(5):
+                    motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, ())
                 return
             if self.game_board.gameBoard[pos[0]][temp].team != FLAG_EMPTY:
                 break
@@ -153,9 +166,17 @@ class AI_KnightBiginner:
             if self.game_board.gameBoard[temp][pos[1]].team == FLAG_PLAYER_TEAM:
                 targets = list(map(lambda a: self.game_board.gameBoard[a[0]][a[1]],
                                    self.character.skills[0].atk_range(pos, (1, pos[1]))))
-                self.character.skills[0].execute(self.character, targets, pos,
-                                                 self.character.skills[0].atk_range(pos, (1, pos[1])),
-                                                 (1, pos[1]))
+                def temp(*_):
+                    self.character.skills[0].execute(self.character, targets, pos,
+                                                     self.character.skills[0].atk_range(pos, (1, pos[1])),
+                                                     (5, pos[1]))
+                motion_draw.add_motion(temp, 20, ())
+                img = pygame.image.load("./EnemyCards/Knight_beginner/preview/sortie.png")
+                for i in range(15):
+                    motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)),
+                                           14 - i, (i, ))
+                for i in range(5):
+                    motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, ())
                 return
             if self.game_board.gameBoard[temp][pos[1]].team != FLAG_EMPTY:
                 break
@@ -165,14 +186,29 @@ class AI_KnightBiginner:
             if self.game_board.gameBoard[pos[0]][temp].team == FLAG_PLAYER_TEAM:
                 targets = list(map(lambda a: self.game_board.gameBoard[a[0]][a[1]],
                                    self.character.skills[0].atk_range(pos, (pos[0], 1))))
-                self.character.skills[0].execute(self.character, targets, pos,
-                                                 self.character.skills[0].atk_range(pos, (pos[0], 1)),
-                                                 (pos[0], 1))
+                def temp(*_):
+                    self.character.skills[0].execute(self.character, targets, pos,
+                                                     self.character.skills[0].atk_range(pos, (pos[0], 1)),
+                                                     (5, pos[1]))
+                motion_draw.add_motion(temp, 20, ())
+                img = pygame.image.load("./EnemyCards/Knight_beginner/preview/sortie.png")
+                for i in range(15):
+                    motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)),
+                                           14 - i, (i))
+                for i in range(5):
+                    motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, ())
                 return
             if self.game_board.gameBoard[pos[0]][temp].team != FLAG_EMPTY:
                 break
             temp -= 1
-
-        self.character.skills[1].execute(self.character, "not used", pos,
-                                         "not used",
-                                         "not used")
+        def temp(*_):
+            self.character.skills[1].execute(self.character, "not used", pos,
+                                             "not used",
+                                             "not used")
+        motion_draw.add_motion(temp, 20, ())
+        img = pygame.image.load("./EnemyCards/Knight_beginner/preview/prepare_defence.png")
+        for i in range(15):
+            motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)),
+                                       14 - i, (i, ))
+        for i in range(5):
+            motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, ())

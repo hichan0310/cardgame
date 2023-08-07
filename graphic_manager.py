@@ -25,5 +25,8 @@ class GraphicManager:
     def motion_playing(self):
         return len(self.__graphics) != 0
 
+    def motion_length(self):
+        return len(self.__graphics)
+
 
 motion_draw = GraphicManager()

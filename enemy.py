@@ -124,6 +124,12 @@ class EnemyCard(Cell):
         for observer in self.observers_die[::-1]:
             observer.die_event(self, self.game_board)
         self.image.fill("#000000")
+        self.game_board.enemys.remove(self)
+        self.game_board.gameBoard[self.pos_gameboard[0]][self.pos_gameboard[1]]=Cell(self.pos_center,
+                                                                           True,
+                                                                           self.game_board,
+                                                                           self.game_board.group,
+                                                                           self.pos_gameboard)
         self.dead = True
 
     def heal(self, heal_amount):
