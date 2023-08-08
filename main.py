@@ -64,6 +64,34 @@ def end(*_):
     pygame.quit()
     sys.exit()
 
+def main(*_):
+    img1=pygame.image.load("main_fight.png")
+    img2=pygame.image.load("main_forming.png")
+    img1=pygame.transform.scale(img1, (500, 500))
+    img2=pygame.transform.scale(img2, (500, 500))
+    screen.blit(img1, (SCREEN_WIDTH/2-300-250, SCREEN_HEIGHT/2+200-250))
+    screen.blit(img2, (SCREEN_WIDTH/2+300-250, SCREEN_HEIGHT/2+200-250))
+    draw_text("아주 멋진 게임 제목", size=100, center=(SCREEN_WIDTH/2, 200))
+    pygame.display.update()
+    while True:
+        for event in pygame.event.get():
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                if SCREEN_WIDTH / 2 - 300 - 250 < event.pos[
+                    0] < SCREEN_WIDTH / 2 - 300 + 250 and SCREEN_HEIGHT / 2 + 200 - 250 < event.pos[
+                    1] < SCREEN_HEIGHT / 2 + 200 + 250:
+                    return select_stage, ()
+                if SCREEN_WIDTH / 2 + 300 - 250 < event.pos[
+                    0] < SCREEN_WIDTH / 2 + 300 + 250 and SCREEN_HEIGHT / 2 + 200 - 250 < event.pos[
+                    1] < SCREEN_HEIGHT / 2 + 200 + 250:
+                    return forming, ()
+
+def select_stage():
+    pass
+
+def forming():
+    pass
+
+
 def game_end(win):
     screen.fill("#000000")
     while True:
@@ -77,7 +105,7 @@ def game_end(win):
         clock.tick(FPS)
 
 
-def main(p_info, e_info):
+def game(p_info, e_info):
     game_board = GameMap(screen)
     for num, pos, color in p_info:
         game_board.add_character(characters_info[num], pos, color)
@@ -140,8 +168,8 @@ params = ([(0, (1, 1), "#FF0000"),
            (4, (4, 5), "asdf"),
            (2, (5, 2), "asdf"),
            (2, (5, 4), "asdf")])
-func=game_end
-params=(True, )
+func=main
+params=()
 while __name__ == "__main__":
     result = func(*params)
     func, params = result
