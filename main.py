@@ -15,7 +15,7 @@ from EnemyCards.Shielder.shielder import *
 from EnemyCards.Crossbow_archer.crossbow_archer import *
 from graphic_manager import motion_draw
 
-screen = pygame.display.set_mode(SCREEN_SIZE)  # , pygame.FULLSCREEN)
+screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
 pygame.init()
 
 clock = pygame.time.Clock()
@@ -64,6 +64,18 @@ def end(*_):
     pygame.quit()
     sys.exit()
 
+def game_end(win):
+    screen.fill("#000000")
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                return
+        draw_text("WIN" if win else "LOSE", size=100, center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2-40), color="#FFFFFF")
+        draw_text("마우스 클릭으로 나가기" if win else "LOSE", size=40, center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2+40), color="#FFFFFF")
+        motion_draw.draw(screen)
+        pygame.display.update()
+        clock.tick(FPS)
+
 
 def main(p_info, e_info):
     game_board = GameMap(screen)
@@ -73,14 +85,14 @@ def main(p_info, e_info):
         game_board.add_enemy(enemies_info[num], pos, color)
     ai_enemy_index=0
     while True:
+        if len(game_board.players)==0 and not motion_draw.motion_playing():
+            return game_end, (False, )
+        if len(game_board.enemys)==0 and not motion_draw.motion_playing():
+            return game_end, (True, )
         bg = pygame.image.load("background.png")
         bg = pygame.transform.scale(bg, (1920, 1080))
         screen.blit(bg, (-1, -1))
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return end,
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return end,
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if game_board.turn != 4:
                     game_board.click(event.pos)
@@ -128,6 +140,8 @@ params = ([(0, (1, 1), "#FF0000"),
            (4, (4, 5), "asdf"),
            (2, (5, 2), "asdf"),
            (2, (5, 4), "asdf")])
+func=game_end
+params=(True, )
 while __name__ == "__main__":
     result = func(*params)
-    func, *params = result
+    func, params = result
