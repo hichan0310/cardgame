@@ -32,3 +32,12 @@ FLAG_EMPTY = 0
 FLAG_PLAYER_TEAM = 1
 FLAG_ENEMY_TEAM = 2
 FLAG_SUMMONS = 3
+
+TAG_NORMAL_ATTACK = "normal attack"
+TAG_SKILL = "skill"
+TAG_SPECIAL_SKILL = "special skill"
+TAG_PENETRATE = "penetrate hit"
+TAG_HEAL = "heal"
+TAG_SUMMON = "summon"
+TAG_BUFF = "buff"
+TAG_FIRE = "fire"

@@ -93,6 +93,9 @@ class PlayerCard(Cell):
 
     def hit(self, damage, caster, atk_type):
         if self.dead: return
+        if TAG_PENETRATE in atk_type:
+            self.penetrateHit(damage, caster, atk_type)
+            return
         for b in self.buff[::-1]:
             damage = b.hit_buff(caster, self, damage, atk_type)
         self.hp -= damage
@@ -112,7 +115,7 @@ class PlayerCard(Cell):
         for observer in self.observers_hit[::-1]:
             observer.hit_event(caster, self, self.game_board, atk_type)
 
-    def penetrateHit(self, damage, caster, atk_type="penetrate hit"):
+    def penetrateHit(self, damage, caster, atk_type):
         if self.dead: return
         self.hp -= damage
         a = random.random() * 2 - 1
@@ -135,7 +138,7 @@ class PlayerCard(Cell):
         if self.dead: return
         for b in self.buff[::-1]:
             damage = b.atk_buff(self, target, damage, atk_type)
-        target.hit(damage, self, 'normal attack')
+        target.hit(damage, self, atk_type)
 
     def die(self):
         if self.dead: return

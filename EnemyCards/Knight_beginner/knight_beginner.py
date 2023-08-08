@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 class Sortie(Skill):
     def __init__(self, game_board):
-        super().__init__(0, game_board)
+        super().__init__(0, game_board, [TAG_NORMAL_ATTACK])
         self.name = "돌격"
         self.explaination = [
             "적을 만날 때까지 앞으로 가면서 타격한다. ",
@@ -56,9 +56,9 @@ class Sortie(Skill):
     def execute(self, caster: "PlayerCard", targets: "list[PlayerCard]", caster_pos, targets_pos, execute_pos):
         for target_pos in targets_pos:
             if self.game_board.gameBoard[target_pos[0]][target_pos[1]].team==FLAG_PLAYER_TEAM:
-                caster.attack(1, self.game_board.gameBoard[target_pos[0]][target_pos[1]], "normal attack")
+                caster.attack(1, self.game_board.gameBoard[target_pos[0]][target_pos[1]], [TAG_NORMAL_ATTACK])
                 for observer in caster.observers_attack[::-1]:
-                    observer.attack_event(self, targets, self.game_board, "normal attack")
+                    observer.attack_event(self, targets, self.game_board, [TAG_NORMAL_ATTACK])
                 break
             self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], self.game_board.gameBoard[target_pos[0]][
                 target_pos[1]] = (
@@ -93,11 +93,12 @@ class Shield(Buff):
 
 class PrepareDefence(Skill):
     def __init__(self, game_board):
-        super().__init__(0, game_board)
+        super().__init__(0, game_board, [TAG_SKILL, TAG_BUFF])
         self.name = "회피"
         self.explaination = [
             "빠르게 회피하며 한 칸 이동한다. 랜덤한 방향으로 이동한다. ",
-            "자신의 몸에 보호막을 두르고 다음 공격에서 받는 피해를 1 줄인다. "
+            "자신의 몸에 보호막을 두르고 다음 공격에서 받는 피해를 1 줄인다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Astin/astin_card.png"
 

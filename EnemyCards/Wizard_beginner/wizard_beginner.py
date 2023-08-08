@@ -16,10 +16,11 @@ if TYPE_CHECKING:
 
 class EnergyBall(Skill):
     def __init__(self, game_board: "GameMap"):
-        super().__init__(3, game_board)
+        super().__init__(3, game_board, [TAG_NORMAL_ATTACK])
         self.name = "에너지볼"
         self.explaination = [
-            "적군 1명을 중심으로 1의 광역 피해를 가한다. "
+            "적군 1명을 중심으로 1의 광역 피해를 가한다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Lucifer/skill_image/curse_arrow.png"
 
@@ -35,9 +36,9 @@ class EnergyBall(Skill):
                 targets_pos: list[tuple[int, int]], execute_pos):
         for target in targets:
             if target.name != "empty cell":
-                caster.attack(2, target, "normal attack")
+                caster.attack(2, target, self.atk_type)
         for observer in caster.observers_attack[::-1]:
-            observer.attack_event(self, targets, self.game_board, "normal attack")
+            observer.attack_event(self, targets, self.game_board, self.atk_type)
 
 
 class AI_WizardBiginner:
@@ -80,7 +81,7 @@ class AI_WizardBiginner:
                       (p[0] + 1, p[1] - 1), (p[0] + 1, p[1]), (p[0] + 1, p[1] + 1)]:
             motion_draw.add_motion(
                 lambda screen, t_p: self.character.attack(1, self.game_board.gameBoard[t_p[0]][t_p[1]],
-                                                          "normal attack"),
+                                                          [TAG_NORMAL_ATTACK]),
                 i + 26, (t_pos,))
         img = pygame.image.load("./EnemyCards/Wizard_beginner/preview/energy_ball.png")
         for i in range(15):

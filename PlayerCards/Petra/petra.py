@@ -19,8 +19,8 @@ class BaseInstability(Buff):
     def turret_die_event(self):
         self.destroyed += 1
 
-    def atk_buff(self, caster, target, damage: int, atk_type: str):
-        if atk_type == "special skill":
+    def atk_buff(self, caster, target, damage: int, atk_type: list[str]):
+        if TAG_SPECIAL_SKILL in atk_type:
             damage += self.destroyed
         return damage
 
@@ -38,19 +38,20 @@ class StoneTurret(Summons):
         super().die()
 
     def attack_event(self, caster, targets, game_board, atk_type):
-        if atk_type == "normal attack":
+        if TAG_NORMAL_ATTACK in atk_type:
             if not self.dead:
                 for target in targets:
-                    target.hit(1, caster, "turret")
+                    target.hit(1, caster, [TAG_SUMMON])
 
 
 class CrackOfEarth(Skill):
     def __init__(self, game_board):
-        super().__init__(2, game_board)
+        super().__init__(2, game_board, [TAG_SUMMON, TAG_SKILL])
         self.name = "대지의 균열"
         self.explaination = [
             "cost : 2",
             "땅을 갈라서 1의 피해를 줍니다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Petra/skill_image/crack_of_earth.png"
 
@@ -58,19 +59,20 @@ class CrackOfEarth(Skill):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             if target.name != "empty cell":
-                caster.attack(1, target, "normal attack")
+                caster.attack(1, target, self.atk_type)
         for observer in caster.observers_attack:
-            observer.attack_event(self, targets, self.game_board, "normal attack")
+            observer.attack_event(self, targets, self.game_board, self.atk_type)
 
 
 class SummonTurret(Skill):
     def __init__(self, game_board):
-        super().__init__(3, game_board)
+        super().__init__(3, game_board, [TAG_SKILL, TAG_SUMMON])
         self.name = "공명하는 바위"
         self.explaination = [
             "cost : 3",
             "일반 공격과 공명하는 바위 포탑을 소환합니다. ",
-            "포탑은 3번 공격받으면 파괴되고 대지의 균열 발동 시 협동 공격으로 1의 피해를 가한다. "
+            "포탑은 3번 공격받으면 파괴되고 대지의 균열 발동 시 협동 공격으로 1의 피해를 가한다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Petra/skill_image/summon_turret.png"
 
@@ -92,11 +94,12 @@ class SummonTurret(Skill):
 
 class BaseCollapse(SpecialSkill):
     def __init__(self, game_board):
-        super().__init__(4, 4, game_board)
+        super().__init__(4, 4, game_board, [TAG_SPECIAL_SKILL])
         self.name = "기반 붕괴"
         self.explaination = [
             "cost : 4, energy : 4",
-            "맵 전체에 기반 붕괴로 2의 피해를 가한다. "
+            "맵 전체에 기반 붕괴로 2의 피해를 가한다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Petra/skill_image/base_collapse.png"
 
@@ -116,8 +119,8 @@ class BaseCollapse(SpecialSkill):
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:
-            caster.attack(2, target, "special skill")
+            caster.attack(2, target, self.atk_type)
         caster.passive[0].destroyed = 0
         caster.specialSkill.energy = 0
         for observer in caster.observers_attack:
-            observer.attack_event(self, targets, self.game_board, "special skill")
+            observer.attack_event(self, targets, self.game_board, self.atk_type)

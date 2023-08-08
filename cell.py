@@ -32,7 +32,7 @@ class Cell(pygame.sprite.Sprite):
     def hit(self, damage, caster, atk_type):
         pass
 
-    def penetrateHit(self, damage, caster):
+    def penetrateHit(self, damage, caster, atk_type):
         pass
 
     def draw_hp_energy(self, screen):

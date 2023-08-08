@@ -1,5 +1,6 @@
 class Skill:
-    def __init__(self, cost: int, game_board):
+    def __init__(self, cost: int, game_board, atk_type):
+        self.atk_type=atk_type
         self.game_board = game_board
         self.cost = cost
         self.name = "empty skill"
@@ -27,8 +28,8 @@ class Skill:
 
 
 class SpecialSkill(Skill):
-    def __init__(self, cost, energy, game_board):
-        super().__init__(cost, game_board)
+    def __init__(self, cost, energy, game_board, atk_type):
+        super().__init__(cost, game_board, atk_type)
         self.max_energy = energy
         self.energy = 0
         self.name = "empty special skill"

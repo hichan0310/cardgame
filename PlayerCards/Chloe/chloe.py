@@ -1,6 +1,6 @@
 from skill import Skill, SpecialSkill
 from buff import Buff
-
+from settings import *
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -10,11 +10,12 @@ if TYPE_CHECKING:
 # 푸른 새싹
 class SproutOfBlue(Skill):
     def __init__(self, game_board):
-        super().__init__(2, game_board)
+        super().__init__(2, game_board, [TAG_NORMAL_ATTACK, TAG_HEAL])
         self.name = "급속생장"
         self.explaination = [
             "cost : 2",
-            "바로 앞 또는 옆에 있는 대상에게 스킬을 시전하여 1의 피해를 준다. "
+            "바로 앞 또는 옆에 있는 대상에게 스킬을 시전하여 1의 피해를 준다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Chloe/skill_image/fast_growth.png"
 
@@ -33,13 +34,14 @@ class SproutOfBlue(Skill):
 # 대지의 새싹
 class SproutOfEarth(Skill):
     def __init__(self, game_board):
-        super().__init__(3, game_board)
+        super().__init__(3, game_board, [TAG_SKILL, TAG_HEAL])
         self.name = "푸른 새싹"
         self.explaination = [
             "cost : 3",
             "아군 한 명을 지정하여 3의 체력을 회복하고 빠른 이동 상태로 만든다. ",
             "빠른 이동 상태에서 다음 이동 시 사용하는 cost가 1 감소한다. ",
-            "빠른 이동 상태는 중첩될 수 없다. "
+            "빠른 이동 상태는 중첩될 수 없다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Chloe/skill_image/sprout_of_blue.png"
 
@@ -69,13 +71,14 @@ class Reincarnation(Buff):
 # 재생의 씨앗
 class SproutOfReincarnation(SpecialSkill):
     def __init__(self, game_board):
-        super().__init__(3, 4, game_board)
+        super().__init__(3, 4, game_board, [TAG_SPECIAL_SKILL, TAG_HEAL, TAG_BUFF])
         self.name = "세계수의 축복"
         self.explaination = [
             "cost : 3, energy : 4",
             "자기 자신에게 재생 상태를 부여한다. 재생 상태에서는 위치 이동 이후에 cost를 소모하지 않는다. ",
             "재생 상태에서 위치 이동을 하면 자기 자신과 바로 위, 아래, 옆에 있는 아군의 체력을 1만큼 회복한다. ",
-            "이 상태는 7번 위치 이동 이후 사라지며 중첩이 가능하다. "
+            "이 상태는 7번 위치 이동 이후 사라지며 중첩이 가능하다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Chloe/skill_image/blessing_world_tree.png"
 

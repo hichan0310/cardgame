@@ -13,20 +13,21 @@ if TYPE_CHECKING:
 
 class StarFall(Skill):
     def __init__(self, game_board):
-        super().__init__(2, game_board)
+        super().__init__(2, game_board, [TAG_NORMAL_ATTACK])
         self.name = "별빛 낙하"
         self.explaination = [
             "cost : 2",
-            "적 1명을 지정하여 별을 떨어트리고 피해를 입힌다. "
+            "적 1명을 지정하여 별을 떨어트리고 피해를 입힌다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Astin/skill_image/star_fall.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
-            caster.attack(1, target, "normal attack")
+            caster.attack(1, target, ["normal attack"])
         for observer in caster.observers_attack:
-            observer.attack_event(self, targets, self.game_board, "normal attack")
+            observer.attack_event(self, targets, self.game_board, ["normal attack"])
 
 
 class CurtainOfNightSky(Buff):
@@ -39,7 +40,7 @@ class CurtainOfNightSky(Buff):
         self.used(1)
 
     def hit_event(self, caster, target, game_board, atk_type):
-        if atk_type == "penetrate hit":
+        if TAG_PENETRATE in atk_type:
             return
         target_pos = None
         for i in range(1, 6):
@@ -50,18 +51,19 @@ class CurtainOfNightSky(Buff):
             if target_pos is not None:
                 break
         target_real_pos = transform_pos(target_pos)
-        target.penetrateHit(1, target)
+        target.penetrateHit(1, target, [TAG_PENETRATE])
 
 
 class NightSky(Skill):
     def __init__(self, game_board):
-        super().__init__(3, game_board)
+        super().__init__(3, game_board, [TAG_SKILL, TAG_BUFF])
         self.name = "밤하늘의 장막"
         self.explaination = [
             "cost : 3",
             "적군 한 명을 지정하여 2턴동안 밤하늘의 장막 상태를 부여한다. ",
             "적이 피해를 2번 받을 때마다 별이 떨어져서 관통 추가 피해 1을 가한다. ",
-            "추가 피해는 관통 공격에 적용되지 않으며, 밤하늘의 장막 상태는 중첩이 가능하다. "
+            "추가 피해는 관통 공격에 적용되지 않으며, 밤하늘의 장막 상태는 중첩이 가능하다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Astin/skill_image/night_sky.png"
 
@@ -76,11 +78,12 @@ class NightSky(Skill):
 
 class StarRain(SpecialSkill):
     def __init__(self, game_board):
-        super().__init__(4, 5, game_board)
+        super().__init__(4, 5, game_board, [TAG_SPECIAL_SKILL])
         self.name = "유성우"
         self.explaination = [
             "cost : 4, energy : 5",
-            "맵 전체에 유성우를 내려 적에게 1의 피해를 3번 가한다. "
+            "맵 전체에 유성우를 내려 적에게 1의 피해를 3번 가한다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Astin/skill_image/star_rain.png"
 
@@ -100,13 +103,13 @@ class StarRain(SpecialSkill):
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:
-            caster.attack(1, target, "special skill")
+            caster.attack(1, target, self.atk_type)
             for observer in caster.observers_attack:
-                observer.attack_event(self, targets, self.game_board, "special skill")
-            caster.attack(1, target, "special skill")
+                observer.attack_event(self, targets, self.game_board, self.atk_type)
+            caster.attack(1, target, self.atk_type)
             for observer in caster.observers_attack:
-                observer.attack_event(self, targets, self.game_board, "special skill")
-            caster.attack(1, target, "special skill")
+                observer.attack_event(self, targets, self.game_board, self.atk_type)
+            caster.attack(1, target, self.atk_type)
             for observer in caster.observers_attack:
-                observer.attack_event(self, targets, self.game_board, "special skill")
+                observer.attack_event(self, targets, self.game_board, self.atk_type)
         caster.specialSkill.energy = 0

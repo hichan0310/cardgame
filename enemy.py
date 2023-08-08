@@ -94,7 +94,7 @@ class EnemyCard(Cell):
         for observer in self.observers_hit[::-1]:
             observer.hit_event(caster, self, self.game_board, atk_type)
 
-    def penetrateHit(self, damage, caster, atk_type="penetrate hit"):
+    def penetrateHit(self, damage, caster, atk_type):
         if self.dead: return
         self.hp -= damage
         a = random.random() * 2 - 1
@@ -111,7 +111,7 @@ class EnemyCard(Cell):
         if self.hp <= 0:
             self.die()
         for observer in self.observers_hit[::-1]:
-            observer.hit_event(caster, self, self.game_board, atk_type)
+            observer.hit_event(caster, self, self.game_board, atk_type+[TAG_PENETRATE])
 
     def attack(self, damage, target, atk_type):
         if self.dead: return
@@ -131,6 +131,7 @@ class EnemyCard(Cell):
                                                                            self.game_board.group,
                                                                            self.pos_gameboard)
         self.dead = True
+        self.image.set_alpha(0)
 
     def heal(self, heal_amount):
         if self.dead: return

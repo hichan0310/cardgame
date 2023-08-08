@@ -13,12 +13,13 @@ if TYPE_CHECKING:
 
 class StraightCut(Skill):
     def __init__(self, game_board):
-        super().__init__(2, game_board)
+        super().__init__(2, game_board, [TAG_NORMAL_ATTACK, TAG_FIRE])
         self.name = "직선 베기"
         self.explaination = [
             "cost : 2",
             "직선상의 모든 적을 관통하며 1의 피해를 주고 맵의 끝으로 이동한다. ",
-            "지나간 자리에 있는 적을 모두 한 칸씩 당긴다. "
+            "지나간 자리에 있는 적을 모두 한 칸씩 당긴다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Tania/skill_image/straight_cut.png"
 
@@ -71,10 +72,10 @@ class StraightCut(Skill):
             )
             self.game_board.gameBoard[caster_pos[0]][caster_pos[1]].update_location()
             self.game_board.gameBoard[target_pos[0]][target_pos[1]].update_location()
-            caster.attack(1, self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], "normal attack")
+            caster.attack(1, self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], self.atk_type)
             caster_pos = target_pos
         for observer in caster.observers_attack[::-1]:
-            observer.attack_event(self, targets, self.game_board, "normal attack")
+            observer.attack_event(self, targets, self.game_board, self.atk_type)
 
 
 class Burn(Buff):
@@ -83,21 +84,19 @@ class Burn(Buff):
         game_board.register_turnover(self)
 
     def turnover_event(self, game_board):
-        self.target.hp -= 1
-        if self.target.hp <= 0:
-            self.target.die()
-        self.used(1)
+        self.target.attack(1, self.target, [TAG_FIRE, TAG_BUFF])
 
 
 class FlameShuriken(Skill):
     def __init__(self, game_board):
-        super().__init__(3, game_board)
+        super().__init__(3, game_board, [TAG_FIRE, TAG_BUFF, TAG_SKILL])
         self.name = "불꽃 수리검"
         self.explaination = [
             "cost : 3",
             "적 1명에게 불꽃 수리검을 날려서 3의 피해를 가하고 1턴간 화상 효과를 부여한다. ",
             "화상 효과가 부여된 적은 턴 종료 시 체력이 1 감소한다. ",
-            "화상 효과는 중첩될 수 있다. "
+            "화상 효과는 중첩될 수 있다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Tania/skill_image/flame_shuriken.png"
 
@@ -198,9 +197,9 @@ class FlameShuriken(Skill):
                 i3 += 1
 
             def temp_damage(screen, *_):
-                caster.attack(1, target, "skill")
+                caster.attack(1, target, self.atk_type)
                 for observer in caster.observers_attack[::-1]:
-                    observer.attack_event(self, targets, self.game_board, "skill")
+                    observer.attack_event(self, targets, self.game_board, self.atk_type)
 
             try:
                 Burn(target, 1, target.game_board)
@@ -214,7 +213,7 @@ class FlameShuriken(Skill):
 
 class FlameSward(SpecialSkill):
     def __init__(self, game_board):
-        super().__init__(4, 5, game_board)
+        super().__init__(4, 5, game_board, [TAG_FIRE, TAG_PENETRATE, TAG_SPECIAL_SKILL])
         self.name = "불의 칼날"
         self.explaination = [
             "cost : 4, energy : 5",
@@ -301,9 +300,9 @@ class FlameSward(SpecialSkill):
                 motion_draw.add_motion(lambda screen, img, pos: screen.blit(img, pos), i,
                                        (img, (img_position[0] - img_size[0] / 2, img_position[1] - img_size[1] / 2)))
             for target in targets:
-                target.penetrateHit(damage, caster)
+                target.penetrateHit(damage, caster, self.atk_type)
             for observer in caster.observers_attack:
-                observer.attack_event(self, targets, self.game_board, "penetrate hit")
+                observer.attack_event(self, targets, self.game_board, self.atk_type)
 
         motion_draw.add_motion(temp_func, 80, (4,))
         motion_draw.add_motion(temp_func, 60, (3,))

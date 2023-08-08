@@ -13,11 +13,12 @@ if TYPE_CHECKING:
 
 class BloodyBlow(Skill):
     def __init__(self, game_board):
-        super().__init__(2, game_board)
+        super().__init__(2, game_board, [TAG_NORMAL_ATTACK])
         self.name = "피의 일격"
         self.explaination = [
             "cost : 2",
-            "전방에 검을 휘둘러 1의 광역 피해를 가한다. "
+            "전방에 검을 휘둘러 1의 광역 피해를 가한다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Gidon/skill_image/bloody_blow.png"
 
@@ -56,9 +57,9 @@ class BloodyBlow(Skill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
-            caster.attack(1, target, "normal attack")
+            caster.attack(1, target, self.atk_type)
         for observer in caster.observers_attack[::-1]:
-            observer.attack_event(self, targets, self.game_board, "normal attack")
+            observer.attack_event(self, targets, self.game_board, self.atk_type)
 
 
 class BloodRage(Buff):
@@ -66,27 +67,28 @@ class BloodRage(Buff):
         super().__init__(character, count, game_board, "피의 분노", "./PlayerCards/Tania/burn.png")
         character.register_attack(self)
 
-    def atk_buff(self, caster, target, damage: int, atk_type: str):
-        if atk_type == "normal attack":
+    def atk_buff(self, caster, target, damage: int, atk_type: list[str]):
+        if TAG_NORMAL_ATTACK in atk_type:
             return damage + min(caster.max_hp - caster.hp, 5)
         return damage
 
     def attack_event(self, caster, target, game_board, atk_type):
-        if atk_type == "normal attack":
+        if TAG_NORMAL_ATTACK in atk_type:
             self.used(1)
 
 
 class VengeanceEye(Skill):
     def __init__(self, game_board):
-        super().__init__(2, game_board)
+        super().__init__(2, game_board, [TAG_SKILL, TAG_PENETRATE, TAG_BUFF])
         self.name = "복수의 눈빛"
         self.explaination = [
             "cost : 2",
             "자신에게 1의 관통 피해를 가하고 자신에게 피의 분노 상태를 부여한다. ",
             "피의 분노 상태는 일반 공격 2회까지 유지되고 일반 공격의 피해가 자신이 잃은 체력만큼 강해진다. ",
             "잃은 체력은 최대 체력에서 현재 체력을 뺀 값으로 계산되며 최대 5까지 피해가 증가한다. ",
-            "자신의 체력이 2 이하일 경우 체력이 감소하지 않는다. "
-            "이 스킬로 필살기 에너지를 채울 수 없다. "
+            "자신의 체력이 2 이하일 경우 체력이 감소하지 않는다. ",
+            "이 스킬로 필살기 에너지를 채울 수 없다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Gidon/skill_image/vengeance_eye.png"
 
@@ -96,19 +98,20 @@ class VengeanceEye(Skill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:
             if target.hp > 2:
-                target.penetrateHit(1, caster)
+                target.penetrateHit(1, caster, self.atk_type)
             BloodRage(target, 2, target.game_board)
         for observer in caster.observers_attack:
-            observer.attack_event(self, targets, self.game_board, "skill")
+            observer.attack_event(self, targets, self.game_board, self.atk_type)
 
 
 class UnfinishedRage(SpecialSkill):
     def __init__(self, game_board):
-        super().__init__(4, 4, game_board)
+        super().__init__(4, 4, game_board, [TAG_SPECIAL_SKILL])
         self.name = "끝나지 않은 분노"
         self.explaination = [
             "cost : 4, energy : 4",
-            "바로 앞의 적을 지정하여 15의 피해를 준다. "
+            "바로 앞의 적을 지정하여 15의 피해를 준다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Gidon/skill_image/unfinished_rage.png"
 
@@ -124,6 +127,6 @@ class UnfinishedRage(SpecialSkill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         self.energy = 0
         for target in targets:
-            caster.attack(15, target, "special skill")
+            caster.attack(15, target, self.atk_type)
         for observer in caster.observers_attack:
-            observer.attack_event(self, targets, self.game_board, "special skill")
+            observer.attack_event(self, targets, self.game_board, self.atk_type)

@@ -38,10 +38,10 @@ class Summons(Cell):
         if self.count == 0:
             self.die()
 
-    def penetrateHit(self, damage, caster):
+    def penetrateHit(self, damage, caster, atk_type):
         if self.dead:
             return
-        self.hit(damage, caster, "penetrate")
+        self.hit(damage, caster, [TAG_PENETRATE]+atk_type)
 
     def draw_hp_energy(self, screen):
         if self.dead:
