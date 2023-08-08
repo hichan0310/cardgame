@@ -22,7 +22,7 @@ class EnergyBall(Skill):
             "적군 1명을 중심으로 1의 광역 피해를 가한다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = "./PlayerCards/Lucifer/skill_image/curse_arrow.png"
+        self.skill_image_path = None
 
     def atk_range(self, caster_pos, pos):
         return list(filter(
@@ -87,4 +87,4 @@ class AI_WizardBiginner:
         for i in range(15):
             motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)), 14 - i, (i,))
         for i in range(5):
-            motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, ())
+            motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, tuple())

@@ -12,6 +12,7 @@ from EnemyCards.Knight_beginner.knight_beginner import *
 from EnemyCards.Archer_beginner.archer_beginner import *
 from EnemyCards.Wizard_beginner.wizard_beginner import *
 from EnemyCards.Shielder.shielder import *
+from EnemyCards.Crossbow_archer.crossbow_archer import *
 from graphic_manager import motion_draw
 
 screen = pygame.display.set_mode(SCREEN_SIZE)  # , pygame.FULLSCREEN)
@@ -36,8 +37,14 @@ characters_info: list[str, tuple[list[Skill], SpecialSkill, int, int, list[Buff]
 enemies_info = [
     ["기사 견습생", [Sortie, PrepareDefence], 10, [], AI_KnightBiginner,
      "./EnemyCards/Knight_beginner/knight_beginner_card.png"],
-    ["궁수 견습생", [Arrow], 7, [], AI_ArcherBiginner, "./EnemyCards/Archer_beginner/archer_beginner_card.png"],
-    ["마법사 견습생", [EnergyBall], 6, [], AI_WizardBiginner, "./EnemyCards/Wizard_beginner/wizard_beginner_card.png"]
+    ["궁수 견습생", [Arrow], 7, [], AI_ArcherBiginner,
+     "./EnemyCards/Archer_beginner/archer_beginner_card.png"],
+    ["마법사 견습생", [EnergyBall], 6, [], AI_WizardBiginner,
+     "./EnemyCards/Wizard_beginner/wizard_beginner_card.png"],
+    ["방패병", [ShieldOfWrath, CounterAttack], 15, [], AI_Shielder,
+     "./EnemyCards/Shielder/shielder_card.png"],
+    ["석궁병", [PenetrateArrow, ContinuousFiring], 10, [], AI_Crossbow,
+     "./EnemyCards/Crossbow_archer/crossbow_archer_card.png"]
 ]
 
 
@@ -66,7 +73,7 @@ def main(p_info, e_info):
         game_board.add_enemy(enemies_info[num], pos, color)
     ai_enemy_index=0
     while True:
-        bg = pygame.image.load("./background.png")
+        bg = pygame.image.load("background.png")
         bg = pygame.transform.scale(bg, (1920, 1080))
         screen.blit(bg, (-1, -1))
         for event in pygame.event.get():
@@ -112,9 +119,15 @@ params = ([(0, (1, 1), "#FF0000"),
            (1, (1, 2), "#FF0000"),
            (2, (1, 3), "#FF0000"),
            (4, (1, 4), "#FF0000")],
-          [(0, (5, 4), "asdf"),
-           (1, (5, 5), "asdf"),
-           (2, (5, 3), "asdf")])
+          [(3, (3, 3), "asdf"),
+           (0, (3, 1), "asdf"),
+           (0, (3, 2), "asdf"),
+           (0, (3, 4), "asdf"),
+           (0, (3, 5), "asdf"),
+           (4, (4, 1), "asdf"),
+           (4, (4, 5), "asdf"),
+           (2, (5, 2), "asdf"),
+           (2, (5, 4), "asdf")])
 while __name__ == "__main__":
     result = func(*params)
     func, *params = result

@@ -16,19 +16,19 @@ if TYPE_CHECKING:
 
 class Arrow(Skill):
     def __init__(self, game_board: "GameMap"):
-        super().__init__(3, game_board, [TAG_NORMAL_ATTACK])
+        super().__init__(0, game_board, [TAG_NORMAL_ATTACK])
         self.name = "정조준"
         self.explaination = [
             "적군 1명에게 2의 피해를 가한다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = "./PlayerCards/Lucifer/skill_image/curse_arrow.png"
+        self.skill_image_path = None
 
     def execute(self, caster: "EnemyCard", targets: "list[PlayerCard]", caster_pos: tuple[int, int],
                 targets_pos: list[tuple[int, int]], execute_pos):
         for target in targets:
             if target.name != "empty cell":
-                caster.attack(2, target, "normal attack")
+                caster.attack(2, target, self.atk_type)
         for observer in caster.observers_attack[::-1]:
             observer.attack_event(self, targets, self.game_board, self.atk_type)
 
@@ -65,4 +65,4 @@ class AI_ArcherBiginner:
         for i in range(15):
             motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)), 14 - i, (i,))
         for i in range(5):
-            motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, ())
+            motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, tuple())

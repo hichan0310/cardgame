@@ -75,6 +75,9 @@ class EnemyCard(Cell):
 
     def hit(self, damage, caster, atk_type):
         if self.dead: return
+        if TAG_PENETRATE in atk_type:
+            self.penetrateHit(damage, caster, atk_type)
+            return
         for b in self.buff[::-1]:
             damage = b.hit_buff(caster, self, damage, atk_type)
         self.hp -= damage
@@ -117,7 +120,7 @@ class EnemyCard(Cell):
         if self.dead: return
         for b in self.buff[::-1]:
             damage = b.atk_buff(self, target, damage, atk_type)
-        target.hit(damage, self, 'normal attack')
+        target.hit(damage, self, atk_type)
 
     def die(self):
         if self.dead: return
@@ -151,7 +154,7 @@ class EnemyCard(Cell):
 
     def move(self, pos):
         if self.dead: return
-        for observer in self.observers_move:
+        for observer in self.observers_move[::-1]:
             observer.move_event(self, pos, self.game_board)
 
     def click(self):

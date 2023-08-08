@@ -22,7 +22,7 @@ class Sortie(Skill):
             "적을 만날 때까지 앞으로 가면서 타격한다. ",
             "적을 만나면 검을 휘둘러서 바로 옆 상대에게 피해를 준다. "
         ]
-        self.skill_image_path = "./PlayerCards/Astin/astin_card.png"
+        self.skill_image_path = None
 
     def execute_range(self, pos):
         return list(filter(
@@ -81,7 +81,7 @@ class Sortie(Skill):
 
 class Shield(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
-        super().__init__(character, count, game_board, "기사의 보호막", "./PlayerCards/Tania/burn.png")
+        super().__init__(character, count, game_board, "기사의 보호막", "./EnemyCards/Knight_beginner/shield.png")
         game_board.register_turnover(self)
 
     def hit_buff(self, caster, target, damage: int, atk_type: str):
@@ -100,7 +100,7 @@ class PrepareDefence(Skill):
             "자신의 몸에 보호막을 두르고 다음 공격에서 받는 피해를 1 줄인다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = "./PlayerCards/Astin/astin_card.png"
+        self.skill_image_path = None
 
     def execute_range(self, pos):
         return [pos]
@@ -195,7 +195,7 @@ class AI_KnightBiginner:
                 img = pygame.image.load("./EnemyCards/Knight_beginner/preview/sortie.png")
                 for i in range(15):
                     motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)),
-                                           14 - i, (i))
+                                           14 - i, (i, ))
                 for i in range(5):
                     motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, ())
                 return

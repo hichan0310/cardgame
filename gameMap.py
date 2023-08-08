@@ -137,16 +137,19 @@ class GameMap:
 
     def register_turnover(self, observer):
         self.observers_turnover.append(observer)
+        observer.observing(self.observers_turnover)
 
     def register_turnstart(self, observer):
         self.observers_turnstart.append(observer)
+        observer.observing(self.observers_turnstart)
 
     def register_move(self, observer):
         self.observers_move.append(observer)
+        observer.observing(self.observers_move)
 
     def turnover(self):
         print("turnover")
-        for observer in self.observers_turnover:
+        for observer in self.observers_turnover[::-1]:
             observer.turnover_event(self)
         self.cost.set(10)
         self.turn_count += 1
@@ -167,7 +170,7 @@ class GameMap:
         )
         self.gameBoard[pos1[0]][pos1[1]].update_location()
         self.gameBoard[pos2[0]][pos2[1]].update_location()
-        for observer in self.observers_move:
+        for observer in self.observers_move[::-1]:
             observer.move_event(self.gameBoard[pos2[0]][pos2[1]], pos2, self)
         try:
             self.gameBoard[pos2[0]][pos2[1]].move(pos2)
@@ -187,7 +190,7 @@ class GameMap:
             self, color,
             self.group, pos
         )
-        self.gameBoard[pos[0]][pos[1]]=temp
+        self.gameBoard[pos[0]][pos[1]] = temp
         self.players.append(temp)
 
     def add_enemy(self, enemy_info, pos, color):
@@ -261,7 +264,8 @@ class GameMap:
                             and pos[1] - CARD_HEIGHT / 2 < self.gameBoard[i][j].pos_center[1] < pos[
                                 1] + CARD_HEIGHT / 2):
                         if self.selected_card in [(i + 1, j), (i - 1, j), (i, j + 1),
-                                                  (i, j - 1)] and self.selected_skill is None:
+                                                  (i, j - 1)] and self.selected_skill is None and \
+                                self.gameBoard[self.selected_card[0]][self.selected_card[1]].team == FLAG_PLAYER_TEAM:
                             self.move_card(self.selected_card, (i, j))
                             self.skill_select = SkillSelectBar([])
                             self.selected_card = None
