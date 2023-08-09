@@ -30,29 +30,57 @@ def end(*_):
 
 
 def main(*_):
+    screen.fill("#000000")
     img1 = pygame.image.load("main_fight.png")
     img2 = pygame.image.load("main_forming.png")
     img1 = pygame.transform.scale(img1, (500, 500))
     img2 = pygame.transform.scale(img2, (500, 500))
-    screen.blit(img1, (SCREEN_WIDTH / 2 - 300 - 250, SCREEN_HEIGHT / 2 + 200 - 250))
-    screen.blit(img2, (SCREEN_WIDTH / 2 + 300 - 250, SCREEN_HEIGHT / 2 + 200 - 250))
+    screen.blit(img1, (SCREEN_WIDTH / 2 - 300 - 250, SCREEN_HEIGHT / 2 + 100 - 250))
+    screen.blit(img2, (SCREEN_WIDTH / 2 + 300 - 250, SCREEN_HEIGHT / 2 + 100 - 250))
     draw_text("아주 멋진 게임 제목", size=100, center=(SCREEN_WIDTH / 2, 200))
+    draw_text("뒤로 가기 : esc, backspace", size=50, center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150), color="#FFFFFF")
     pygame.display.update()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if SCREEN_WIDTH / 2 - 300 - 250 < event.pos[
-                    0] < SCREEN_WIDTH / 2 - 300 + 250 and SCREEN_HEIGHT / 2 + 200 - 250 < event.pos[
-                    1] < SCREEN_HEIGHT / 2 + 200 + 250:
+                    0] < SCREEN_WIDTH / 2 - 300 + 250 and SCREEN_HEIGHT / 2 + 100 - 250 < event.pos[
+                    1] < SCREEN_HEIGHT / 2 + 100 + 250:
                     return select_stage, ()
                 if SCREEN_WIDTH / 2 + 300 - 250 < event.pos[
-                    0] < SCREEN_WIDTH / 2 + 300 + 250 and SCREEN_HEIGHT / 2 + 200 - 250 < event.pos[
-                    1] < SCREEN_HEIGHT / 2 + 200 + 250:
+                    0] < SCREEN_WIDTH / 2 + 300 + 250 and SCREEN_HEIGHT / 2 + 100 - 250 < event.pos[
+                    1] < SCREEN_HEIGHT / 2 + 100 + 250:
                     return forming, ()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                    return end, ()
 
 
-def select_stage():
-    return select_character, (0,)
+
+def select_stage(stage=0):
+    stage_num = stage
+    while True:
+        screen.fill("#000000")
+        screen.blit(
+            pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % (len(stage_list) + 1)}.png"),
+                                   (800, 800)),
+            (SCREEN_WIDTH / 2 - 400, SCREEN_HEIGHT / 2 - 500))
+        draw_text("방향키로 스테이지 이동, 스테이지를 클릭하여 시작하기",
+                  center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150), size=50, color="#FFFFFF")
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    stage_num -= 1 if stage_num >= 0 else 0
+                if event.key == pygame.K_RIGHT:
+                    stage_num += 1 if stage_num < len(stage_list) else 0
+                if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
+                    return main, ()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if SCREEN_WIDTH / 2 - 400 < event.pos[0] < SCREEN_WIDTH / 2 + 400 and SCREEN_HEIGHT / 2 - 500 < \
+                        event.pos[1] < SCREEN_HEIGHT / 2 + 300 and -1 < stage_num < len(stage_list):
+                    return select_character, (stage_num,)
+        motion_draw.draw(screen)
+        pygame.display.update()
 
 
 def select_character(stage_num):
@@ -66,6 +94,9 @@ def select_character(stage_num):
                 if SCREEN_WIDTH - 500 < x < SCREEN_WIDTH - 100 and SCREEN_HEIGHT - 300 < y < SCREEN_HEIGHT - 100:
                     if len(game_board.result) != 0:
                         return game, (game_board.result, stage_list[stage_num])
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                    return select_stage, (stage_num,)
         game_board.draw()
         screen.blit(pygame.transform.scale(pygame.image.load("start.png"), (400, 200)),
                     (SCREEN_WIDTH - 500, SCREEN_HEIGHT - 300))
