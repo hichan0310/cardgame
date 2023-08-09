@@ -183,22 +183,20 @@ class GameMap:
     def heal(self, pos, heal_amount):
         self.gameBoard[pos[0]][pos[1]].heal(heal_amount)
 
-    def add_character(self, character_info, pos, color):
+    def add_character(self, character_info, pos):
         temp = PlayerCard(
             character_info,
             self.gameBoard[pos[0]][pos[1]].pos_center,
-            self, color,
-            self.group, pos
+            self, self.group, pos
         )
         self.gameBoard[pos[0]][pos[1]] = temp
         self.players.append(temp)
 
-    def add_enemy(self, enemy_info, pos, color):
+    def add_enemy(self, enemy_info, pos):
         temp = EnemyCard(
             enemy_info,
             self.gameBoard[pos[0]][pos[1]].pos_center,
-            self, color,
-            self.group, pos
+            self, self.group, pos
         )
         self.gameBoard[pos[0]][pos[1]] = temp
         self.enemys.append(temp)

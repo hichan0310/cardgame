@@ -7,10 +7,9 @@ from graphic_manager import motion_draw
 
 
 class EnemyCard(Cell):
-    def __init__(self, character_params, pos: tuple[int, int], game_board, color, group, pos_game_board):
+    def __init__(self, character_params, pos: tuple[int, int], game_board, group, pos_game_board):
         super().__init__(pos, True, game_board, group, pos_game_board)
         self.team = FLAG_ENEMY_TEAM
-        self.color = color
         self.skills: list[Skill]
         self.hp: int
         self.max_energy: int

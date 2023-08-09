@@ -9,16 +9,15 @@ import random
 
 
 class PlayerCard(Cell):
-    def __init__(self, character_params, pos: tuple[int, int], game_board, color, group, pos_game_board):
+    def __init__(self, character_params, pos: tuple[int, int], game_board, group, pos_game_board):
         super().__init__(pos, True, game_board, group, pos_game_board)
         self.team = FLAG_PLAYER_TEAM
-        self.color = color
         self.skills: list[Skill]
         self.hp: int
         self.max_energy: int
         self.buff: list[Buff] = []
         self.passive: list[Buff] = []
-        self.name, self.skills, self.specialSkill, self.max_hp, self.max_energy, self.passive, self.img_path = character_params
+        self.name, self.skills, self.specialSkill, self.max_hp, self.max_energy, self.passive, self.img_path, self.color = character_params
         t = []
         for passive_buff in self.passive:
             t.append(passive_buff(self, game_board))
@@ -145,7 +144,7 @@ class PlayerCard(Cell):
         for observer in self.observers_die[::-1]:
             observer.die_event(self, self.game_board)
         self.image.fill("#000000")
-        self.game_board.enemys.remove(self)
+        self.game_board.players.remove(self)
         self.game_board.gameBoard[self.pos_gameboard[0]][self.pos_gameboard[1]]=Cell(self.pos_center,
                                                                            True,
                                                                            self.game_board,
