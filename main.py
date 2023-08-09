@@ -1,4 +1,5 @@
 import pygame
+import time
 from gameMap import GameMap
 from select_character import SelectCharacter
 from settings import *
@@ -56,7 +57,6 @@ def main(*_):
                     return end, ()
 
 
-
 def select_stage(stage=0):
     stage_num = stage
     while True:
@@ -106,7 +106,11 @@ def select_character(stage_num):
 
 
 def forming():
-    pass
+    screen.fill("#000000")
+    draw_text("아직 개발중임", center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), size=100, color="#FFFFFF")
+    pygame.display.update()
+    time.sleep(0.5)
+    return main, ()
 
 
 def game_end(win):
