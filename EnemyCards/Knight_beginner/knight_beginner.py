@@ -90,6 +90,9 @@ class Shield(Buff):
             self.remove()
         return damage
 
+    def turnover_event(self, game_board):
+        self.used(1)
+
 
 class PrepareDefence(Skill):
     def __init__(self, game_board):

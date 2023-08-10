@@ -24,6 +24,27 @@ def transform_pos(pos):
     j, i = pos
     return (30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i, 30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j)
 
+screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
+
+clock = pygame.time.Clock()
+
+def draw_text(text, *, center=None, size=None, color=None):
+    font = pygame.font.Font("./D2Coding.ttf", size or 24)
+    text = font.render(text, True, color or (255, 255, 255))
+    if center is None:
+        text_rect = text.get_rect()
+        text_rect.centerx = SCREEN_WIDTH // 2
+        text_rect.centery = SCREEN_HEIGHT // 2
+    else:
+        text_rect = text.get_rect(center=center)
+    screen.blit(text, text_rect)
+
+
+EVENT_TYPE_0 = "zero"
+EVENT_TYPE_1 = "one"
+EVENT_TYPE_2 = "two"
+
+
 
 BUFF_WIDTH = 120
 BUFF_HEIGHT = 160
@@ -40,4 +61,15 @@ TAG_PENETRATE = "penetrate hit"
 TAG_HEAL = "heal"
 TAG_SUMMON = "summon"
 TAG_BUFF = "buff"
-TAG_FIRE = "fire"
+TAG_PYRO = "fire"
+TAG_HYDRO = "water"
+TAG_ELECTRIC = "electric"
+TAG_ICE = "ice"
+TAG_PLANT = "plant"
+TAG_STONE = "stone"
+TAG_DARK = "dark"
+
+# colors={
+#     TAG_HEAL:"#B4E179",
+#     TAG_PYRO:""
+# }

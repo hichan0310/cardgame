@@ -7,22 +7,7 @@ import sys
 from graphic_manager import motion_draw
 from characters import *
 
-screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
 pygame.init()
-
-clock = pygame.time.Clock()
-
-
-def draw_text(text, *, center=None, size=None, color=None):
-    font = pygame.font.Font("./D2Coding.ttf", size or 24)
-    text = font.render(text, True, color or (255, 255, 255))
-    if center is None:
-        text_rect = text.get_rect()
-        text_rect.centerx = SCREEN_WIDTH // 2
-        text_rect.centery = SCREEN_HEIGHT // 2
-    else:
-        text_rect = text.get_rect(center=center)
-    screen.blit(text, text_rect)
 
 
 def end(*_):
@@ -170,6 +155,7 @@ def game(p_info, e_info):
                     game_board.turnover()
                     game_board.turn = 0
                     ai_enemy_index = 0
+                    game_board.turnstart()
         game_board.draw()
         draw_text(str(game_board.cost.cost), size=40, center=(830, 40), color=(0, 0, 0))
         motion_draw.draw(screen)

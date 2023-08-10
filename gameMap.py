@@ -5,6 +5,7 @@ import pygame
 from playerCard import PlayerCard
 from enemy import EnemyCard
 from graphic_manager import motion_draw
+from skill import SpecialSkill
 import random
 
 
@@ -48,17 +49,29 @@ class SkillExplaination(pygame.sprite.Sprite):
         self.explaination = skill.explaination
         self.img_path = skill.skill_image_path
         self.skill_index = skill_index
+        self.cost = skill.cost
+        self.energy = None
+        try:self.energy = skill.max_energy
+        except:pass
 
     def draw(self, screen):
         font = pygame.font.Font("./D2Coding.ttf", 24)
         text = font.render(self.name, True, "#FFFFFF")
-        text_rect = text.get_rect(center=(self.pos_center[0], self.pos_center[1] + 40))
+        text_rect = text.get_rect(center=(self.pos_center[0], self.pos_center[1] + 40+10))
         screen.blit(text, text_rect)
 
         image = pygame.image.load(self.img_path)
         image = pygame.transform.scale(image, (70, 70))
-        pos = (self.pos_center[0] - 35, self.pos_center[1] - 35 - 35)
+        pos = (self.pos_center[0] - 35, self.pos_center[1] - 35 - 35+10)
         screen.blit(image, pos)
+
+        center_pos = (self.pos_center[0] + 35, self.pos_center[1] - 35 - 35+10)
+        pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
+        draw_text(str(self.cost), center=center_pos, color="#FFFFFF", size=16)
+        if self.energy is not None:
+            center_pos = (self.pos_center[0] + 35, self.pos_center[1] - 35 - 35 + 20+10)
+            pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
+            draw_text(str(self.energy), center=center_pos, color="#FFFFFF", size=16)
 
 
 class SkillMoreExplaination:
@@ -66,6 +79,10 @@ class SkillMoreExplaination:
         self.image_path = skill.skill_image_path
         self.name = skill.name
         self.explaination = skill.explaination
+        self.cost = skill.cost
+        self.energy = None
+        try:self.energy = skill.max_energy
+        except:pass
 
     def draw(self, screen):
         background = pygame.Surface(((SKILL_WIDTH + 20) * 4 - 20, SKILL_HEIGHT))
@@ -83,6 +100,15 @@ class SkillMoreExplaination:
         image = pygame.transform.scale(image, (80, 80))
         pos = (SCREEN_WIDTH / 2 + 40 - 40, SCREEN_HEIGHT - 60 - 35 - 60)
         screen.blit(image, pos)
+
+        center_pos = (SCREEN_WIDTH / 2 + 40 + 40, SCREEN_HEIGHT - 60 - 35 - 60)
+        pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
+        draw_text(str(self.cost), center=center_pos, color="#FFFFFF", size=16)
+        if self.energy is not None:
+            center_pos = (SCREEN_WIDTH / 2 + 40 + 40, SCREEN_HEIGHT - 60 - 35 - 60 + 20)
+            pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
+            draw_text(str(self.energy), center=center_pos, color="#FFFFFF", size=16)
+
 
         i = 0
         for t in self.explaination:
@@ -148,12 +174,15 @@ class GameMap:
         observer.observing(self.observers_move)
 
     def turnover(self):
-        print("turnover")
         for observer in self.observers_turnover[::-1]:
             observer.turnover_event(self)
-        self.cost.set(10)
-        self.turn_count += 1
         random.shuffle(self.enemys)
+
+    def turnstart(self):
+        self.turn_count += 1
+        self.cost.set(10)
+        for observer in self.observers_turnstart[::-1]:
+            observer.turnstart_event(self)
 
     def move_card(self, pos1, pos2):
         self.gameBoard[pos1[0]][pos1[1]], self.gameBoard[pos2[0]][pos2[1]] = (
@@ -236,6 +265,16 @@ class GameMap:
                                     selected_skill.atk_range(caster_pos, execute_pos),
                                     execute_pos)
 
+    def low_cost(self):
+        img=pygame.transform.scale(pygame.image.load("low_cost.png"), (SCREEN_WIDTH, SCREEN_HEIGHT/5))
+        def temp(scr, alpah):
+            img.set_alpha(alpah)
+            scr.blit(img, (0, SCREEN_HEIGHT/5*2))
+        for i in range(5):
+            motion_draw.add_motion(temp, i, (255, ))
+        for i in range(10):
+            motion_draw.add_motion(temp, i+5, (255-i*23, ))
+
     def click(self, pos):
         if motion_draw.motion_playing():
             return
@@ -271,7 +310,7 @@ class GameMap:
                             return
                         if self.selected_skill is not None and (i, j) in self.selected_skill_range:
                             if self.cost.cost < self.selected_skill.cost:
-                                print("cost 부족")
+                                self.low_cost()
                                 self.selected_card = None
                                 self.selected_skill = None
                                 self.selected_skill_range = []

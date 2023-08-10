@@ -121,12 +121,11 @@ class AI_Crossbow:
     def __init__(self, game_board, character: "EnemyCard"):
         self.game_board = game_board
         self.character = character
-        self.normal = 2
-        self.skill = 2
+        self.turn=0
 
     def execute(self, pos):
-        if random.randint(1, self.normal + self.skill) < self.normal:
-            self.normal += 1
+        if self.turn % 2==1:
+            self.turn += random.randint(0, 1)
             target = random.choice(self.game_board.players)
             target_pos = target.pos_gameboard
 
@@ -139,7 +138,7 @@ class AI_Crossbow:
                                                                                    self.character.pos_gameboard,
                                                                                    [target_pos], target_pos), 20, tuple())
         else:
-            self.skill += 1
+            self.turn += 1
             img = pygame.image.load("./EnemyCards/Crossbow_archer/preview/continuous_firing.png")
             for i in range(15):
                 motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)), 14 - i, (i,))

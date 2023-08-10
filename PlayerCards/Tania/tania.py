@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class StraightCut(Skill):
     def __init__(self, game_board):
-        super().__init__(2, game_board, [TAG_NORMAL_ATTACK, TAG_FIRE])
+        super().__init__(2, game_board, [TAG_NORMAL_ATTACK, TAG_PYRO])
         self.name = "직선 베기"
         self.explaination = [
             "cost : 2",
@@ -84,12 +84,13 @@ class Burn(Buff):
         game_board.register_turnover(self)
 
     def turnover_event(self, game_board):
-        self.target.attack(1, self.target, [TAG_FIRE, TAG_BUFF])
+        self.target.attack(1, self.target, [TAG_PYRO, TAG_BUFF])
+        self.used(1)
 
 
 class FlameShuriken(Skill):
     def __init__(self, game_board):
-        super().__init__(3, game_board, [TAG_FIRE, TAG_BUFF, TAG_SKILL])
+        super().__init__(3, game_board, [TAG_PYRO, TAG_BUFF, TAG_SKILL])
         self.name = "불꽃 수리검"
         self.explaination = [
             "cost : 3",
@@ -213,7 +214,7 @@ class FlameShuriken(Skill):
 
 class FlameSward(SpecialSkill):
     def __init__(self, game_board):
-        super().__init__(4, 5, game_board, [TAG_FIRE, TAG_PENETRATE, TAG_SPECIAL_SKILL])
+        super().__init__(4, 5, game_board, [TAG_PYRO, TAG_PENETRATE, TAG_SPECIAL_SKILL])
         self.name = "불의 칼날"
         self.explaination = [
             "cost : 4, energy : 5",

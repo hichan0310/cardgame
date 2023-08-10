@@ -1,3 +1,5 @@
+import random
+
 import pygame.image
 
 from skill import Skill, SpecialSkill
@@ -50,8 +52,13 @@ class CurtainOfNightSky(Buff):
                     break
             if target_pos is not None:
                 break
-        target_real_pos = transform_pos(target_pos)
-        target.penetrateHit(1, target, [TAG_PENETRATE])
+        if target_pos is not None:
+            x, y = transform_pos(target_pos)
+            dx, dy=random.randint(-30, 30), random.randint(-30, 30)
+            img=pygame.transform.scale(pygame.image.load("./PlayerCards/Astin/star.png"), (80, 80))
+            for i in range(16):
+                motion_draw.add_motion(lambda screen, ii:screen.blit(img, (x-40+dx, y+(ii**2-225)-40+dy)), i, (i, ))
+            motion_draw.add_motion(lambda scr:target.penetrateHit(1, target, [TAG_PENETRATE]), 15, ())
 
 
 class NightSky(Skill):
