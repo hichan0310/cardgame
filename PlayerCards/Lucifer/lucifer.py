@@ -17,7 +17,7 @@ class Curse(Buff):
     def curse_event(self, caster: "PlayerCard", target: "PlayerCard", game_board: "GameMap"):
         caster.attack(2, self.target, [TAG_SKILL, TAG_BUFF])
         for observer in caster.observers_attack:
-            observer.attack_event(self, [target], self.game_board, [TAG_SKILL, TAG_BUFF])
+            observer.attack_event(self, [target], self.game_board, [TAG_BUFF])
         self.remove()
 
 

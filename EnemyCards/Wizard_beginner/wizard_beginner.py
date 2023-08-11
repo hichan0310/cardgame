@@ -13,6 +13,9 @@ if TYPE_CHECKING:
     from enemy import EnemyCard
     from gameMap import GameMap
 
+wizard_energy_ball=pygame.image.load("./EnemyCards/Wizard_beginner/energy_ball.png")
+wizard_energy_ball_boom=pygame.image.load("./EnemyCards/Wizard_beginner/energy_bomb.png")
+wizard_energy_ball_preview=pygame.image.load("./EnemyCards/Wizard_beginner/preview/energy_ball.png")
 
 class EnergyBall(Skill):
     def __init__(self, game_board: "GameMap"):
@@ -49,8 +52,7 @@ class AI_WizardBiginner:
     def execute(self, pos):
         target = random.choice(self.game_board.players)
         target_pos = target.pos_center
-        img_arrow = pygame.image.load("./EnemyCards/Wizard_beginner/energy_ball.png")
-        img_arrow = pygame.transform.scale(img_arrow, (100, 30))
+        img_arrow = pygame.transform.scale(wizard_energy_ball, (100, 30))
         p1 = transform_pos(pos)
         p2 = target_pos
         dx = p2[0] - p1[0]
@@ -71,10 +73,9 @@ class AI_WizardBiginner:
             i += 1
 
         p = target.pos_gameboard
-        img_boom = pygame.image.load("./EnemyCards/Wizard_beginner/energy_bomb.png")
         size_change = [100, 130, 160, 200, 300, 440, 430, 400]
         for ii in range(8):
-            motion_draw.add_motion(lambda screen, size: screen.blit(pygame.transform.scale(img_boom, (size, size)), (
+            motion_draw.add_motion(lambda screen, size: screen.blit(pygame.transform.scale(wizard_energy_ball_boom, (size, size)), (
             target_pos[0] - size / 2, target_pos[1] - size / 2)), ii + 20 + i, (size_change[ii],))
         for t_pos in [(p[0] - 1, p[1] - 1), (p[0] - 1, p[1]), (p[0] - 1, p[1] + 1),
                       (p[0], p[1] - 1), (p[0], p[1]), (p[0], p[1] + 1),
@@ -83,8 +84,7 @@ class AI_WizardBiginner:
                 lambda screen, t_p: self.character.attack(1, self.game_board.gameBoard[t_p[0]][t_p[1]],
                                                           [TAG_NORMAL_ATTACK]),
                 i + 26, (t_pos,))
-        img = pygame.image.load("./EnemyCards/Wizard_beginner/preview/energy_ball.png")
         for i in range(15):
-            motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)), 14 - i, (i,))
+            motion_draw.add_motion(lambda screen, a: screen.blit(wizard_energy_ball_preview, (1 - 1.4 ** a, 0)), 14 - i, (i,))
         for i in range(5):
-            motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, tuple())
+            motion_draw.add_motion(lambda screen: screen.blit(wizard_energy_ball_preview, (0, 0)), 15 + i, tuple())

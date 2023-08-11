@@ -10,6 +10,8 @@ from math import sqrt, atan, pi, sin, cos
 if TYPE_CHECKING:
     from playerCard import PlayerCard
 
+flame_shuriken=pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
+flame_sward=[pygame.image.load(f"./PlayerCards/Tania/skill_motion/flame_sward/{i}.png") for i in range(15)]
 
 class StraightCut(Skill):
     def __init__(self, game_board):
@@ -115,8 +117,7 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = i * 5 / sqrt(dx ** 2 + dy ** 2)
-                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
-                    image = pygame.transform.scale(image, (120, 120))
+                    image = pygame.transform.scale(flame_shuriken, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 15
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
@@ -132,8 +133,7 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = 100 / sqrt(dx ** 2 + dy ** 2)
-                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
-                    image = pygame.transform.scale(image, (120, 120))
+                    image = pygame.transform.scale(flame_shuriken, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 15
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
@@ -151,8 +151,7 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
-                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
-                    image = pygame.transform.scale(image, (120, 120))
+                    image = pygame.transform.scale(flame_shuriken, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
@@ -168,8 +167,7 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
-                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
-                    image = pygame.transform.scale(image, (120, 120))
+                    image = pygame.transform.scale(flame_shuriken, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
@@ -185,8 +183,7 @@ class FlameShuriken(Skill):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = i * 40 / sqrt(dx ** 2 + dy ** 2)
-                    image = pygame.image.load("./PlayerCards/Tania/skill_motion/flame_shuriken/0.png")
-                    image = pygame.transform.scale(image, (120, 120))
+                    image = pygame.transform.scale(flame_shuriken, (120, 120))
                     angle = -atan(dy / (dx - 0.00001)) / pi * 180
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
@@ -265,10 +262,8 @@ class FlameSward(SpecialSkill):
         execute_pos_real = transform_pos(execute_pos)
         caster_pos_real = transform_pos(caster_pos)
         for i in range(40):
-            img1 = pygame.image.load(f"./PlayerCards/Tania/skill_motion/flame_sward/14.png")
-            img2 = pygame.image.load(f"./PlayerCards/Tania/skill_motion/flame_sward/14.png")
-            img1 = pygame.transform.rotate(img1, 270)
-            img2 = pygame.transform.rotate(img2, 90)
+            img1 = pygame.transform.rotate(flame_sward[14], 270)
+            img2 = pygame.transform.rotate(flame_sward[14], 90)
             img1 = pygame.transform.scale(img1, (((39 - i) * 40), 2 * ((39 - i) * 40) / 3))
             img2 = pygame.transform.scale(img2, (((39 - i) * 40), 2 * ((39 - i) * 40) / 3))
             motion_draw.add_motion(
@@ -284,24 +279,23 @@ class FlameSward(SpecialSkill):
 
         def temp_func(screen, damage):
             for i in range(30):
-                img = pygame.image.load(f"./PlayerCards/Tania/skill_motion/flame_sward/{min(i, 14)}.png")
                 if caster_pos[0] > execute_pos[0]:
-                    img = pygame.transform.rotate(img, 270)
+                    img = pygame.transform.rotate(flame_sward[min(i, 14)], 270)
                     img_position = (execute_pos_real[0], execute_pos_real[1] - i * 30)
                 elif caster_pos[0] < execute_pos[0]:
-                    img = pygame.transform.rotate(img, 90)
+                    img = pygame.transform.rotate(flame_sward[min(i, 14)], 90)
                     img_position = (execute_pos_real[0], execute_pos_real[1] + i * 30)
                 elif caster_pos[1] > execute_pos[1]:
-                    img = pygame.transform.rotate(img, 0)
+                    img = pygame.transform.rotate(flame_sward[min(i, 14)], 0)
                     img_position = (execute_pos_real[0] - i * 30, execute_pos_real[1])
                 else:
-                    img = pygame.transform.rotate(img, 180)
+                    img = pygame.transform.rotate(flame_sward[min(i, 14)], 180)
                     img_position = (execute_pos_real[0] + i * 30, execute_pos_real[1])
                 img_size = img.get_size()
                 motion_draw.add_motion(lambda screen, img, pos: screen.blit(img, pos), i,
                                        (img, (img_position[0] - img_size[0] / 2, img_position[1] - img_size[1] / 2)))
             for target in targets:
-                target.penetrateHit(damage, caster, self.atk_type)
+                target.hit(damage, caster, self.atk_type)
             for observer in caster.observers_attack:
                 observer.attack_event(self, targets, self.game_board, self.atk_type)
 

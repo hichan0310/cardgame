@@ -134,6 +134,7 @@ class EnemyCard(Cell):
                                                                            self.pos_gameboard)
         self.dead = True
         self.image.set_alpha(0)
+        self.kill()
 
     def heal(self, heal_amount):
         if self.dead: return

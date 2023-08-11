@@ -5,6 +5,7 @@ from select_character import SelectCharacter
 from settings import *
 import sys
 from graphic_manager import motion_draw
+from EventCards.BombThrowing.bomb_throwing import *
 from characters import *
 
 pygame.init()
@@ -67,6 +68,7 @@ def select_stage(stage=0):
         motion_draw.draw(screen)
         pygame.display.update()
 
+e_card_list=[BombThrowing for _ in range(10)]
 
 def select_character(stage_num):
     game_board = SelectCharacter(stage_num, screen)
@@ -78,7 +80,7 @@ def select_character(stage_num):
                 x, y = event.pos
                 if SCREEN_WIDTH - 500 < x < SCREEN_WIDTH - 100 and SCREEN_HEIGHT - 300 < y < SCREEN_HEIGHT - 100:
                     if len(game_board.result) != 0:
-                        return game, (game_board.result, stage_list[stage_num])
+                        return game, (game_board.result, stage_list[stage_num], e_card_list)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                     return select_stage, (stage_num,)
@@ -113,8 +115,10 @@ def game_end(win):
         clock.tick(FPS)
 
 
-def game(p_info, e_info):
-    game_board = GameMap(screen)
+def game(p_info, e_info, eventcard_list):
+    game_board = GameMap(screen, eventcard_list)
+    bg = pygame.image.load("background.png")
+    bg = pygame.transform.scale(bg, (1920, 1080))
     for num, pos in p_info:
         game_board.add_character(characters_info[num], pos)
     for num, pos in e_info:
@@ -125,8 +129,6 @@ def game(p_info, e_info):
             return game_end, (False,)
         if len(game_board.enemys) == 0 and not motion_draw.motion_playing():
             return game_end, (True,)
-        bg = pygame.image.load("background.png")
-        bg = pygame.transform.scale(bg, (1920, 1080))
         screen.blit(bg, (-1, -1))
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:

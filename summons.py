@@ -30,6 +30,10 @@ class Summons(Cell):
             observer.die_event(self, self.game_board)
         self.image.fill("#000000")
         self.dead = True
+        self.game_board.gameBoard[self.pos_gameboard[0]][self.pos_gameboard[1]]=Cell(
+            self.pos_center, True, self.game_board, self.game_board.group, self.pos_gameboard
+        )
+        self.kill()
 
     def hit(self, damage, caster, atk_type):
         if self.dead:

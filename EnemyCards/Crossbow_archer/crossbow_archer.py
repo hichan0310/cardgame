@@ -13,6 +13,10 @@ if TYPE_CHECKING:
     from enemy import EnemyCard
     from gameMap import GameMap
 
+continueous_firing=pygame.image.load("./EnemyCards/Crossbow_archer/continuous_firing.png")
+continueous_firing_preview=pygame.image.load("./EnemyCards/Crossbow_archer/preview/continuous_firing.png")
+penetrate_arrow_preview=pygame.image.load("./EnemyCards/Crossbow_archer/preview/penetrate_arrow.png")
+arrow=pygame.image.load("./EnemyCards/Archer_beginner/arrow.png")
 
 class PenetrateArrow(Skill):
     def __init__(self, game_board: "GameMap"):
@@ -27,8 +31,7 @@ class PenetrateArrow(Skill):
 
     def execute(self, caster: "EnemyCard", targets: "list[PlayerCard]", caster_pos: tuple[int, int],
                 targets_pos: list[tuple[int, int]], execute_pos):
-        img_arrow = pygame.image.load("./EnemyCards/Archer_beginner/arrow.png")
-        img_arrow = pygame.transform.scale(img_arrow, (100, 30))
+        img_arrow = pygame.transform.scale(arrow, (100, 30))
         i = 1
         for target_pos, target in zip(targets_pos, targets):
             for observer in self.observer_addition_arrow[::-1]:
@@ -68,8 +71,7 @@ class ContinuousFiringBuff(Buff):
         game_board.register_turnover(self)
 
     def active_event(self, caster_pos, target_pos):
-        img_arrow = pygame.image.load("./EnemyCards/Archer_beginner/arrow.png")
-        img_arrow = pygame.transform.scale(img_arrow, (80, 24))
+        img_arrow = pygame.transform.scale(arrow, (80, 24))
         p1 = transform_pos(caster_pos)
         p2 = transform_pos(target_pos)
         dx = p2[0] - p1[0]
@@ -107,11 +109,10 @@ class ContinuousFiring(Skill):
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         ContinuousFiringBuff(caster, 3, self.game_board)
-        img = pygame.image.load("./EnemyCards/Crossbow_archer/continuous_firing.png")
         x, y = transform_pos(caster_pos)
         for i in range(20):
             size = i * 20
-            img_temp = pygame.transform.scale(img, (2*size, size))
+            img_temp = pygame.transform.scale(continueous_firing, (2*size, size))
             img_temp.set_alpha(min((20 - i) * 15, 255))
             motion_draw.add_motion(lambda screen, image, size: screen.blit(image, (x - size, y - size / 2)), i,
                                    (img_temp, size))
@@ -129,21 +130,19 @@ class AI_Crossbow:
             target = random.choice(self.game_board.players)
             target_pos = target.pos_gameboard
 
-            img = pygame.image.load("./EnemyCards/Crossbow_archer/preview/penetrate_arrow.png")
             for i in range(15):
-                motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)), 14 - i, (i,))
+                motion_draw.add_motion(lambda screen, a: screen.blit(penetrate_arrow_preview, (1 - 1.4 ** a, 0)), 14 - i, (i,))
             for i in range(5):
-                motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, tuple())
+                motion_draw.add_motion(lambda screen: screen.blit(penetrate_arrow_preview, (0, 0)), 15 + i, tuple())
             motion_draw.add_motion(lambda screen: self.character.skills[0].execute(self.character, [target],
                                                                                    self.character.pos_gameboard,
                                                                                    [target_pos], target_pos), 20, tuple())
         else:
             self.turn += 1
-            img = pygame.image.load("./EnemyCards/Crossbow_archer/preview/continuous_firing.png")
             for i in range(15):
-                motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)), 14 - i, (i,))
+                motion_draw.add_motion(lambda screen, a: screen.blit(continueous_firing_preview, (1 - 1.4 ** a, 0)), 14 - i, (i,))
             for i in range(5):
-                motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, tuple())
+                motion_draw.add_motion(lambda screen: screen.blit(continueous_firing_preview, (0, 0)), 15 + i, tuple())
             motion_draw.add_motion(
                 lambda screen: self.character.skills[1].execute(self.character, [self.character],
                                                                 self.character.pos_gameboard,

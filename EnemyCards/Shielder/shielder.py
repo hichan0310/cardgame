@@ -14,6 +14,10 @@ if TYPE_CHECKING:
     from playerCard import PlayerCard
     from enemy import EnemyCard
 
+rage_shield=pygame.image.load("./EnemyCards/Shielder/rage_shield.png")
+counter=pygame.image.load("./EnemyCards/Shielder/counter.png")
+shield_of_wrath_preview=pygame.image.load("./EnemyCards/Shielder/preview/shield_of_wrath.png")
+counter_preview=pygame.image.load("./EnemyCards/Shielder/preview/counterattack.png")
 
 class ShieldOfWrath(Skill):
     def __init__(self, game_board):
@@ -62,11 +66,10 @@ class ShieldOfWrath(Skill):
         for target in targets:
             caster.attack(2, target, self.atk_type)
         Shield(caster, 2, caster.game_board)
-        img = pygame.image.load("./EnemyCards/Shielder/rage_shield.png")
         x, y = transform_pos(caster_pos)
         for i in range(20):
             size = i * 20
-            img_temp = pygame.transform.scale(img, (size, size))
+            img_temp = pygame.transform.scale(rage_shield, (size, size))
             img_temp.set_alpha(min((20 - i) * 15, 255))
             motion_draw.add_motion(lambda screen, image, size: screen.blit(image, (x - size / 2, y - size / 2)), i,
                                    (img_temp, size))
@@ -87,8 +90,7 @@ class CounterAttackBuff(Buff):
                                  (p[0] + 1, p[1] - 1), (p[0] + 1, p[1]), (p[0] + 1, p[1] + 1)])):
             t = game_board.gameBoard[x][y]
             target.attack(2 if t.team==FLAG_PLAYER_TEAM else 1, t, [TAG_BUFF, TAG_PENETRATE])
-        image=pygame.image.load("./EnemyCards/Shielder/counter.png")
-        image=pygame.transform.scale(image, (360, 360))
+        image=pygame.transform.scale(counter, (360, 360))
         motion_draw.add_motion(
             lambda screen: screen.blit(image, (target.pos_center[0] - 180, target.pos_center[1] - 180)), 1, tuple()
         )
@@ -119,11 +121,10 @@ class CounterAttack(Skill):
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         CounterAttackBuff(caster, 3, self.game_board)
-        img = pygame.image.load("./EnemyCards/Shielder/rage_shield.png")
         x, y = transform_pos(caster_pos)
         for i in range(20):
             size = i * 20
-            img_temp = pygame.transform.scale(img, (size, size))
+            img_temp = pygame.transform.scale(rage_shield, (size, size))
             img_temp.set_alpha(min((20 - i) * 15, 255))
             motion_draw.add_motion(lambda screen, image, size: screen.blit(image, (x - size / 2, y - size / 2)), i,
                                    (img_temp, size))
@@ -149,11 +150,10 @@ class AI_Shielder:
                     best = (exep, now)
             best_pos = best[0]
             best_pos_tar = skill.atk_range(pos, best_pos)
-            img = pygame.image.load("./EnemyCards/Shielder/preview/shield_of_wrath.png")
             for i in range(15):
-                motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)), 14 - i, (i,))
+                motion_draw.add_motion(lambda screen, a: screen.blit(shield_of_wrath_preview, (1 - 1.4 ** a, 0)), 14 - i, (i,))
             for i in range(5):
-                motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, tuple())
+                motion_draw.add_motion(lambda screen: screen.blit(shield_of_wrath_preview, (0, 0)), 15 + i, tuple())
             motion_draw.add_motion(lambda screen: skill.execute(self.character,
                                                                 list(map(
                                                                     lambda p: self.game_board.gameBoard[p[0]][p[1]],
@@ -161,10 +161,9 @@ class AI_Shielder:
                                                                 )), pos, best_pos_tar, best_pos), 20, tuple())
         else:
             skill=self.character.skills[1]
-            img = pygame.image.load("./EnemyCards/Shielder/preview/counterattack.png")
             for i in range(15):
-                motion_draw.add_motion(lambda screen, a: screen.blit(img, (1 - 1.4 ** a, 0)), 14 - i, (i,))
+                motion_draw.add_motion(lambda screen, a: screen.blit(counter_preview, (1 - 1.4 ** a, 0)), 14 - i, (i,))
             for i in range(5):
-                motion_draw.add_motion(lambda screen: screen.blit(img, (0, 0)), 15 + i, tuple())
+                motion_draw.add_motion(lambda screen: screen.blit(counter_preview, (0, 0)), 15 + i, tuple())
             motion_draw.add_motion(lambda scr:skill.execute(self.character, [self.character], pos, [pos], pos), 20, tuple())
 

@@ -56,3 +56,86 @@ stage_list = [([(3, (3, 3)),
                 (0, (4, 2)),
                 (0, (4, 3)),
                 (0, (4, 4))])]
+
+TAG_ACTIVE = "active"
+TAG_COST = "cost"
+
+EVENT_Sniping = "저격"
+EVENT_HealingLight = "회복의 빛"
+EVENT_EnergyRecharge = "에너지 재충전"
+EVENT_Lucky = "행운"
+EVENT_WarpGate = "워프 게이트"
+EVENT_EnforceHit = "강화 타격"
+EVENT_SecondOpportunity = "두 번째 기회"
+EVENT_BombThrowing = "폭탄 투척"
+EVENT_ManaSynthesizer = "마나 합성기"
+EVENT_Overheating = "과열"
+event_card_info = {
+    EVENT_Sniping: (
+        EVENT_Sniping, 3,
+        "./EventCards/Sniping/sniping_card.png",
+        ["적군 1명을 선택하여 hp를 1로 만듭니다.",
+         "보스에게는 4의 피해를 가합니다. "],
+        EVENT_TYPE_1,
+        []
+    ),
+    EVENT_HealingLight: (
+        EVENT_HealingLight, 1,
+        "./EventCards/HealingLight/healing_light.png",
+        ["아군 1명을 지정하여 hp를 2 회복합니다. "],
+        EVENT_TYPE_1
+    ),
+    EVENT_EnergyRecharge: (
+        EVENT_EnergyRecharge, 2,
+        "./EventCards/EnergyRecharge/energy_recharge.png",
+        ["아군 1명을 지정하여 필살기 게이지를 1 충전합니다. "],
+        EVENT_TYPE_1
+    ),
+    EVENT_Lucky: (
+        EVENT_Lucky, 2,
+        "./EventCards/Lucky/lucky.png",
+        ["아군 1명을 골라서 이번 턴의 공격을 50%의 확률로 회피하는 버프를 부여한다. ",
+         "관통 공격은 피할 수 없다. "],
+        EVENT_TYPE_1
+    ),
+    EVENT_WarpGate: (
+        EVENT_WarpGate, 1,
+        "./EventCards/WarpGate/warp_gate.png",
+        ["워프 게이트를 열어서 2개 칸을 서로 바꾼다. "],
+        EVENT_TYPE_2
+    ),
+    EVENT_EnforceHit: (
+        EVENT_EnforceHit, 1,
+        "./EventCards/EnforceHit/enforce_hit.png",
+        ["아군 1명을 지정하여 일반 공격 피해 50% 증가하는 버프를 부여한다. ",
+         "소수점 아래는 버린다. "],
+        EVENT_TYPE_1
+    ),
+    EVENT_SecondOpportunity: (
+        EVENT_SecondOpportunity, 2,
+        "./EventCards/SecondOpportunity/second_opportunity.png",
+        ["이번 턴 행동 가능 횟수가 1회 증가한다. "],
+        EVENT_TYPE_0
+    ),
+    EVENT_BombThrowing: (
+        EVENT_BombThrowing, 2,
+        "./EventCards/BombThrowing/bomb_throwing.png",
+        ["공격하면 터지면서 4의 광역 피해를 주는 폭탄을 소환한다. ",
+         "폭탄은 1변 공격하면 바로 터진다. ",
+         "빈 공간이 없으면 사용할 수 없다. "],
+        EVENT_TYPE_1
+    ),
+    EVENT_ManaSynthesizer: (
+        EVENT_ManaSynthesizer, 3,
+        "./EventCards/ManaSynthesizer/mana_synthesizer.png",
+        ["아군 1명을 골라 피해를 받으면 4cost를 회복하는 버프를 부여한다. "],
+        EVENT_TYPE_1
+    ),
+    EVENT_Overheating: (
+        EVENT_Overheating, 2,
+        "./EventCards/Overheating/overheating.png",
+        ["스킬로 데미지를 3번 가할 때마다 cost와 필살기를 1 회복한다. ",
+         "이 버프는 턴이 지나도 사라지지 않는다. "],
+        EVENT_TYPE_1
+    ),
+}

@@ -12,6 +12,8 @@ from math import sqrt, atan, pi, sin, cos
 if TYPE_CHECKING:
     from playerCard import PlayerCard
 
+astin_star = pygame.image.load("./PlayerCards/Astin/star.png")
+
 
 class StarFall(Skill):
     def __init__(self, game_board):
@@ -44,21 +46,13 @@ class CurtainOfNightSky(Buff):
     def hit_event(self, caster, target, game_board, atk_type):
         if TAG_PENETRATE in atk_type:
             return
-        target_pos = None
-        for i in range(1, 6):
-            for j in range(1, 6):
-                if game_board.gameBoard[i][j].name == target.name:
-                    target_pos = (i, j)
-                    break
-            if target_pos is not None:
-                break
-        if target_pos is not None:
-            x, y = transform_pos(target_pos)
-            dx, dy=random.randint(-30, 30), random.randint(-30, 30)
-            img=pygame.transform.scale(pygame.image.load("./PlayerCards/Astin/star.png"), (80, 80))
-            for i in range(16):
-                motion_draw.add_motion(lambda screen, ii:screen.blit(img, (x-40+dx, y+(ii**2-225)-40+dy)), i, (i, ))
-            motion_draw.add_motion(lambda scr:target.penetrateHit(1, target, [TAG_PENETRATE]), 15, ())
+        x, y = target.pos_center
+        dx, dy = random.randint(-30, 30), random.randint(-30, 30)
+        img = pygame.transform.scale(astin_star, (80, 80))
+        for i in range(16):
+            motion_draw.add_motion(lambda screen, ii: screen.blit(img, (x - 40 + dx, y + (ii ** 2 - 225) - 40 + dy)), i,
+                                   (i,))
+        motion_draw.add_motion(lambda scr: target.hit(1, target, [TAG_PENETRATE]), 15, ())
 
 
 class NightSky(Skill):

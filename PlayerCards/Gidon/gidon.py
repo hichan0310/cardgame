@@ -98,7 +98,7 @@ class VengeanceEye(Skill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         for target in targets:
             if target.hp > 2:
-                target.penetrateHit(1, caster, self.atk_type)
+                target.hit(1, caster, self.atk_type)
             BloodRage(target, 2, target.game_board)
         for observer in caster.observers_attack:
             observer.attack_event(self, targets, self.game_board, self.atk_type)
