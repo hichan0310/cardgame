@@ -177,6 +177,11 @@ class SelectEventCard:
             draw_text(str(eventcard.cost), center=center_pos, color="#FFFFFF", size=24)
 
     def use(self, params, flag=True):
+        if self.on_gameboard[self.choose].cost>self.game_board.cost.cost:
+            self.game_board.low_cost()
+            self.choose = None
+            self.execute_pos_first = None
+            return
         if flag:
             if self.choose is not None:
                 if self.on_gameboard[self.choose].execute_type == EVENT_TYPE_0:
@@ -185,8 +190,10 @@ class SelectEventCard:
                     self.on_gameboard[self.choose].execute_one(*params)
                 if self.on_gameboard[self.choose].execute_type == EVENT_TYPE_2:
                     self.on_gameboard[self.choose].execute_two(*params)
-        self.on_gameboard.pop(self.choose).kill()
-        self.choose = None
+        temp=self.on_gameboard.pop(self.choose)
+        self.not_on_gameboard=[temp.class_name]+self.not_on_gameboard
+        temp.kill()
+        self.choos = None
         self.execute_pos_first = None
         for i in range(len(self.on_gameboard)):
             self.on_gameboard[i].update_location((250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i-2),

@@ -23,7 +23,6 @@ class Bomb(Summons):
                          "./EventCards/BombThrowing/bomb_throwing.png", pos)
 
     def die(self):
-        print(self.pos_center, self.pos_gameboard)
         super().die()
         x, y = self.pos_gameboard
         for target_pos in list(filter(lambda pos: 0 < pos[0] < 6 and 0 < pos[1] < 6,
@@ -37,7 +36,7 @@ class Bomb(Summons):
 class BombThrowing(EventCard):
     def __init__(self, pos_center, game_board: "GameMap", group):
         super().__init__(pos_center, event_card_info[EVENT_BombThrowing],
-                         game_board, group)
+                         game_board, group, BombThrowing)
         self.group=group
 
     def execute_range_one(self):
