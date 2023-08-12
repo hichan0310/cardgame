@@ -113,7 +113,7 @@ class EnemyCard(Cell):
         if self.hp <= 0:
             self.die()
         for observer in self.observers_hit[::-1]:
-            observer.hit_event(caster, self, self.game_board, atk_type+[TAG_PENETRATE])
+            observer.hit_event(caster, self, self.game_board, atk_type + [TAG_PENETRATE])
 
     def attack(self, damage, target, atk_type):
         if self.dead: return
@@ -127,11 +127,11 @@ class EnemyCard(Cell):
             observer.die_event(self, self.game_board)
         self.image.fill("#000000")
         self.game_board.enemys.remove(self)
-        self.game_board.gameBoard[self.pos_gameboard[0]][self.pos_gameboard[1]]=Cell(self.pos_center,
-                                                                           True,
-                                                                           self.game_board,
-                                                                           self.game_board.group,
-                                                                           self.pos_gameboard)
+        self.game_board.gameBoard[self.pos_gameboard[0]][self.pos_gameboard[1]] = Cell(self.pos_center,
+                                                                                       True,
+                                                                                       self.game_board,
+                                                                                       self.game_board.group,
+                                                                                       self.pos_gameboard)
         self.dead = True
         self.image.set_alpha(0)
         self.kill()

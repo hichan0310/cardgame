@@ -29,9 +29,18 @@ class StarFall(Skill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
-            caster.attack(1, target, ["normal attack"])
-        for observer in caster.observers_attack:
-            observer.attack_event(self, targets, self.game_board, ["normal attack"])
+            x, y = target.pos_center
+            dx, dy = random.randint(-30, 30), random.randint(-30, 30)
+            img = pygame.transform.scale(astin_star, (80, 80))
+            for i in range(16):
+                motion_draw.add_motion(
+                    lambda screen, ii: screen.blit(img, (x - 40 + dx, y + (ii ** 2 - 225) - 40 + dy)), i,
+                    (i,))
+            motion_draw.add_motion(lambda scr, tar: caster.attack(1, tar, [TAG_NORMAL_ATTACK]), 15, (target, ))
+        def tmp(screen):
+            for observer in caster.observers_attack:
+                observer.attack_event(self, targets, self.game_board, [TAG_NORMAL_ATTACK])
+        motion_draw.add_motion(tmp, 15, ())
 
 
 class CurtainOfNightSky(Buff):
@@ -52,7 +61,7 @@ class CurtainOfNightSky(Buff):
         for i in range(16):
             motion_draw.add_motion(lambda screen, ii: screen.blit(img, (x - 40 + dx, y + (ii ** 2 - 225) - 40 + dy)), i,
                                    (i,))
-        motion_draw.add_motion(lambda scr: target.hit(1, target, [TAG_PENETRATE]), 15, ())
+        motion_draw.add_motion(lambda scr: target.hit(1, target, [TAG_PENETRATE, TAG_BUFF]), 15, ())
 
 
 class NightSky(Skill):

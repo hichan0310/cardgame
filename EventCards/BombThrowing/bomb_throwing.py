@@ -16,6 +16,8 @@ if TYPE_CHECKING:
     from playerCard import PlayerCard
     from gameMap import GameMap
 
+boom = pygame.image.load("./EventCards/BombThrowing/boom.png")
+
 
 class Bomb(Summons):
     def __init__(self, pos, game_board, group):
@@ -23,21 +25,26 @@ class Bomb(Summons):
                          "./EventCards/BombThrowing/bomb_throwing.png", pos)
 
     def die(self):
+        p = self.pos_gameboard
+        size_change = [100, 130, 160, 200, 300, 440, 430, 400]
+        for ii in range(8):
+            motion_draw.add_motion(
+                lambda screen, size: screen.blit(pygame.transform.scale(wizard_energy_ball_boom, (size, size)), (
+                    self.pos_center[0] - size / 2, self.pos_center[1] - size / 2)), ii, (size_change[ii],))
+        for t_pos in [(p[0] - 1, p[1] - 1), (p[0] - 1, p[1]), (p[0] - 1, p[1] + 1),
+                      (p[0], p[1] - 1), (p[0], p[1]), (p[0], p[1] + 1),
+                      (p[0] + 1, p[1] - 1), (p[0] + 1, p[1]), (p[0] + 1, p[1] + 1)]:
+            motion_draw.add_motion(
+                lambda screen, t_p: self.game_board.gameBoard[t_p[0]][t_p[1]].hit(3, self, [TAG_SUMMON, TAG_PYRO]),
+                6, (t_pos,))
         super().die()
-        x, y = self.pos_gameboard
-        for target_pos in list(filter(lambda pos: 0 < pos[0] < 6 and 0 < pos[1] < 6,
-                               [(x - 1, y - 1), (x - 1, y), (x - 1, y + 1),
-                                (x, y - 1), (x, y + 1),
-                                (x + 1, y - 1), (x + 1, y), (x + 1, y + 1)])):
-            target=self.game_board.gameBoard[target_pos[0]][target_pos[1]]
-            target.hit(4, self, [TAG_SUMMON, TAG_PYRO])
 
 
 class BombThrowing(EventCard):
     def __init__(self, pos_center, game_board: "GameMap", group):
         super().__init__(pos_center, event_card_info[EVENT_BombThrowing],
                          game_board, group, BombThrowing)
-        self.group=group
+        self.group = group
 
     def execute_range_one(self):
         result = []

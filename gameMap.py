@@ -193,8 +193,9 @@ class SelectEventCard:
         temp=self.on_gameboard.pop(self.choose)
         self.not_on_gameboard=[temp.class_name]+self.not_on_gameboard
         temp.kill()
-        self.choos = None
+        self.choose = None
         self.execute_pos_first = None
+        self.game_board.selected_skill_range=[]
         for i in range(len(self.on_gameboard)):
             self.on_gameboard[i].update_location((250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i-2),
                                                   30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10))
