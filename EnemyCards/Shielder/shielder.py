@@ -28,7 +28,7 @@ class ShieldOfWrath(Skill):
             "자신의 몸에 2번의 피격까지 유지되는 기사의 보호막을 두른다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = "./PlayerCards/Chloe/skill_image/fast_growth.png"
+        self.skill_image_path = "./EnemyCards/Shielder/shield_of_wrath.png"
 
     def execute_range(self, pos):
         return list(filter(
@@ -117,7 +117,7 @@ class CounterAttack(Skill):
             "이 공격은 관통 공격에 발동되지 않는다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = "./PlayerCards/Chloe/skill_image/fast_growth.png"
+        self.skill_image_path = "./EnemyCards/Shielder/counterattack.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         CounterAttackBuff(caster, 3, self.game_board)

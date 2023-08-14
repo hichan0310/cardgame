@@ -26,7 +26,7 @@ class PenetrateArrow(Skill):
             "적군 1명에게 3의 관통 피해를 가한다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = None
+        self.skill_image_path = "./EnemyCards/Crossbow_archer/penetrate_arrow.png"
         self.observer_addition_arrow = []
 
     def execute(self, caster: "EnemyCard", targets: "list[PlayerCard]", caster_pos: tuple[int, int],
@@ -105,7 +105,7 @@ class ContinuousFiring(Skill):
             "3턴동안 자신에게 일반 공격을 하면 추가 화살을 발사하는 버프를 건다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = None
+        self.skill_image_path = "./EnemyCards/Crossbow_archer/multy_shot.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         ContinuousFiringBuff(caster, 3, self.game_board)

@@ -25,7 +25,7 @@ class Sortie(Skill):
             "적을 만날 때까지 앞으로 가면서 타격한다. ",
             "적을 만나면 검을 휘둘러서 바로 옆 상대에게 피해를 준다. "
         ]
-        self.skill_image_path = None
+        self.skill_image_path = "./EnemyCards/Knight_beginner/sortie.png"
 
     def execute_range(self, pos):
         return list(filter(
@@ -107,7 +107,7 @@ class PrepareDefence(Skill):
             "자신의 몸에 보호막을 두르고 다음 공격에서 받는 피해를 1 줄인다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = None
+        self.skill_image_path = "./EnemyCards/Knight_beginner/prepare_defence.png"
 
     def execute_range(self, pos):
         return [pos]

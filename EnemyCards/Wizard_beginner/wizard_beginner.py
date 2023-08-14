@@ -25,7 +25,7 @@ class EnergyBall(Skill):
             "적군 1명을 중심으로 1의 광역 피해를 가한다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = None
+        self.skill_image_path = "./EnemyCards/Wizard_beginner/energyball.png"
 
     def atk_range(self, caster_pos, pos):
         return list(filter(

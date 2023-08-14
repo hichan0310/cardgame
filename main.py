@@ -92,7 +92,7 @@ e_card_list = [
     Sniping,
     WarpGate
 ]
-e_card_list=e_card_list*2
+e_card_list = e_card_list * 2
 
 
 def select_character(stage_num):
@@ -123,6 +123,102 @@ def forming():
     pygame.display.update()
     time.sleep(0.5)
     return main, ()
+
+
+def draw_skill(skill, index):
+    background = pygame.Surface(((SKILL_WIDTH + 20) * 4 - 20, SKILL_HEIGHT))
+    background.fill("#000000")
+    bg_rect = background.get_rect(
+        center=(
+        SCREEN_WIDTH / 2 + 30 - SKILL_WIDTH / 2 + (SKILL_WIDTH + 20) * 2-100, SCREEN_HEIGHT - 100 - 600 + index * 200))
+    screen.blit(background, bg_rect)
+
+    font = pygame.font.Font("./D2Coding.ttf", 26)
+    text = font.render(skill.name, True, "#FFFFFF")
+    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40-100, SCREEN_HEIGHT - 50 - 600 + index * 200))
+    screen.blit(text, text_rect)
+
+    image = pygame.image.load(skill.skill_image_path)
+    image = pygame.transform.scale(image, (80, 80))
+    pos = (SCREEN_WIDTH / 2 + 40 - 40-100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 200)
+    screen.blit(image, pos)
+
+    center_pos = (SCREEN_WIDTH / 2 + 40 + 40-100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 200)
+    pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
+    draw_text(str(skill.cost), center=center_pos, color="#FFFFFF", size=16)
+    try:
+        if skill.max_energy is not None:
+            center_pos = (SCREEN_WIDTH / 2 + 40 + 40-100, SCREEN_HEIGHT - 60 - 35 - 60 + 20 - 600 + index * 200)
+            pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
+            draw_text(str(skill.max_energy), center=center_pos, color="#FFFFFF", size=16)
+    except:
+        pass
+
+    i = 0
+    for t in skill.explaination:
+        font = pygame.font.Font("./D2Coding.ttf", 14)
+        text = font.render(t, True, "#FFFFFF")
+        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19-600+index*200, left=SCREEN_WIDTH / 2 + 40)
+        screen.blit(text, text_rect)
+        i += 1
+
+
+def dogam_character(*_):
+    index=0
+    while True:
+        for event in pygame.event.get():
+            if event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_RIGHT:
+                    index=min(len(characters_info)-1, index+1)
+                    screen.fill("#000000")
+                if event.key==pygame.K_LEFT:
+                    index=max(0, index-1)
+                    screen.fill("#000000")
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                        return
+        name, skills, specialskill, hp, energy, passive, img_path, color=characters_info[index]
+        img=pygame.transform.scale(pygame.image.load(img_path), (600, 900))
+        font = pygame.font.Font("./D2Coding.ttf", 60)
+        text = font.render(name, True, "#FFFFFF")
+        text_rect = text.get_rect(centery=200, left=900)
+        screen.blit(text, text_rect)
+        screen.blit(img, (100, 90))
+        draw_skill(skills[0](None), 0)
+        draw_skill(skills[1](None), 1)
+        draw_skill(specialskill(None), 2)
+        motion_draw.draw(screen)
+        pygame.display.update()
+        clock.tick(FPS)
+
+def dogam_enemy(*_):
+    index=0
+    while True:
+        for event in pygame.event.get():
+            if event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_RIGHT:
+                    index=min(len(enemies_info)-1, index+1)
+                    screen.fill("#000000")
+                if event.key==pygame.K_LEFT:
+                    index=max(0, index-1)
+                    screen.fill("#000000")
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                        return
+        name, skills, hp, passive, ai, img_path=enemies_info[index]
+        img=pygame.transform.scale(pygame.image.load(img_path), (600, 900))
+        font = pygame.font.Font("./D2Coding.ttf", 60)
+        text = font.render(name, True, "#FFFFFF")
+        text_rect = text.get_rect(centery=200, left=900)
+        screen.blit(text, text_rect)
+        screen.blit(img, (100, 90))
+        for i in range(len(skills)):
+            draw_skill(skills[i](None), i)
+        motion_draw.draw(screen)
+        pygame.display.update()
+        clock.tick(FPS)
+
+
 
 
 def game_end(win):
@@ -190,7 +286,7 @@ def game(p_info, e_info, eventcard_list):
         clock.tick(FPS)
 
 
-func = main
+func = dogam_enemy
 
 params = ()
 while __name__ == "__main__":

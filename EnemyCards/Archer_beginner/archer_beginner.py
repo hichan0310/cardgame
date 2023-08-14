@@ -22,7 +22,7 @@ class Arrow(Skill):
             "적군 1명에게 2의 피해를 가한다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = None
+        self.skill_image_path = "./EnemyCards/Archer_beginner/arrow_skill.png"
 
     def execute(self, caster: "EnemyCard", targets: "list[PlayerCard]", caster_pos: tuple[int, int],
                 targets_pos: list[tuple[int, int]], execute_pos):
