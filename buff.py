@@ -28,10 +28,10 @@ class Buff:
     def observing(self, observed_event):
         self.observing_list.append(observed_event)
 
-    def atk_buff(self, caster, target, damage: int, atk_type: str):
+    def atk_buff(self, caster, target, damage: int, atk_type):
         return damage
 
-    def hit_buff(self, caster, target, damage: int, atk_type: str):
+    def hit_buff(self, caster, target, damage: int, atk_type):
         return damage
 
     def hit_event(self, caster, target, game_board, atk_type):

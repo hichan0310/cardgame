@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 class EventCard(pygame.sprite.Sprite):
     def __init__(self, pos_center, info, game_board:"gameMap", group, class_name):
         super().__init__(group)
+        self.group=group
         self.class_name=class_name
         self.name, self.cost, self.img_path, self.explaination, self.execute_type = info
         self.pos_center = pos_center

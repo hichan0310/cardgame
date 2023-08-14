@@ -37,3 +37,13 @@ class SpecialSkill(Skill):
             "no explaination"
         ]
         self.skill_image_path = "./Chloe/skill_image/sprout_of_blue.png"
+
+    def gage_up(self, num):
+        self.energy+=num
+        if self.energy>self.max_energy:
+            self.energy=self.max_energy
+
+    def gage_down(self, num):
+        self.energy-=num
+        if self.energy<0:
+            self.energy=0

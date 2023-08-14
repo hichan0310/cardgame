@@ -118,7 +118,7 @@ class FlameShuriken(Skill):
                     dy = p2[1] - p1[1]
                     t = i * 5 / sqrt(dx ** 2 + dy ** 2)
                     image = pygame.transform.scale(flame_shuriken, (120, 120))
-                    angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 15
+                    angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 30
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
                     size=image.get_size()
@@ -128,13 +128,13 @@ class FlameShuriken(Skill):
                 motion_draw.add_motion(temp_move, i, (pos1, p1, i))
                 motion_draw.add_motion(temp_move, i, (pos1, p2, i))
                 motion_draw.add_motion(temp_move, i, (pos1, p3, i))
-            for i in range(40):
+            for i in range(10):
                 def temp_move(screen, p1, p2, i):
                     dx = p2[0] - p1[0]
                     dy = p2[1] - p1[1]
                     t = 100 / sqrt(dx ** 2 + dy ** 2)
                     image = pygame.transform.scale(flame_shuriken, (120, 120))
-                    angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 15
+                    angle = -atan(dy / (dx - 0.00001)) / pi * 180 + i * 30
                     if dx > 0: angle += 180
                     image = pygame.transform.rotate(image, angle)
                     size=image.get_size()
@@ -159,7 +159,7 @@ class FlameShuriken(Skill):
                     img_pos = (p1[0] + t * dx - size[0]/2, p1[1] + t * dy - size[1]/2)
                     screen.blit(image, img_pos)
 
-                motion_draw.add_motion(temp_move, i1 + 60, (p1, pos2, i1))
+                motion_draw.add_motion(temp_move, i1 + 30, (p1, pos2, i1))
                 i1 += 1
             i2 = 0
             while (i2 * 40 - 40) ** 2 < (p2[0] - pos2[0]) ** 2 + (p2[1] - pos2[1]) ** 2:
@@ -175,7 +175,7 @@ class FlameShuriken(Skill):
                     img_pos = (p1[0] + t * dx - size[0]/2, p1[1] + t * dy - size[1]/2)
                     screen.blit(image, img_pos)
 
-                motion_draw.add_motion(temp_move, i2 + 60, (p2, pos2, i2))
+                motion_draw.add_motion(temp_move, i2 + 30, (p2, pos2, i2))
                 i2 += 1
             i3 = 0
             while (i3 * 40 - 40) ** 2 < (p3[0] - pos2[0]) ** 2 + (p3[1] - pos2[1]) ** 2:
@@ -191,7 +191,7 @@ class FlameShuriken(Skill):
                     img_pos = (p1[0] + t * dx - size[0]/2, p1[1] + t * dy - size[1]/2)
                     screen.blit(image, img_pos)
 
-                motion_draw.add_motion(temp_move, i3 + 60, (p3, pos2, i3))
+                motion_draw.add_motion(temp_move, i3 + 30, (p3, pos2, i3))
                 i3 += 1
 
             def temp_damage(screen, *_):
@@ -204,9 +204,9 @@ class FlameShuriken(Skill):
             except:
                 pass
 
-            motion_draw.add_motion(temp_damage, i1 + 60, ())
-            motion_draw.add_motion(temp_damage, i2 + 60, ())
-            motion_draw.add_motion(temp_damage, i3 + 60, ())
+            motion_draw.add_motion(temp_damage, i1 + 30, ())
+            motion_draw.add_motion(temp_damage, i2 + 30, ())
+            motion_draw.add_motion(temp_damage, i3 + 30, ())
 
 
 class FlameSward(SpecialSkill):

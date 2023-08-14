@@ -69,15 +69,14 @@ EVENT_EnforceHit = "강화 타격"
 EVENT_SecondOpportunity = "두 번째 기회"
 EVENT_BombThrowing = "폭탄 투척"
 EVENT_ManaSynthesizer = "마나 합성기"
-EVENT_Overheating = "과열"
+EVENT_FireSward = "불타오르는 칼날"
 event_card_info = {
     EVENT_Sniping: (
         EVENT_Sniping, 3,
         "./EventCards/Sniping/sniping_card.png",
-        ["적군 1명을 선택하여 hp를 1로 만듭니다.",
-         "보스에게는 4의 피해를 가합니다. "],
+        ["적군 1명을 선택하여 관통 피해를 가하고 hp를 1로 만듭니다.",
+         "최대 7의 피해를 가합니다. "],
         EVENT_TYPE_1,
-        []
     ),
     EVENT_HealingLight: (
         EVENT_HealingLight, 1,
@@ -86,7 +85,7 @@ event_card_info = {
         EVENT_TYPE_1
     ),
     EVENT_EnergyRecharge: (
-        EVENT_EnergyRecharge, 2,
+        EVENT_EnergyRecharge, 1,
         "./EventCards/EnergyRecharge/energy_recharge.png",
         ["아군 1명을 지정하여 필살기 게이지를 1 충전합니다. "],
         EVENT_TYPE_1
@@ -101,14 +100,16 @@ event_card_info = {
     EVENT_WarpGate: (
         EVENT_WarpGate, 1,
         "./EventCards/WarpGate/warp_gate.png",
-        ["워프 게이트를 열어서 2개 칸을 서로 바꾼다. "],
+        ["워프 게이트를 열어서 2개 칸을 서로 바꾼다. ",
+         "이것은 이동으로 간주하지 않는다. "],
         EVENT_TYPE_2
     ),
     EVENT_EnforceHit: (
-        EVENT_EnforceHit, 1,
+        EVENT_EnforceHit, 3,
         "./EventCards/EnforceHit/enforce_hit.png",
-        ["아군 1명을 지정하여 일반 공격 피해 50% 증가하는 버프를 부여한다. ",
-         "소수점 아래는 버린다. "],
+        ["아군 1명을 지정하여 강화 타격 버프를 부여한다. ",
+         "강화 타격 상태의 적은 3턴간 일반 공격 피해가 50% 증가하는 버프를 부여한다. ",
+         "소수점 아래는 버린다 . "],
         EVENT_TYPE_1
     ),
     EVENT_SecondOpportunity: (
@@ -120,22 +121,23 @@ event_card_info = {
     EVENT_BombThrowing: (
         EVENT_BombThrowing, 2,
         "./EventCards/BombThrowing/bomb_throwing.png",
-        ["공격하면 터지면서 4의 광역 피해를 주는 폭탄을 소환한다. ",
+        ["공격하면 터지면서 3의 광역 피해를 주는 폭탄을 소환한다. ",
          "폭탄은 1변 공격하면 바로 터진다. ",
          "빈 공간이 없으면 사용할 수 없다. "],
         EVENT_TYPE_1
     ),
     EVENT_ManaSynthesizer: (
-        EVENT_ManaSynthesizer, 3,
+        EVENT_ManaSynthesizer, 1,
         "./EventCards/ManaSynthesizer/mana_synthesizer.png",
-        ["아군 1명을 골라 피해를 받으면 4cost를 회복하는 버프를 부여한다. "],
+        ["아군 1명을 골라 피해를 3번 받으면 다음 턴에 3cost를 회복하는 버프를 부여한다. "],
         EVENT_TYPE_1
     ),
-    EVENT_Overheating: (
-        EVENT_Overheating, 2,
-        "./EventCards/Overheating/overheating.png",
-        ["스킬로 데미지를 3번 가할 때마다 cost와 필살기를 1 회복한다. ",
-         "이 버프는 턴이 지나도 사라지지 않는다. "],
+    EVENT_FireSward: (
+        EVENT_FireSward, 2,
+        "./EventCards/FireSward/fire_sward.png",
+        ["캐릭터에게 과열 상태를 부여한다. ",
+         "과열 상태이 캐릭터는 스킬로 데미지를 3번 가할 때마다 cost와 필살기를 1 회복한다. ",
+         "이 버프는 턴이 지나도 사라지지 않으며 중첩될 수 없다. "],
         EVENT_TYPE_1
     ),
 }

@@ -152,7 +152,7 @@ class SelectEventCard:
         for i in range(5):
             self.on_gameboard.append(
                 self.not_on_gameboard.pop()(
-                    (250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i-2), 30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10),
+                    (250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i-2)+30, 30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10),
                     self.game_board, self.group
                 )
             )
@@ -175,9 +175,39 @@ class SelectEventCard:
             center_pos = (eventcard.pos_center[0] + CARD_WIDTH/2-6, eventcard.pos_center[1] - CARD_HEIGHT/2+6)
             pygame.draw.circle(screen, "#000000", center_pos, 18, 18)
             draw_text(str(eventcard.cost), center=center_pos, color="#FFFFFF", size=24)
+        if self.choose is not None:
+            background = pygame.Surface(((SKILL_WIDTH + 20) * 4 - 20, SKILL_HEIGHT))
+            background.fill("#000000")
+            bg_rect = background.get_rect(
+                center=(SCREEN_WIDTH / 2 + 30 - SKILL_WIDTH / 2 + (SKILL_WIDTH + 20) * 2, SCREEN_HEIGHT - 100 - 650))
+            screen.blit(background, bg_rect)
+
+            font = pygame.font.Font("./D2Coding.ttf", 20)
+            text = font.render(self.on_gameboard[self.choose].name, True, "#FFFFFF")
+            text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40, SCREEN_HEIGHT - 50 - 650))
+            screen.blit(text, text_rect)
+
+            image = pygame.image.load(self.on_gameboard[self.choose].img_path)
+            image = pygame.transform.scale(image, (60, 90))
+            pos = (SCREEN_WIDTH / 2 + 40 - 30, SCREEN_HEIGHT - 60 - 30 - 60 - 650)
+            screen.blit(image, pos)
+
+            center_pos = (SCREEN_WIDTH / 2 + 40 + 40, SCREEN_HEIGHT - 60 - 35 - 60 - 650)
+            pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
+            draw_text(str(self.on_gameboard[self.choose].cost), center=center_pos, color="#FFFFFF", size=16)
+
+            i = 0
+            for t in self.on_gameboard[self.choose].explaination:
+                font = pygame.font.Font("./D2Coding.ttf", 14)
+                text = font.render(t, True, "#FFFFFF")
+                text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 650, left=SCREEN_WIDTH / 2 + 140)
+                screen.blit(text, text_rect)
+                i += 1
 
     def use(self, params, flag=True):
-        if self.on_gameboard[self.choose].cost>self.game_board.cost.cost:
+        if not flag:
+            self.game_board.cost.plus(1)
+        if self.on_gameboard[self.choose].cost>self.game_board.cost.cost and flag:
             self.game_board.low_cost()
             self.choose = None
             self.execute_pos_first = None
@@ -197,7 +227,7 @@ class SelectEventCard:
         self.execute_pos_first = None
         self.game_board.selected_skill_range=[]
         for i in range(len(self.on_gameboard)):
-            self.on_gameboard[i].update_location((250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i-2),
+            self.on_gameboard[i].update_location((250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i-2)+30,
                                                   30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10))
 
     def selectedCard(self):
@@ -238,6 +268,7 @@ class GameMap:
         self.skill_select = SkillSelectBar([])
         self.selected_skill = None
         self.enemys, self.players = [], []
+        self.executing_ai=None
 
     def addItem(self, item, pos):
         self.gameBoard[pos[0]][pos[1]].item = item
@@ -255,6 +286,7 @@ class GameMap:
         observer.observing(self.observers_move)
 
     def turnover(self):
+        self.executing_ai=None
         for observer in self.observers_turnover[::-1]:
             observer.turnover_event(self)
         random.shuffle(self.enemys)
@@ -289,6 +321,7 @@ class GameMap:
             return
 
     def AI_execute(self, i):
+        self.executing_ai=self.enemys[i]
         self.enemys[i].ai.execute(self.enemys[i].pos_gameboard)
 
     def heal(self, pos, heal_amount):
@@ -322,6 +355,12 @@ class GameMap:
         temp.kill()
 
     def draw(self):
+        if self.executing_ai is not None:
+            j, i=self.executing_ai.pos_gameboard
+            pygame.draw.rect(self.screen, "#777777",
+                             [30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i - (CELL_WIDTH - 10) / 2,
+                              30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j - CELL_HEIGHT / 2, CELL_WIDTH - 10,
+                              CELL_HEIGHT])
         if self.selected_skill is not None or self.event_card_manager.choose is not None:
             for j, i in self.selected_skill_range:
                 pygame.draw.rect(self.screen, "#777777",
@@ -465,7 +504,6 @@ class GameMap:
         else:
             if 805 < pos[0] < 855 and 85 < pos[1] < 1065:
                 self.event_card_manager.use((), False)
-                print("asdf")
                 return
             elif self.event_card_manager.selectedCard().execute_type == EVENT_TYPE_0:
                 x, y = self.event_card_manager.selectedCard().pos_center

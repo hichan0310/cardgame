@@ -44,7 +44,6 @@ class BombThrowing(EventCard):
     def __init__(self, pos_center, game_board: "GameMap", group):
         super().__init__(pos_center, event_card_info[EVENT_BombThrowing],
                          game_board, group, BombThrowing)
-        self.group = group
 
     def execute_range_one(self):
         result = []

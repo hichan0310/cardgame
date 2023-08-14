@@ -31,15 +31,17 @@ class StarFall(Skill):
         for target in targets:
             x, y = target.pos_center
             dx, dy = random.randint(-30, 30), random.randint(-30, 30)
-            img = pygame.transform.scale(astin_star, (80, 80))
+            img = pygame.transform.scale(astin_star, (50, 50))
             for i in range(16):
                 motion_draw.add_motion(
                     lambda screen, ii: screen.blit(img, (x - 40 + dx, y + (ii ** 2 - 225) - 40 + dy)), i,
                     (i,))
-            motion_draw.add_motion(lambda scr, tar: caster.attack(1, tar, [TAG_NORMAL_ATTACK]), 15, (target, ))
+            motion_draw.add_motion(lambda scr, tar: caster.attack(1, tar, [TAG_NORMAL_ATTACK]), 15, (target,))
+
         def tmp(screen):
             for observer in caster.observers_attack:
                 observer.attack_event(self, targets, self.game_board, [TAG_NORMAL_ATTACK])
+
         motion_draw.add_motion(tmp, 15, ())
 
 
@@ -57,7 +59,7 @@ class CurtainOfNightSky(Buff):
             return
         x, y = target.pos_center
         dx, dy = random.randint(-30, 30), random.randint(-30, 30)
-        img = pygame.transform.scale(astin_star, (80, 80))
+        img = pygame.transform.scale(astin_star, (50, 50))
         for i in range(16):
             motion_draw.add_motion(lambda screen, ii: screen.blit(img, (x - 40 + dx, y + (ii ** 2 - 225) - 40 + dy)), i,
                                    (i,))
@@ -81,9 +83,16 @@ class NightSky(Skill):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             try:
-                CurtainOfNightSky(target, 2, target.game_board)
+                x_0, y_0 = target.pos_center
+                for i in range(50):
+                    motion_draw.add_motion(lambda scr, x: scr.blit(pygame.transform.scale(astin_star, (60 - x, 60 - x)),
+                                                                   (x_0 + cos(x / 2.5) * (1.1 ** (60 - x)) - 30 + x / 2,
+                                                                    y_0 + sin(x / 2.5) * (
+                                                                                1.1 ** (60 - x)) - 30 + x / 2)), i,
+                                           (i,))
+                motion_draw.add_motion(lambda scr: CurtainOfNightSky(target, 2, target.game_board), 60, ())
             except:
-                pass
+                continue
 
 
 class StarRain(SpecialSkill):
@@ -109,17 +118,34 @@ class StarRain(SpecialSkill):
             [(i + 1, 3) for i in range(5)] + \
             [(i + 1, 4) for i in range(5)] + \
             [(i + 1, 5) for i in range(5)]
-        return list(filter(lambda p: p != caster_pos, t))
+        return list(
+            filter(lambda p: p != caster_pos and self.game_board.gameBoard[p[0]][p[1]].team != FLAG_PLAYER_TEAM, t)
+        )
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
-        for target in targets:
-            caster.attack(1, target, self.atk_type)
-            for observer in caster.observers_attack:
-                observer.attack_event(self, targets, self.game_board, self.atk_type)
-            caster.attack(1, target, self.atk_type)
-            for observer in caster.observers_attack:
-                observer.attack_event(self, targets, self.game_board, self.atk_type)
-            caster.attack(1, target, self.atk_type)
-            for observer in caster.observers_attack:
-                observer.attack_event(self, targets, self.game_board, self.atk_type)
+        def temp_damage(screen):
+            for target in targets:
+                caster.attack(1, target, self.atk_type)
+                for observer in caster.observers_attack:
+                    observer.attack_event(self, targets, self.game_board, self.atk_type)
+
+        motion_draw.add_motion(temp_damage, 25, ())
+        motion_draw.add_motion(temp_damage, 45, ())
+        motion_draw.add_motion(temp_damage, 55, ())
+        left, up = self.game_board.gameBoard[1][1].pos_center
+        right, down = self.game_board.gameBoard[5][5].pos_center
+        left -= CELL_WIDTH // 2
+        up -= CELL_HEIGHT // 2
+        right += CELL_WIDTH // 2
+        down -= CELL_WIDTH // 2
+        img = pygame.transform.scale(astin_star, (30, 30))
+
+        def falling_star(screen):
+            x, y = random.randint(left, right), random.randint(up, down)
+            for i in range(21):
+                motion_draw.add_motion(lambda scr, t: scr.blit(img, (x - t * t / 2 + 200, y + t * t - 400)), i, (i,))
+
+        for i in range(40):
+            for _ in range(5):
+                motion_draw.add_motion(falling_star, i, ())
         caster.specialSkill.energy = 0

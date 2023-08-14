@@ -5,7 +5,18 @@ from select_character import SelectCharacter
 from settings import *
 import sys
 from graphic_manager import motion_draw
-from EventCards.BombThrowing.bomb_throwing import *
+
+from EventCards.BombThrowing.bomb_throwing import BombThrowing
+from EventCards.EnergyRecharge.energy_recharge import EnergyRecharge
+from EventCards.EnforceHit.enforce_hit import EnforceHit
+from EventCards.FireSward.fire_sward import FireSward
+from EventCards.HealingLight.healing_light import HealingLight
+from EventCards.Lucky.lucky import Lucky
+from EventCards.ManaSynthesizer.mana_synthesizer import ManaSynthesizer
+from EventCards.SecondOpportunity.second_opertunity import SecondOpertunity
+from EventCards.Sniping.sniping import Sniping
+from EventCards.WarpGate.warp_gate import WarpGate
+
 from characters import *
 
 pygame.init()
@@ -68,7 +79,21 @@ def select_stage(stage=0):
         motion_draw.draw(screen)
         pygame.display.update()
 
-e_card_list=[BombThrowing for _ in range(10)]
+
+e_card_list = [
+    BombThrowing,
+    EnergyRecharge,
+    EnforceHit,
+    FireSward,
+    HealingLight,
+    Lucky,
+    ManaSynthesizer,
+    SecondOpertunity,
+    Sniping,
+    WarpGate
+]
+e_card_list=e_card_list*2
+
 
 def select_character(stage_num):
     game_board = SelectCharacter(stage_num, screen)

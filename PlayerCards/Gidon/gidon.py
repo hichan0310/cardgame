@@ -10,6 +10,7 @@ from settings import *
 if TYPE_CHECKING:
     from playerCard import PlayerCard
 
+bloody_blows=[pygame.transform.scale(pygame.image.load(f"./PlayerCards/Gidon/bloody_blow/{i}.png"), (170*3, 170*2)) for i in range(5)]
 
 class BloodyBlow(Skill):
     def __init__(self, game_board):
@@ -56,10 +57,32 @@ class BloodyBlow(Skill):
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
+        x, y = transform_pos(execute_pos)
+        y -= 170 * 3 / 2
+        x -= 170 / 2
+        angle=90
+        if caster_pos[0] < execute_pos[0]:
+            x, y=transform_pos(execute_pos)
+            x-=170*3/2
+            y-=170/2
+            angle=0
+        if caster_pos[0] > execute_pos[0]:
+            x, y = transform_pos(execute_pos)
+            x -= 170 * 3 / 2
+            y -= 170 * 3 / 2
+            angle=180
+        if caster_pos[1] > execute_pos[1]:
+            x, y = transform_pos(execute_pos)
+            y -= 170 * 3 / 2
+            x -= 170 * 3 / 2
+            angle=270
+        images=[pygame.transform.rotate(img, angle) for img in bloody_blows]
         for target in targets:
             caster.attack(1, target, self.atk_type)
         for observer in caster.observers_attack[::-1]:
             observer.attack_event(self, targets, self.game_board, self.atk_type)
+        for i in range(5):
+            motion_draw.add_motion(lambda scr, img:scr.blit(img, (x, y)), i, (images[i], ))
 
 
 class BloodRage(Buff):
