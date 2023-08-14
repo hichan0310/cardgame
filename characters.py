@@ -74,20 +74,20 @@ event_card_info = {
     EVENT_Sniping: (
         EVENT_Sniping, 3,
         "./EventCards/Sniping/sniping_card.png",
-        ["적군 1명을 선택하여 관통 피해를 가하고 hp를 1로 만듭니다.",
-         "최대 7의 피해를 가합니다. "],
+        ["적군 1명을 선택하여 관통 피해를 가하고 hp를 1로 만든다.",
+         "최대 7의 피해를 가한다. "],
         EVENT_TYPE_1,
     ),
     EVENT_HealingLight: (
         EVENT_HealingLight, 1,
         "./EventCards/HealingLight/healing_light.png",
-        ["아군 1명을 지정하여 hp를 2 회복합니다. "],
+        ["아군 1명을 지정하여 hp를 2 회복한다. "],
         EVENT_TYPE_1
     ),
     EVENT_EnergyRecharge: (
         EVENT_EnergyRecharge, 1,
         "./EventCards/EnergyRecharge/energy_recharge.png",
-        ["아군 1명을 지정하여 필살기 게이지를 1 충전합니다. "],
+        ["아군 1명을 지정하여 필살기 게이지를 1 충전한다. "],
         EVENT_TYPE_1
     ),
     EVENT_Lucky: (
