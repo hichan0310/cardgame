@@ -11,18 +11,18 @@ from EnemyCards.Shielder.shielder import *
 from EnemyCards.Crossbow_archer.crossbow_archer import *
 
 characters_info = [
-    ["Chloe", [SproutOfBlue, SproutOfEarth], SproutOfReincarnation, 20, 4, [],
-     "./PlayerCards/Chloe/chloe_card.png", "#FF0000"],
     ["Tania", [StraightCut, FlameShuriken], FlameSward, 20, 5, [],
      "./PlayerCards/Tania/tania_card.png", "#FF0000"],
     ["Lucifer", [CurseArrow, ExplodeCurse], CommingApocalypse, 20, 4, [],
      "./PlayerCards/Lucifer/lucifer_card.png", "#FF0000"],
-    ["Petra", [CrackOfEarth, SummonTurret], BaseCollapse, 20, 4, [BaseInstability],
-     "./PlayerCards/Petra/petra_card.png", "#FF0000"],
     ["Gidon", [BloodyBlow, VengeanceEye], UnfinishedRage, 20, 4, [],
      "./PlayerCards/Gidon/gidon_card.png", "#FF0000"],
     ["Astin", [StarFall, NightSky], StarRain, 20, 5, [],
-     "./PlayerCards/Astin/astin_card.png", "#FF0000"]
+     "./PlayerCards/Astin/astin_card.png", "#FF0000"],
+    ["Chloe", [SproutOfBlue, SproutOfEarth], SproutOfReincarnation, 20, 4, [],
+     "./PlayerCards/Chloe/chloe_card.png", "#FF0000"],
+    ["Petra", [CrackOfEarth, SummonTurret], BaseCollapse, 20, 4, [BaseInstability],
+     "./PlayerCards/Petra/petra_card.png", "#FF0000"],
 ]
 
 enemies_info = [

@@ -241,7 +241,7 @@ class SelectEventCard:
                 return
             self.on_gameboard.append(
                 self.not_on_gameboard.pop()(
-                    (250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (len(self.on_gameboard)-2),
+                    (250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (len(self.on_gameboard)-2)+30,
                      30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10),
                     self.game_board, self.group
                 )
