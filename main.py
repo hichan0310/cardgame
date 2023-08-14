@@ -225,17 +225,17 @@ def draw_eventcard(eventcard_key, movement):
 
 
 def dogam_character(*_):
-    screen.fill("#000000")
+    screen.fill("#333333")
     index=0
     while True:
         for event in pygame.event.get():
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_RIGHT:
                     index=min(len(characters_info)-1, index+1)
-                    screen.fill("#000000")
+                    screen.fill("#333333")
                 if event.key==pygame.K_LEFT:
                     index=max(0, index-1)
-                    screen.fill("#000000")
+                    screen.fill("#333333")
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                         return dogam, ()
@@ -254,17 +254,17 @@ def dogam_character(*_):
         clock.tick(FPS)
 
 def dogam_enemy(*_):
-    screen.fill("#000000")
+    screen.fill("#333333")
     index=0
     while True:
         for event in pygame.event.get():
             if event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_RIGHT:
                     index=min(len(enemies_info)-1, index+1)
-                    screen.fill("#000000")
+                    screen.fill("#333333")
                 if event.key==pygame.K_LEFT:
                     index=max(0, index-1)
-                    screen.fill("#000000")
+                    screen.fill("#333333")
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                         return dogam, ()
@@ -282,7 +282,7 @@ def dogam_enemy(*_):
         clock.tick(FPS)
 
 def dogam_eventcard(*_):
-    screen.fill("#000000")
+    screen.fill("#333333")
     i=0
     for key in event_card_info.keys():
         draw_eventcard(key, (70+920*(i%2), (i//2)*180-150))
