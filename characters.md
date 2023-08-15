@@ -7,7 +7,7 @@
 ## 캐릭터
 1. 딜러
     1. 타니아 : 딜러, 여자
-<img src="./PlayerCards/Tania/tania_card.png">
+      <img src="./PlayerCards/Tania/tania_card.png">
       - 불 컨셉
       - 일반 공격 : 직선 베기
         - cost : 2
@@ -22,7 +22,7 @@
         - 전방에 불의 힘이 담긴 검으로 크게 베어 3의 광역 관통 피해를 2번 가한다.
    <br><br><br>
    2. 루시퍼 : 딜러, 남자
-<img src="./PlayerCards/Lucifer/lucifer_card.png">
+      <img src="./PlayerCards/Lucifer/lucifer_card.png">
       - 타락 천사 느낌
       - 일반 공격 : 저주의 화살
         - cost : 3
@@ -39,7 +39,7 @@
         - 앞으로 3턴동안 턴이 시작하고 끝날 때 저주 버프를 부여한다.
    <br><br><br>
    3. 기드온 : 딜러, 남자
-<img src="./PlayerCards/Gidon/gidon_card.png">
+      <img src="./PlayerCards/Gidon/gidon_card.png">
       - 광전사, 피 컨셉
       - 일반 공격 : 피의 일격
         - cost : 2
@@ -56,7 +56,7 @@
         - 바로 앞의 적을 지정하여 15의 피해를 준다. 
    <br><br><br>
    4. 페트라 : 딜러, 여자
-<img src="./PlayerCards/Petra/petra_card.png">
+      <img src="./PlayerCards/Petra/petra_card.png">
       - 돌, 모래 컨셉
       - 기본 패시브 : 기반 불안정
         - 바위 포탑이 파괴될 때마다 바위의 분노가 1씩 쌓인다. 
@@ -77,7 +77,7 @@
 #
 2. 힐러
    1. 클로에 : 여자, 힐러
-<img src="./PlayerCards/Chloe/chloe_card.png">
+      <img src="./PlayerCards/Chloe/chloe_card.png">
       - 푸른 새싹이라는 뜻
       - 뭔가 생명 관련 능력이 있는 느낌을 추가하면 좋을 듯
         - 일반 공격 : 급속생장
@@ -101,7 +101,7 @@
 #
 3. 버퍼
    1. 아스틴 : 딜 버퍼, 여자
-<img src="./PlayerCards/Astin/astin_card.png"><br>
+      <img src="./PlayerCards/Astin/astin_card.png">
       - 별 컨셉
       - 일반 공격 : 별빛 낙하
         - cost : 2
