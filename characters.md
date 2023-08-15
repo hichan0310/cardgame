@@ -101,8 +101,7 @@
 #
 3. 버퍼
    1. 아스틴 : 딜 버퍼, 여자
-<img src="./PlayerCards/Astin/astin_card.png">
-
+<img src="./PlayerCards/Astin/astin_card.png"><br>
       - 별 컨셉
       - 일반 공격 : 별빛 낙하
         - cost : 2
