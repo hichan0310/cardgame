@@ -22,7 +22,7 @@ boom = pygame.image.load("./EventCards/BombThrowing/boom.png")
 class Bomb(Summons):
     def __init__(self, pos, game_board, group):
         super().__init__(1, transform_pos(pos), game_board, group, None,
-                         "./EventCards/BombThrowing/bomb_throwing.png", pos)
+                         "./EventCards/BombThrowing/bomb.png", pos)
 
     def die(self):
         p = self.pos_gameboard

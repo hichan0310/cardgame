@@ -225,27 +225,41 @@ def draw_eventcard(eventcard_key, movement):
 
 
 def dogam_character(*_):
-    screen.fill("#333333")
-    index=0
+    background=pygame.image.load("dogam_char.png")
+    while True:
+        screen.blit(background, (0, 0))
+        for event in pygame.event.get():
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                x, y=event.pos
+                if 59 < x < 351 and 144 < y < 1015:
+                    return dogam_character_index, (0,)
+                if 360 < x < 652 and 144 < y < 1015:
+                    return dogam_character_index, (1,)
+                if 662 < x < 955 and 144 < y < 1015:
+                    return dogam_character_index, (2,)
+                if 964 < x < 1257 and 144 < y < 1015:
+                    return dogam_character_index, (3,)
+                if 1265 < x < 1558 and 144 < y < 1015:
+                    return dogam_character_index, (4,)
+                if 1565 < x < 1859 and 144 < y < 1015:
+                    return dogam_character_index, (5,)
+                if 60<x<292 and 38<y<103:
+                    return dogam, ()
+        motion_draw.draw(screen)
+        pygame.display.update()
+        clock.tick(FPS)
+
+
+def dogam_character_index(index):
+    name, skills, specialskill, hp, energy, passive, img_path, color = characters_info[index]
+    bg_img=pygame.image.load(f"./dogam_background/{name}.png")
     while True:
         for event in pygame.event.get():
-            if event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_RIGHT:
-                    index=min(len(characters_info)-1, index+1)
-                    screen.fill("#333333")
-                if event.key==pygame.K_LEFT:
-                    index=max(0, index-1)
-                    screen.fill("#333333")
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
-                        return dogam, ()
-        name, skills, specialskill, hp, energy, passive, img_path, color=characters_info[index]
-        img=pygame.transform.scale(pygame.image.load(img_path), (600, 900))
-        font = pygame.font.Font("./D2Coding.ttf", 60)
-        text = font.render(name, True, "#FFFFFF")
-        text_rect = text.get_rect(centery=200, left=900)
-        screen.blit(text, text_rect)
-        screen.blit(img, (100, 90))
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                x, y=event.pos
+                if 1713 < x < 1872 and 42 < y < 88:
+                    return dogam_character, ()
+        screen.blit(bg_img, (0, 0))
         draw_skill(skills[0](None), 0)
         draw_skill(skills[1](None), 1)
         draw_skill(specialskill(None), 2)
@@ -381,7 +395,38 @@ def game(p_info, e_info, eventcard_list):
         clock.tick(FPS)
 
 
-func = main
+images=[pygame.transform.scale(pygame.image.load(f"gacha/frame_{i}.png"), SCREEN_SIZE) for i in range(281)]
+result=random.randint(1, 100)
+if True:
+    result_img=pygame.image.load("gacha_banner.png")
+    tmp_arr=[]
+    for i in range(20):
+        tmp_img=pygame.transform.scale(result_img, (SCREEN_WIDTH*(1+(1.3**(19-i)-1)/10), SCREEN_HEIGHT*(1+(1.3**(19-i)-1)/10)))
+        tmp_pos=(-SCREEN_WIDTH*(1.3**(19-i)-1)/20, -SCREEN_HEIGHT*(1.3**(19-i)-1)/20)
+        tmp_arr.append((tmp_img, tmp_pos))
+        print("asdf")
+
+def gacha():
+    for i in range(74):
+        screen.blit(images[i], (0, 0))
+        pygame.display.update()
+        clock.tick(FPS/2)
+    click=False
+    while not click:
+        for event in pygame.event.get():
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                click=True
+    for i in range(74, 281):
+        screen.blit(images[i], (0, 0))
+        pygame.display.update()
+        clock.tick(FPS)
+    for img, pos in tmp_arr:
+        screen.blit(img, pos)
+        pygame.display.update()
+        clock.tick(FPS)
+    time.sleep(100)
+
+func = gacha
 
 params = ()
 while __name__ == "__main__":

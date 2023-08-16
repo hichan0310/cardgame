@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 class ManaSynthesizerBuff(Buff):
     def __init__(self, character, game_board):
-        super().__init__(character, 1, game_board, "마나 합성", "./EventCards/ManaSynthesizer/mana_synthesizer.png")
+        super().__init__(character, 1, game_board, "마나 합성", "./EventCards/ManaSynthesizer/mana_synthesizer_buff.png")
         game_board.register_turnstart(self)
         character.register_hit(self)
         self.hit_stack=0

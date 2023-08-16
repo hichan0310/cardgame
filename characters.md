@@ -39,7 +39,7 @@
         - 앞으로 3턴동안 턴이 시작하고 끝날 때 저주 버프를 부여한다.
    <br><br><br>
    3. 기드온 : 딜러, 남자
-      - <img src="./PlayerCards/Gidon/gidon_card.png">
+      - <img src="PlayerCards/Gideon/gideon_card.png">
       - 광전사, 피 컨셉
       - 일반 공격 : 피의 일격
         - cost : 2

@@ -2,7 +2,7 @@ from PlayerCards.Chloe.chloe import *
 from PlayerCards.Tania.tania import *
 from PlayerCards.Lucifer.lucifer import *
 from PlayerCards.Petra.petra import *
-from PlayerCards.Gidon.gidon import *
+from PlayerCards.Gideon.gideon import *
 from PlayerCards.Astin.astin import *
 from EnemyCards.Knight_beginner.knight_beginner import *
 from EnemyCards.Archer_beginner.archer_beginner import *
@@ -15,8 +15,8 @@ characters_info = [
      "./PlayerCards/Tania/tania_card.png", "#FF0000"],
     ["Lucifer", [CurseArrow, ExplodeCurse], CommingApocalypse, 20, 4, [],
      "./PlayerCards/Lucifer/lucifer_card.png", "#FF0000"],
-    ["Gidon", [BloodyBlow, VengeanceEye], UnfinishedRage, 20, 4, [],
-     "./PlayerCards/Gidon/gidon_card.png", "#FF0000"],
+    ["Gideon", [BloodyBlow, VengeanceEye], UnfinishedRage, 20, 4, [],
+     "./PlayerCards/Gideon/gideon_card.png", "#FF0000"],
     ["Astin", [StarFall, NightSky], StarRain, 20, 5, [],
      "./PlayerCards/Astin/astin_card.png", "#FF0000"],
     ["Chloe", [SproutOfBlue, SproutOfEarth], SproutOfReincarnation, 20, 4, [],
