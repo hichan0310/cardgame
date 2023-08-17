@@ -3,10 +3,14 @@ from buff import Buff
 from graphic_manager import motion_draw
 from typing import TYPE_CHECKING
 from settings import *
+from math import atan, pi, sqrt, sin, cos
+import random
 
 if TYPE_CHECKING:
     from playerCard import PlayerCard
     from gameMap import GameMap
+
+img_cursearrow=pygame.transform.scale(pygame.image.load("./PlayerCards/Lucifer/curse_arrow.png"), (150, 100))
 
 
 class Curse(Buff):
@@ -15,7 +19,7 @@ class Curse(Buff):
         character.register_curse(self)
 
     def curse_event(self, caster: "PlayerCard", target: "PlayerCard", game_board: "GameMap"):
-        caster.attack(2, self.target, [TAG_SKILL, TAG_BUFF])
+        caster.attack(4, self.target, [TAG_SKILL, TAG_BUFF])
         for observer in caster.observers_attack:
             observer.attack_event(self, [target], self.game_board, [TAG_BUFF])
         self.remove()
@@ -33,19 +37,41 @@ class CurseArrow(Skill):
         ]
         self.skill_image_path = "./PlayerCards/Lucifer/skill_image/curse_arrow.png"
 
-    def execute_range(self, pos: tuple[int, int]):
-        return list(filter(
-            lambda p: p != pos,
-            [(pos[0], 1), (pos[0], 2), (pos[0], 3), (pos[0], 4), (pos[0], 5),
-             (1, pos[1]), (2, pos[1]), (3, pos[1]), (4, pos[1]), (5, pos[1])]
-        ))
-
     def execute(self, caster: "PlayerCard", targets: "list[PlayerCard]", caster_pos: tuple[int, int],
                 targets_pos: list[tuple[int, int]], execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
+        angle_rand=random.randint(0, 120)
         for target in targets:
+            i=0
+            for p1 in [(target.pos_center[0]+1000*cos(angle_rand*pi/180), target.pos_center[1]+1000*sin(angle_rand*pi/180)),
+                       (target.pos_center[0]+1000*cos(angle_rand*pi/180+pi*2/3), target.pos_center[1]+1000*sin(angle_rand*pi/180+pi*2/3)),
+                       (target.pos_center[0]+1000*cos(angle_rand*pi/180+pi*4/3), target.pos_center[1]+1000*sin(angle_rand*pi/180+pi*4/3))]:
+                p2=target.pos_center
+                dx = p2[0] - p1[0]
+                dy = p2[1] - p1[1]
+                angle = -atan(dy / (dx - 0.00001)) / pi * 180
+                if dx > 0: angle += 180
+                angle += 180
+                img_arrow = pygame.transform.rotate(img_cursearrow, angle)
+                size = img_arrow.get_size()
+                i = 0
+                while (100 * i) ** 2 < dx ** 2 + dy ** 2:
+                    def temp(screen, img_arrow_, i_, p1_, size_, dx_, dy_):
+                        t = i_ * 100 / sqrt(dx_ ** 2 + dy_ ** 2)
+                        img_pos = (p1_[0] + t * dx_ - size_[0] / 2, p1_[1] + t * dy_ - size_[1] / 2)
+                        screen.blit(img_arrow_, img_pos)
+                    motion_draw.add_motion(temp, i, (img_arrow, i, p1, size, dx, dy))
+                    i += 1
+            motion_draw.add_motion(lambda *_: caster.attack(1, target, self.atk_type), i, ())
             if target.name != "empty cell" and target.name != "petra turret":
-                caster.attack(1, target, self.atk_type)
+                x, y = target.pos_center
+                for j in range(20):
+                    size = j * 20
+                    img_temp = pygame.transform.scale(pygame.image.load("./PlayerCards/Lucifer/curse.png"), (size, size))
+                    img_temp.set_alpha(min((20 - j) * 15, 255))
+                    motion_draw.add_motion(lambda screen, image, size: screen.blit(image, (x - size / 2, y - size / 2)),
+                                           i+j,
+                                           (img_temp, size))
                 Curse(target, target.game_board)
         for observer in caster.observers_attack:
             observer.attack_event(self, targets, self.game_board, self.atk_type)

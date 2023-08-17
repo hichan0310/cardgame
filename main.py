@@ -5,6 +5,7 @@ from select_character import SelectCharacter
 from settings import *
 import sys
 from graphic_manager import motion_draw
+pygame.init()
 
 from EventCards.BombThrowing.bomb_throwing import BombThrowing
 from EventCards.EnergyRecharge.energy_recharge import EnergyRecharge
@@ -19,7 +20,86 @@ from EventCards.WarpGate.warp_gate import WarpGate
 
 from characters import *
 
-pygame.init()
+"""
+def loading(p):
+    screen.fill("#000000")
+    draw_text(f"loading : {p}%", size=30, center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), color="#FFFFFF")
+    pygame.draw.rect(screen, "#FFFFFF", (0, 1040, p*SCREEN_WIDTH/100, 40), 40)
+    pygame.display.update()
+
+
+gacha_yonchool = [
+    [(pygame.transform.scale(pygame.image.load(f"./gacha/tania/frame_{i}.png"), SCREEN_SIZE),
+      loading(100 * (i) / (383 * 6)))[0] for i in range(383)],
+    [(pygame.transform.scale(pygame.image.load(f"./gacha/chloe/frame_{i}.png"), SCREEN_SIZE),
+      loading(100 * (i + 383) / (383 * 6)))[0] for i in range(383)],
+    [(pygame.transform.scale(pygame.image.load(f"./gacha/lucifer/frame_{i}.png"), SCREEN_SIZE),
+      loading(100 * (i + 383 * 2) / (383 * 6)))[0] for i in range(383)],
+    [(pygame.transform.scale(pygame.image.load(f"./gacha/gidon/frame_{i}.png"), SCREEN_SIZE),
+      loading(100 * (i + 383 * 3) / (383 * 6)))[0] for i in range(383)],
+    [(pygame.transform.scale(pygame.image.load(f"./gacha/astin/frame_{i}.png"), SCREEN_SIZE),
+      loading(100 * (i + 383 * 4) / (383 * 6)))[0] for i in range(383)],
+    [(pygame.transform.scale(pygame.image.load(f"./gacha/petra/frame_{i}.png"), SCREEN_SIZE),
+      loading(100 * (i + 383 * 5) / (383 * 6)))[0] for i in range(383)]
+]
+
+
+def gacha():
+    images_banner = [
+        pygame.transform.scale(pygame.image.load("./gacha/charactercard_gacha_banner.png"), SCREEN_SIZE),
+        pygame.transform.scale(pygame.image.load("./gacha/eventcard_gacha_banner.png"), SCREEN_SIZE)
+    ]
+    button = [
+        pygame.transform.scale(pygame.image.load("gacha/gacha_button_character.png"), (300, 150)),
+        pygame.transform.scale(pygame.image.load("gacha/gacha_button_event.png"), (300, 150))
+    ]
+    gachamode = 0
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if 100 < x < 400 and 200 < y < 350:
+                    gachamode = 0
+                if 100 < x < 400 and 400 < y < 550:
+                    gachamode = 1
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                    return main, ()
+        screen.blit(images_banner[gachamode], (0, 0))
+        screen.blit(button[0], (100, 200))
+        screen.blit(button[1], (100, 400))
+        pygame.display.update()
+        clock.tick(FPS)
+
+
+def gacha_charactercard():
+    result = random.randint(1, 10)
+    if result > 5:
+        result = 0
+    for i in range(170):
+        screen.blit(gacha_yonchool[result][i], (0, 0))
+        pygame.display.update()
+        clock.tick(FPS / 2)
+    draw_text("클릭하여 카드 확인", size=30, color="#FFFFFF")
+    pygame.display.update()
+    click = False
+    while not click:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                click = True
+    for i in range(230, 383):
+        screen.blit(gacha_yonchool[result][i], (0, 0))
+        pygame.display.update()
+        clock.tick(FPS/2)
+    click = False
+    while not click:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                click = True
+    return gacha, ()
+"""
+
+
 
 
 def end(*_):
@@ -34,8 +114,8 @@ def main(*_):
     while True:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y=event.pos
-                if 706<x<1216 and 392<y<505:
+                x, y = event.pos
+                if 706 < x < 1216 and 392 < y < 505:
                     return select_stage, ()
                 if 706 < x < 1216 and 537 < y < 651:
                     return forming, ()
@@ -87,7 +167,7 @@ e_card_list = [
     Sniping,
     WarpGate
 ]
-e_cards=[2 for _ in range(len(e_card_list))]
+e_cards = [2 for _ in range(len(e_card_list))]
 e_card_list = e_card_list * 2
 
 
@@ -116,39 +196,39 @@ def select_character(stage_num):
 def forming():
     global e_cards, e_card_list
     screen.fill("#333333")
-    cards=e_cards
-    images=[pygame.transform.scale(pygame.image.load(img_path), (200, 300))
-            for _, _, img_path, _, _ in event_card_info.values()]
+    cards = e_cards
+    images = [pygame.transform.scale(pygame.image.load(img_path), (200, 300))
+              for _, _, img_path, _, _ in event_card_info.values()]
     while True:
         screen.fill("#333333")
         for event in pygame.event.get():
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                x, y=event.pos
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
                 for i in range(10):
                     center_pos = (SCREEN_WIDTH / 2 + (i % 5 - 2) * 250, SCREEN_HEIGHT / 2 + (i // 5 - 0.5) * 400 - 50)
-                    if center_pos[0]-100<x<center_pos[0]+100 and center_pos[1]-150<y<center_pos[1]+150:
-                        cards[i]=(cards[i]+1)%3
-                if 893<x<1026 and 966<y<991 and sum(cards)>=15:
-                    e_cards=cards
-                    e_card_list=[Sniping for _ in range(cards[0])]+\
-                                [HealingLight for _ in range(cards[1])]+\
-                                [EnergyRecharge for _ in range(cards[2])]+\
-                                [Lucky for _ in range(cards[3])]+\
-                                [WarpGate for _ in range(cards[4])]+\
-                                [EnforceHit for _ in range(cards[5])]+\
-                                [SecondOpertunity for _ in range(cards[6])]+\
-                                [BombThrowing for _ in range(cards[7])]+\
-                                [ManaSynthesizer for _ in range(cards[8])]+\
-                                [FireSward for _ in range(cards[3])]
+                    if center_pos[0] - 100 < x < center_pos[0] + 100 and center_pos[1] - 150 < y < center_pos[1] + 150:
+                        cards[i] = (cards[i] + 1) % 3
+                if 893 < x < 1026 and 966 < y < 991 and sum(cards) >= 15:
+                    e_cards = cards
+                    e_card_list = [Sniping for _ in range(cards[0])] + \
+                                  [HealingLight for _ in range(cards[1])] + \
+                                  [EnergyRecharge for _ in range(cards[2])] + \
+                                  [Lucky for _ in range(cards[3])] + \
+                                  [WarpGate for _ in range(cards[4])] + \
+                                  [EnforceHit for _ in range(cards[5])] + \
+                                  [SecondOpertunity for _ in range(cards[6])] + \
+                                  [BombThrowing for _ in range(cards[7])] + \
+                                  [ManaSynthesizer for _ in range(cards[8])] + \
+                                  [FireSward for _ in range(cards[3])]
                     return main, ()
-        if sum(cards)>=15:
-            draw_text("편성 완료", center=(SCREEN_WIDTH/2, SCREEN_HEIGHT-100), color="#FFFFFF", size=30)
+        if sum(cards) >= 15:
+            draw_text("편성 완료", center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100), color="#FFFFFF", size=30)
         else:
-            draw_text("15개 이상을 선택해야 합니다", center=(SCREEN_WIDTH/2, SCREEN_HEIGHT-100), color="#FFFFFF", size=30)
+            draw_text("15개 이상을 선택해야 합니다", center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100), color="#FFFFFF", size=30)
         for i in range(10):
-            center_pos=(SCREEN_WIDTH/2+(i%5-2)*250, SCREEN_HEIGHT/2+(i//5-0.5)*400-50)
-            screen.blit(images[i], (center_pos[0]-100, center_pos[1]-150))
-            draw_text(str(cards[i]), color="#FFFFFF", center=(center_pos[0], center_pos[1]+180), size=30)
+            center_pos = (SCREEN_WIDTH / 2 + (i % 5 - 2) * 250, SCREEN_HEIGHT / 2 + (i // 5 - 0.5) * 400 - 50)
+            screen.blit(images[i], (center_pos[0] - 100, center_pos[1] - 150))
+            draw_text(str(cards[i]), color="#FFFFFF", center=(center_pos[0], center_pos[1] + 180), size=30)
         pygame.display.update()
     return main, ()
 
@@ -158,25 +238,26 @@ def draw_skill(skill, index):
     background.fill("#000000")
     bg_rect = background.get_rect(
         center=(
-        SCREEN_WIDTH / 2 + 30 - SKILL_WIDTH / 2 + (SKILL_WIDTH + 20) * 2-100, SCREEN_HEIGHT - 100 - 600 + index * 200))
+            SCREEN_WIDTH / 2 + 30 - SKILL_WIDTH / 2 + (SKILL_WIDTH + 20) * 2 - 100,
+            SCREEN_HEIGHT - 100 - 600 + index * 200))
     screen.blit(background, bg_rect)
 
     font = pygame.font.Font("./D2Coding.ttf", 26)
     text = font.render(skill.name, True, "#FFFFFF")
-    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40-100, SCREEN_HEIGHT - 50 - 600 + index * 200))
+    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40 - 100, SCREEN_HEIGHT - 50 - 600 + index * 200))
     screen.blit(text, text_rect)
 
     image = pygame.image.load(skill.skill_image_path)
     image = pygame.transform.scale(image, (80, 80))
-    pos = (SCREEN_WIDTH / 2 + 40 - 40-100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 200)
+    pos = (SCREEN_WIDTH / 2 + 40 - 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 200)
     screen.blit(image, pos)
 
-    center_pos = (SCREEN_WIDTH / 2 + 40 + 40-100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 200)
+    center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 200)
     pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
     draw_text(str(skill.cost), center=center_pos, color="#FFFFFF", size=16)
     try:
         if skill.max_energy is not None:
-            center_pos = (SCREEN_WIDTH / 2 + 40 + 40-100, SCREEN_HEIGHT - 60 - 35 - 60 + 20 - 600 + index * 200)
+            center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 + 20 - 600 + index * 200)
             pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
             draw_text(str(skill.max_energy), center=center_pos, color="#FFFFFF", size=16)
     except:
@@ -186,32 +267,33 @@ def draw_skill(skill, index):
     for t in skill.explaination:
         font = pygame.font.Font("./D2Coding.ttf", 14)
         text = font.render(t, True, "#FFFFFF")
-        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19-600+index*200, left=SCREEN_WIDTH / 2 + 40)
+        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 600 + index * 200, left=SCREEN_WIDTH / 2 + 40)
         screen.blit(text, text_rect)
         i += 1
 
+
 def draw_eventcard(eventcard_key, movement):
-    x, y=movement
-    x-=900
-    y-=10
-    name, cost, img_path, explaination, exe_type=event_card_info[eventcard_key]
+    x, y = movement
+    x -= 900
+    y -= 10
+    name, cost, img_path, explaination, exe_type = event_card_info[eventcard_key]
     background = pygame.Surface((860, 160))
     background.fill("#000000")
     bg_rect = background.get_rect(
-        center=(1330+x, 330+y))
+        center=(1330 + x, 330 + y))
     screen.blit(background, bg_rect)
 
     font = pygame.font.Font("./D2Coding.ttf", 20)
     text = font.render(name, True, "#FFFFFF")
-    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40+x, SCREEN_HEIGHT - 50 - 650+y))
+    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40 + x, SCREEN_HEIGHT - 50 - 650 + y))
     screen.blit(text, text_rect)
 
     image = pygame.image.load(img_path)
     image = pygame.transform.scale(image, (60, 90))
-    pos = (SCREEN_WIDTH / 2 + 40 - 30+x, SCREEN_HEIGHT - 60 - 30 - 60 - 650+y)
+    pos = (SCREEN_WIDTH / 2 + 40 - 30 + x, SCREEN_HEIGHT - 60 - 30 - 60 - 650 + y)
     screen.blit(image, pos)
 
-    center_pos = (SCREEN_WIDTH / 2 + 40 + 40+x, SCREEN_HEIGHT - 60 - 35 - 60 - 650+y)
+    center_pos = (SCREEN_WIDTH / 2 + 40 + 40 + x, SCREEN_HEIGHT - 60 - 35 - 60 - 650 + y)
     pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
     draw_text(str(cost), center=center_pos, color="#FFFFFF", size=16)
 
@@ -219,18 +301,18 @@ def draw_eventcard(eventcard_key, movement):
     for t in explaination:
         font = pygame.font.Font("./D2Coding.ttf", 14)
         text = font.render(t, True, "#FFFFFF")
-        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 650+y, left=SCREEN_WIDTH / 2 + 140+x)
+        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 650 + y, left=SCREEN_WIDTH / 2 + 140 + x)
         screen.blit(text, text_rect)
         i += 1
 
 
 def dogam_character(*_):
-    background=pygame.image.load("dogam_char.png")
+    background = pygame.image.load("dogam_char.png")
     while True:
         screen.blit(background, (0, 0))
         for event in pygame.event.get():
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                x, y=event.pos
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
                 if 59 < x < 351 and 144 < y < 1015:
                     return dogam_character_index, (0,)
                 if 360 < x < 652 and 144 < y < 1015:
@@ -243,7 +325,7 @@ def dogam_character(*_):
                     return dogam_character_index, (4,)
                 if 1565 < x < 1859 and 144 < y < 1015:
                     return dogam_character_index, (5,)
-                if 60<x<292 and 38<y<103:
+                if 60 < x < 292 and 38 < y < 103:
                     return dogam, ()
         motion_draw.draw(screen)
         pygame.display.update()
@@ -252,11 +334,11 @@ def dogam_character(*_):
 
 def dogam_character_index(index):
     name, skills, specialskill, hp, energy, passive, img_path, color = characters_info[index]
-    bg_img=pygame.image.load(f"./dogam_background/{name}.png")
+    bg_img = pygame.image.load(f"./dogam_background/{name}.png")
     while True:
         for event in pygame.event.get():
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                x, y=event.pos
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
                 if 1713 < x < 1872 and 42 < y < 88:
                     return dogam_character, ()
         screen.blit(bg_img, (0, 0))
@@ -267,23 +349,24 @@ def dogam_character_index(index):
         pygame.display.update()
         clock.tick(FPS)
 
+
 def dogam_enemy(*_):
     screen.fill("#333333")
-    index=0
+    index = 0
     while True:
         for event in pygame.event.get():
-            if event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_RIGHT:
-                    index=min(len(enemies_info)-1, index+1)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    index = min(len(enemies_info) - 1, index + 1)
                     screen.fill("#333333")
-                if event.key==pygame.K_LEFT:
-                    index=max(0, index-1)
+                if event.key == pygame.K_LEFT:
+                    index = max(0, index - 1)
                     screen.fill("#333333")
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                         return dogam, ()
-        name, skills, hp, passive, ai, img_path=enemies_info[index]
-        img=pygame.transform.scale(pygame.image.load(img_path), (600, 900))
+        name, skills, hp, passive, ai, img_path = enemies_info[index]
+        img = pygame.transform.scale(pygame.image.load(img_path), (600, 900))
         font = pygame.font.Font("./D2Coding.ttf", 60)
         text = font.render(name, True, "#FFFFFF")
         text_rect = text.get_rect(centery=200, left=900)
@@ -295,23 +378,24 @@ def dogam_enemy(*_):
         pygame.display.update()
         clock.tick(FPS)
 
+
 def dogam_eventcard(*_):
     screen.fill("#333333")
-    i=0
+    i = 0
     for key in event_card_info.keys():
-        draw_eventcard(key, (70+920*(i%2), (i//2)*180-150))
-        i+=1
+        draw_eventcard(key, (70 + 920 * (i % 2), (i // 2) * 180 - 150))
+        i += 1
     pygame.display.update()
     while True:
         for event in pygame.event.get():
-            if event.type==pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                     return dogam, ()
         clock.tick(FPS)
 
 
 def dogam():
-    background=pygame.transform.scale(pygame.image.load("dogam.png"), SCREEN_SIZE)
+    background = pygame.transform.scale(pygame.image.load("dogam.png"), SCREEN_SIZE)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -327,7 +411,6 @@ def dogam():
         screen.blit(background, (0, 0))
         pygame.display.update()
         clock.tick(FPS)
-
 
 
 def game_end(win):
@@ -395,38 +478,13 @@ def game(p_info, e_info, eventcard_list):
         clock.tick(FPS)
 
 
-images=[pygame.transform.scale(pygame.image.load(f"gacha/frame_{i}.png"), SCREEN_SIZE) for i in range(281)]
-result=random.randint(1, 100)
-if True:
-    result_img=pygame.image.load("gacha_banner.png")
-    tmp_arr=[]
-    for i in range(20):
-        tmp_img=pygame.transform.scale(result_img, (SCREEN_WIDTH*(1+(1.3**(19-i)-1)/10), SCREEN_HEIGHT*(1+(1.3**(19-i)-1)/10)))
-        tmp_pos=(-SCREEN_WIDTH*(1.3**(19-i)-1)/20, -SCREEN_HEIGHT*(1.3**(19-i)-1)/20)
-        tmp_arr.append((tmp_img, tmp_pos))
-        print("asdf")
 
-def gacha():
-    for i in range(74):
-        screen.blit(images[i], (0, 0))
-        pygame.display.update()
-        clock.tick(FPS/2)
-    click=False
-    while not click:
-        for event in pygame.event.get():
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                click=True
-    for i in range(74, 281):
-        screen.blit(images[i], (0, 0))
-        pygame.display.update()
-        clock.tick(FPS)
-    for img, pos in tmp_arr:
-        screen.blit(img, pos)
-        pygame.display.update()
-        clock.tick(FPS)
-    time.sleep(100)
 
-func = gacha
+
+
+
+
+func = main
 
 params = ()
 while __name__ == "__main__":

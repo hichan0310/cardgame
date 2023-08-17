@@ -10,7 +10,10 @@ from settings import *
 if TYPE_CHECKING:
     from playerCard import PlayerCard
 
-bloody_blows=[pygame.transform.scale(pygame.image.load(f"./PlayerCards/Gideon/bloody_blow/{i}.png"), (170*3, 170*2)) for i in range(5)]
+bloody_blows = [
+    pygame.transform.scale(pygame.image.load(f"./PlayerCards/Gideon/bloody_blow/{i}.png"), (170 * 3, 170 * 2)) for i in
+    range(5)]
+
 
 class BloodyBlow(Skill):
     def __init__(self, game_board):
@@ -56,33 +59,33 @@ class BloodyBlow(Skill):
             ))
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
-        caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
+        caster.specialSkill.energy = min(caster.specialSkill.energy + 4, caster.specialSkill.max_energy)
         x, y = transform_pos(execute_pos)
         y -= 170 * 3 / 2
         x -= 170 / 2
-        angle=90
+        angle = 90
         if caster_pos[0] < execute_pos[0]:
-            x, y=transform_pos(execute_pos)
-            x-=170*3/2
-            y-=170/2
-            angle=0
+            x, y = transform_pos(execute_pos)
+            x -= 170 * 3 / 2
+            y -= 170 / 2
+            angle = 0
         if caster_pos[0] > execute_pos[0]:
             x, y = transform_pos(execute_pos)
             x -= 170 * 3 / 2
             y -= 170 * 3 / 2
-            angle=180
+            angle = 180
         if caster_pos[1] > execute_pos[1]:
             x, y = transform_pos(execute_pos)
             y -= 170 * 3 / 2
             x -= 170 * 3 / 2
-            angle=270
-        images=[pygame.transform.rotate(img, angle) for img in bloody_blows]
+            angle = 270
+        images = [pygame.transform.rotate(img, angle) for img in bloody_blows]
         for target in targets:
             caster.attack(1, target, self.atk_type)
         for observer in caster.observers_attack[::-1]:
             observer.attack_event(self, targets, self.game_board, self.atk_type)
         for i in range(5):
-            motion_draw.add_motion(lambda scr, img:scr.blit(img, (x, y)), i, (images[i], ))
+            motion_draw.add_motion(lambda scr, img: scr.blit(img, (x, y)), i, (images[i],))
 
 
 class BloodRage(Buff):
@@ -133,7 +136,7 @@ class UnfinishedRage(SpecialSkill):
         self.name = "끝나지 않은 분노"
         self.explaination = [
             "cost : 4, energy : 4",
-            "바로 앞의 적을 지정하여 15의 피해를 준다. ",
+            "바로 앞의 적을 지정하여 15의 피해를 주고 3의 체력을 회복한다. ",
             ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Gideon/skill_image/unfinished_rage.png"
@@ -150,6 +153,30 @@ class UnfinishedRage(SpecialSkill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         self.energy = 0
         for target in targets:
-            caster.attack(15, target, self.atk_type)
+            target_pos = target.pos_gameboard
+            angle = 120
+            if caster_pos[0] < target_pos[0]:
+                angle += 180
+            if caster_pos[0] > target_pos[0]:
+                angle += 0
+            if caster_pos[1] < target_pos[1]:
+                angle += 270
+            if caster_pos[1] > target_pos[1]:
+                angle += 90
+            sward = pygame.image.load("./PlayerCards/Gideon/sward.png")
+            for i in range(5):
+                motion_draw.add_motion(lambda scr, img: screen.blit(img, (
+                caster.pos_center[0] - img.get_size()[0]/2, caster.pos_center[1] - img.get_size()[1]/2)),
+                                       i, (pygame.transform.rotate(sward, angle), ))
+            for i in range(6):
+                motion_draw.add_motion(lambda scr, img: screen.blit(img, (
+                    caster.pos_center[0] - img.get_size()[0]/2, caster.pos_center[1] - img.get_size()[1]/2)),
+                                       i+5, (pygame.transform.rotate(sward, angle-i*40), ))
+            for i in range(5):
+                motion_draw.add_motion(lambda scr, img: screen.blit(img, (
+                caster.pos_center[0] - img.get_size()[0]/2, caster.pos_center[1] - img.get_size()[1]/2)),
+                                       i+11, (pygame.transform.rotate(sward, angle-240), ))
+            motion_draw.add_motion(lambda scr:caster.attack(15, target, self.atk_type), 8, ())
+            motion_draw.add_motion(lambda scr:caster.heal(3), 8, ())
         for observer in caster.observers_attack:
             observer.attack_event(self, targets, self.game_board, self.atk_type)

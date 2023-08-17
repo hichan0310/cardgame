@@ -6,9 +6,12 @@ from summons import Summons
 from graphic_manager import motion_draw
 from typing import TYPE_CHECKING
 from settings import *
+from math import atan, pi, sqrt
 
 if TYPE_CHECKING:
     from playerCard import PlayerCard
+
+img_stone=pygame.image.load("./PlayerCards/Petra/turret_stone.png")
 
 
 class BaseInstability(Buff):
@@ -40,8 +43,27 @@ class StoneTurret(Summons):
     def attack_event(self, caster, targets, game_board, atk_type):
         if TAG_NORMAL_ATTACK in atk_type:
             if not self.dead:
+                p1=self.pos_center
                 for target in targets:
-                    target.hit(1, caster, [TAG_SUMMON])
+                    p2=target.pos_center
+                    dx = p2[0] - p1[0]
+                    dy = p2[1] - p1[1]
+                    angle = -atan(dy / (dx - 0.00001)) / pi * 180
+                    if dx > 0: angle += 180
+                    angle += 180
+                    img_arrow = pygame.transform.rotate(img_stone, angle)
+                    size = img_arrow.get_size()
+                    i = 0
+                    while (80 * i) ** 2 < dx ** 2 + dy ** 2:
+                        def temp(screen, i):
+                            t = i * 80 / sqrt(dx ** 2 + dy ** 2)
+                            img_pos = (p1[0] + t * dx - size[0] / 2, p1[1] + t * dy - size[1] / 2)
+                            screen.blit(img_arrow, img_pos)
+
+                        motion_draw.add_motion(temp, 10+i, (i,))
+                        i += 1
+                    motion_draw.add_motion(lambda *_: target.hit(1, caster, [TAG_SUMMON]), i + 10, ())
+
 
 
 class CrackOfEarth(Skill):
