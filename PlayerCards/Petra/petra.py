@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from playerCard import PlayerCard
 
 img_stone=pygame.image.load("./PlayerCards/Petra/turret_stone.png")
-
+crack_line=pygame.transform.scale(pygame.image.load("./PlayerCards/Petra/crack_line.png"), (30, 30))
 
 class BaseInstability(Buff):
     def __init__(self, character: "PlayerCard", game_board):
@@ -80,6 +80,29 @@ class CrackOfEarth(Skill):
     def execute(self, caster: "PlayerCard", targets: "list[PlayerCard]", caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
+            for observer in caster.observers_attack:
+                observer.attack_event(caster, targets, self.game_board, self.atk_type)
+                if observer.name=="petra turret":
+                    p1=target.pos_center
+                    p2=observer.pos_center
+                    dx = p2[0] - p1[0]
+                    dy = p2[1] - p1[1]
+                    angle = -atan(dy / (dx - 0.00001)) / pi * 180
+                    if dx > 0: angle += 180
+                    angle += 90
+                    img_arrow = pygame.transform.rotate(crack_line, angle)
+                    size = img_arrow.get_size()
+                    i = 0
+                    while (30 * i) ** 2 < dx ** 2 + dy ** 2:
+                        def temp(screen, img_arrow_, i_, p1_, size_, dx_, dy_):
+                            t = i_ * 30 / sqrt(dx_ ** 2 + dy_ ** 2)
+                            img_pos = (p1_[0] + t * dx_ - size_[0] / 2, p1_[1] + t * dy_ - size_[1] / 2)
+                            screen.blit(img_arrow_, img_pos)
+
+                        for j in range(15, 24):
+                            img_arrow.set_alpha(min([255 * (1.1 ** i - 1), 255]))
+                            motion_draw.add_motion(temp, j-15+i//6, (img_arrow, i, p1, size, dx, dy))
+                        i += 1
             if target.name != "empty cell":
                 petra_normal_crack=pygame.image.load("./PlayerCards/Petra/crack.png")
                 for i in range(24):
@@ -92,8 +115,6 @@ class CrackOfEarth(Skill):
                                            23 - i,
                                            (tmp,))
                 caster.attack(1, target, self.atk_type)
-        for observer in caster.observers_attack:
-            observer.attack_event(caster, targets, self.game_board, self.atk_type)
 
 
 class SummonTurret(Skill):

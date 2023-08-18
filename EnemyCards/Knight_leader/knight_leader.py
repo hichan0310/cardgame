@@ -74,10 +74,10 @@ class Shield(Buff):
 
     def hit_buff(self, caster, target, damage: int, atk_type):
         if damage < self.amount:
-            self.used(damage)
+            self.amount-=damage
             return 0
         else:
-            self.used(self.amount)
+            self.remove()
             return damage - self.amount
 
 
@@ -146,7 +146,8 @@ class SwordPhantom(Summons):
         if self.count == 0:
             if caster.team == FLAG_PLAYER_TEAM:
                 for target in self.game_board.players:
-                    Shield(target, self.game_board, 8)
+                    if self.real:
+                        Shield(target, self.game_board, 8)
             self.die()
 
 
@@ -209,18 +210,23 @@ class LastSkillBuff(Buff):
     def turnstart_event(self, game_board):
         self.used(1)
 
+    def hit_buff(self, caster, target, damage: int, atk_type):
+        if damage>=3:
+            self.over3_attack+=1
+        return 0
+
     def remove(self):
         super().remove()
         if self.over3_attack < 2:
             for x, y in [(i, j) for i in range(1, 6) for j in range(1, 6) if (i, j) != self.target.pos_gameboard]:
                 target = self.game_board.gameBoard[x][y]
                 self.target.attack(8, target, [TAG_SPECIAL_SKILL])
-                self.target.heal(10)
+            self.target.heal(10)
         else:
             for x, y in [(i, j) for i in range(1, 6) for j in range(1, 6) if (i, j) != self.target.pos_gameboard]:
                 target = self.game_board.gameBoard[x][y]
                 self.target.attack(5, target, [TAG_SPECIAL_SKILL])
-                motion_draw.add_motion(lambda scr: self.target.die(), 10, ())
+            motion_draw.add_motion(lambda scr: self.target.die(), 10, ())
 
 
 class LastSkill(Skill):
@@ -243,7 +249,7 @@ class LastSkill(Skill):
         # tmp.execute_two(caster.pos_gameboard, (3, 3),
         #                 self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], self.game_board.gameBoard[3][3])
         # tmp.kill()
-        warp_two(self, caster_pos, (3, 3))
+        warp_two(self, caster.pos_gameboard, (3, 3))
         LastSkillBuff(caster, self.game_board)
 
 
@@ -259,7 +265,6 @@ class AI_KnightLeader:
         elif self.turn % 3 == 0:
             self.character.skills[1].execute(self.character, None, None, None, None)
         elif self.turn % 3 == 1:
-
             self.character.skills[0].execute(self.character, None, None, None, None)
         elif self.turn % 3 == 2:
             self.character.skills[2].execute(self.character, None, None, None, None)
