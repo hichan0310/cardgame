@@ -81,9 +81,19 @@ class CrackOfEarth(Skill):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
             if target.name != "empty cell":
+                petra_normal_crack=pygame.image.load("./PlayerCards/Petra/crack.png")
+                for i in range(24):
+                    size = min([1, 2 - 1.25 ** (i - 21)]) * 200
+                    tmp = pygame.transform.scale(petra_normal_crack, (size, size))
+                    tmp.set_alpha(min([255 * (1.1 ** i - 1), 255]))
+
+                    motion_draw.add_motion(lambda scr, img: scr.blit(img, (
+                    target.pos_center[0] - img.get_size()[0] / 2, target.pos_center[1] - img.get_size()[1] / 2)),
+                                           23 - i,
+                                           (tmp,))
                 caster.attack(1, target, self.atk_type)
         for observer in caster.observers_attack:
-            observer.attack_event(self, targets, self.game_board, self.atk_type)
+            observer.attack_event(caster, targets, self.game_board, self.atk_type)
 
 
 class SummonTurret(Skill):

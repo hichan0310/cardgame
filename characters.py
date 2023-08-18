@@ -9,6 +9,7 @@ from EnemyCards.Archer_beginner.archer_beginner import *
 from EnemyCards.Wizard_beginner.wizard_beginner import *
 from EnemyCards.Shielder.shielder import *
 from EnemyCards.Crossbow_archer.crossbow_archer import *
+from EnemyCards.Knight_leader.knight_leader import *
 
 characters_info = [
     ["Tania", [StraightCut, FlameShuriken], FlameSward, 20, 5, [],
@@ -35,7 +36,9 @@ enemies_info = [
     ["방패병", [ShieldOfWrath, CounterAttack], 15, [], AI_Shielder,
      "./EnemyCards/Shielder/shielder_card.png"],
     ["석궁병", [PenetrateArrow, ContinuousFiring], 10, [], AI_Crossbow,
-     "./EnemyCards/Crossbow_archer/crossbow_archer_card.png"]
+     "./EnemyCards/Crossbow_archer/crossbow_archer_card.png"],
+    ["기사단장", [StrongHit, ResonanceSword, GuardianShield, LastSkill], 50, [], AI_KnightLeader,
+     "./EnemyCards/Knight_leader/knight_leader_card.png"]
 ]
 
 stage_list = [[(3, (3, 3)),
@@ -58,16 +61,7 @@ stage_list = [[(3, (3, 3)),
                (0, (4, 3)),
                (0, (4, 4))],
 
-              [(3, (1, 3)),
-               (3, (2, 3)),
-               (3, (3, 3)),
-               (3, (4, 3)),
-               (3, (5, 3)),
-               (2, (1, 1)),
-               (2, (2, 1)),
-               (2, (3, 1)),
-               (2, (4, 1)),
-               (2, (5, 1))],
+              [(5, (3, 3))],
 
               [(4, (2, 3)),
                (4, (3, 3)),
@@ -122,7 +116,7 @@ event_card_info = {
     ),
     EVENT_WarpGate: (
         EVENT_WarpGate, 1,
-        "./EventCards/WarpGate/warp_gate.png",
+        "./EventCards/WarpGateOpen/warp_gate.png",
         ["워프 게이트를 열어서 2개 칸을 서로 바꾼다. ",
          "이것은 이동으로 간주하지 않는다. "],
         EVENT_TYPE_2
@@ -164,3 +158,6 @@ event_card_info = {
         EVENT_TYPE_1
     ),
 }
+
+def test():
+    print(event_card_info)

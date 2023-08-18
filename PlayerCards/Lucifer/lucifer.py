@@ -63,7 +63,7 @@ class CurseArrow(Skill):
                     motion_draw.add_motion(temp, i, (img_arrow, i, p1, size, dx, dy))
                     i += 1
             motion_draw.add_motion(lambda *_: caster.attack(1, target, self.atk_type), i, ())
-            if target.name != "empty cell" and target.name != "petra turret":
+            if target.team!=FLAG_EMPTY and target.team!=FLAG_SUMMONS:
                 x, y = target.pos_center
                 for j in range(20):
                     size = j * 20

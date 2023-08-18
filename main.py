@@ -16,7 +16,7 @@ from EventCards.Lucky.lucky import Lucky
 from EventCards.ManaSynthesizer.mana_synthesizer import ManaSynthesizer
 from EventCards.SecondOpportunity.second_opertunity import SecondOpertunity
 from EventCards.Sniping.sniping import Sniping
-from EventCards.WarpGate.warp_gate import WarpGate
+from EventCards.WarpGateOpen.warp_gate import WarpGate
 
 from characters import *
 
@@ -156,19 +156,19 @@ def select_stage(stage=0):
 
 
 e_card_list = [
-    BombThrowing,
-    EnergyRecharge,
-    EnforceHit,
-    FireSward,
-    HealingLight,
-    Lucky,
-    ManaSynthesizer,
-    SecondOpertunity,
-    Sniping,
-    WarpGate
+    # BombThrowing,
+    # EnergyRecharge,
+    # EnforceHit,
+    # FireSward,
+    # HealingLight,
+    # Lucky,
+    # ManaSynthesizer,
+    # SecondOpertunity,
+    # Sniping,
+    WarpGate,
 ]
 e_cards = [2 for _ in range(len(e_card_list))]
-e_card_list = e_card_list * 2
+e_card_list = e_card_list * 20
 
 
 def select_character(stage_num):
