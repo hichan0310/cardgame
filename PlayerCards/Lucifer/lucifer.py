@@ -1,3 +1,5 @@
+import pygame.transform
+
 from skill import Skill, SpecialSkill
 from buff import Buff
 from graphic_manager import motion_draw
@@ -11,7 +13,9 @@ if TYPE_CHECKING:
     from gameMap import GameMap
 
 img_cursearrow=pygame.transform.scale(pygame.image.load("./PlayerCards/Lucifer/curse_arrow.png"), (150, 100))
-curse=
+curse_explode=[
+    pygame.transform.scale(pygame.image.load(f"./PlayerCards/Lucifer/curse/{i}.png"), (500, 500)) for i in range(11)
+]
 
 class Curse(Buff):
     def __init__(self, character: "PlayerCard", game_board: "GameMap"):
@@ -19,9 +23,22 @@ class Curse(Buff):
         character.register_curse(self)
 
     def curse_event(self, caster: "PlayerCard", target: "PlayerCard", game_board: "GameMap"):
-        caster.attack(4, self.target, [TAG_SKILL, TAG_BUFF])
-        for observer in caster.observers_attack:
-            observer.attack_event(self, [target], self.game_board, [TAG_BUFF])
+        def tmp(scr):
+            caster.attack(4, self.target, [TAG_SKILL, TAG_BUFF])
+            for observer in caster.observers_attack:
+                observer.attack_event(self, [target], self.game_board, [TAG_BUFF])
+        motion_draw.add_motion(tmp, 11, ())
+        x, y=self.target.pos_center
+        for i in range(7):
+            tmp_img_0=pygame.transform.scale(curse_explode[0], (500, 500))
+            tmp_img_0.set_alpha(min(i*51, 255))
+            motion_draw.add_motion(lambda scr, tmpp:scr.blit(tmpp, (x-250, y-250)), i, (tmp_img_0, ))
+        for i in range(11):
+            motion_draw.add_motion(lambda scr, ii:scr.blit(curse_explode[ii], (x-250, y-250)), i+7, (i, ))
+        for i in range(10):
+            tmp_img_10=pygame.transform.scale(curse_explode[10], (500, 500))
+            tmp_img_10.set_alpha(min(255, (10-i)*25))
+            motion_draw.add_motion(lambda scr, tmpp:scr.blit(tmpp, (x-250, y-250)), i+18, (tmp_img_10, ))
         self.remove()
 
 
