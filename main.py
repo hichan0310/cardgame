@@ -156,19 +156,19 @@ def select_stage(stage=0):
 
 
 e_card_list = [
-    # BombThrowing,
-    # EnergyRecharge,
-    # EnforceHit,
-    # FireSward,
-    # HealingLight,
-    # Lucky,
-    # ManaSynthesizer,
-    # SecondOpertunity,
-    # Sniping,
+    BombThrowing,
+    EnergyRecharge,
+    EnforceHit,
+    FireSward,
+    HealingLight,
+    Lucky,
+    ManaSynthesizer,
+    SecondOpertunity,
+    Sniping,
     WarpGate,
 ]
 e_cards = [2 for _ in range(len(e_card_list))]
-e_card_list = e_card_list * 20
+e_card_list = e_card_list * 2
 
 
 def select_character(stage_num):
@@ -239,25 +239,25 @@ def draw_skill(skill, index):
     bg_rect = background.get_rect(
         center=(
             SCREEN_WIDTH / 2 + 30 - SKILL_WIDTH / 2 + (SKILL_WIDTH + 20) * 2 - 100,
-            SCREEN_HEIGHT - 100 - 600 + index * 200))
+            SCREEN_HEIGHT - 100 - 600 + index * 170 - 100))
     screen.blit(background, bg_rect)
 
     font = pygame.font.Font("./D2Coding.ttf", 26)
     text = font.render(skill.name, True, "#FFFFFF")
-    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40 - 100, SCREEN_HEIGHT - 50 - 600 + index * 200))
+    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40 - 100, SCREEN_HEIGHT - 50 - 600 + index * 170 - 100))
     screen.blit(text, text_rect)
 
     image = pygame.image.load(skill.skill_image_path)
     image = pygame.transform.scale(image, (80, 80))
-    pos = (SCREEN_WIDTH / 2 + 40 - 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 200)
+    pos = (SCREEN_WIDTH / 2 + 40 - 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 170 - 100)
     screen.blit(image, pos)
 
-    center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 200)
+    center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 170 - 100)
     pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
     draw_text(str(skill.cost), center=center_pos, color="#FFFFFF", size=16)
     try:
         if skill.max_energy is not None:
-            center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 + 20 - 600 + index * 200)
+            center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 + 20 - 600 + index * 170 - 100)
             pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
             draw_text(str(skill.max_energy), center=center_pos, color="#FFFFFF", size=16)
     except:
@@ -267,7 +267,7 @@ def draw_skill(skill, index):
     for t in skill.explaination:
         font = pygame.font.Font("./D2Coding.ttf", 14)
         text = font.render(t, True, "#FFFFFF")
-        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 600 + index * 200, left=SCREEN_WIDTH / 2 + 40)
+        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 600 + index * 170 - 100, left=SCREEN_WIDTH / 2 + 40)
         screen.blit(text, text_rect)
         i += 1
 
@@ -365,11 +365,11 @@ def dogam_enemy(*_):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                         return dogam, ()
-        name, skills, hp, passive, ai, img_path = enemies_info[index]
+        name, skills, hp, passive, _, ai, img_path = enemies_info[index]
         img = pygame.transform.scale(pygame.image.load(img_path), (600, 900))
         font = pygame.font.Font("./D2Coding.ttf", 60)
         text = font.render(name, True, "#FFFFFF")
-        text_rect = text.get_rect(centery=200, left=900)
+        text_rect = text.get_rect(centery=100, left=900)
         screen.blit(text, text_rect)
         screen.blit(img, (100, 90))
         for i in range(len(skills)):

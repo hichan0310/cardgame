@@ -18,6 +18,13 @@ rage_shield=pygame.image.load("./EnemyCards/Shielder/rage_shield.png")
 counter=pygame.image.load("./EnemyCards/Shielder/counter.png")
 shield_of_wrath_preview=pygame.image.load("./EnemyCards/Shielder/preview/shield_of_wrath.png")
 counter_preview=pygame.image.load("./EnemyCards/Shielder/preview/counterattack.png")
+pulse=[
+    pygame.transform.scale(pygame.image.load(f"./pulse/{i}.png"), (500, 500)) for i in range(7)
+]
+
+def draw_pulse(pos):
+    for i in range(7):
+        motion_draw.add_motion(lambda scr, ind:scr.blit(pulse[ind], (pos[0]-250, pos[1]-250)), i, (i, ))
 
 class ShieldOfWrath(Skill):
     def __init__(self, game_board):
@@ -91,18 +98,7 @@ class CounterAttackBuff(Buff):
             t = game_board.gameBoard[x][y]
             target.attack(2 if t.team==FLAG_PLAYER_TEAM else 1, t, [TAG_BUFF, TAG_PENETRATE])
         image=pygame.transform.scale(counter, (360, 360))
-        motion_draw.add_motion(
-            lambda screen: screen.blit(image, (target.pos_center[0] - 180, target.pos_center[1] - 180)), 1, tuple()
-        )
-        motion_draw.add_motion(
-            lambda screen: screen.blit(image, (target.pos_center[0] - 180, target.pos_center[1] - 180)), 2, tuple()
-        )
-        motion_draw.add_motion(
-            lambda screen: screen.blit(image, (target.pos_center[0] - 180, target.pos_center[1] - 180)), 3, tuple()
-        )
-        motion_draw.add_motion(
-            lambda screen: screen.blit(image, (target.pos_center[0] - 180, target.pos_center[1] - 180)), 4, tuple()
-        )
+        draw_pulse(self.target.pos_center)
 
     def turnover_event(self, game_board):
         self.used(1)

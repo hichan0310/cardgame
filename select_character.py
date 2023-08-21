@@ -37,7 +37,7 @@ class SelectCharacter:
         self.stage = stage_num
         self.screen = screen
         for enemy_num, location in stage_list[stage_num]:
-            name, skills, hp, passive, ai, img_path = enemies_info[enemy_num]
+            name, skills, hp, passive, _, ai, img_path = enemies_info[enemy_num]
             self.change_image(location, img_path)
             self.gameBoard[location[0]][location[1]].team = FLAG_ENEMY_TEAM
         self.result = []

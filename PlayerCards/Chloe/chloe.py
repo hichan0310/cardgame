@@ -2,9 +2,20 @@ from skill import Skill, SpecialSkill
 from buff import Buff
 from settings import *
 from typing import TYPE_CHECKING
+from graphic_manager import motion_draw
 
 if TYPE_CHECKING:
     from playerCard import PlayerCard
+
+
+grow=[pygame.image.load(f"./PlayerCards/Chloe/grow/{i}.png") for i in range(13)]
+
+def heal_grow(pos):
+    pos=transform_pos(pos)
+    for i in range(30):
+        img=grow[min(i, 12)]
+        motion_draw.add_motion(lambda scr, imgg, xx, yy:scr.blit(imgg, (pos[0]-xx/2, pos[1]-yy/2-50)), i, (img, *img.get_size()))
+
 
 
 # 푸른 새싹
@@ -14,7 +25,7 @@ class SproutOfBlue(Skill):
         self.name = "급속생장"
         self.explaination = [
             "cost : 2",
-            "바로 앞 또는 옆에 있는 대상에게 스킬을 시전하여 1의 피해를 준다. ",
+            "바로 앞 또는 옆에 있는 대상에게 스킬을 시전하여 체력 1을 회복한다. ",
             ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Chloe/skill_image/fast_growth.png"
@@ -28,7 +39,8 @@ class SproutOfBlue(Skill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
-            target.heal(1)
+            motion_draw.add_motion(lambda scr:target.heal(1), 13, ())
+            heal_grow(target.pos_gameboard)
 
 
 # 대지의 새싹
@@ -48,8 +60,9 @@ class SproutOfEarth(Skill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = min(caster.specialSkill.energy + 1, caster.specialSkill.max_energy)
         for target in targets:
-            target.heal(3)
+            motion_draw.add_motion(lambda scr:target.heal(3), 13, ())
             target.quick_move = True
+            heal_grow(target.pos_gameboard)
 
 
 # 재생 버프
@@ -60,10 +73,17 @@ class Reincarnation(Buff):
 
     def move_event(self, player: "PlayerCard", pos: tuple[int, int], game_board):
         x, y = pos
-        self.game_board.heal((x + 1, y), 1)
-        self.game_board.heal((x, y + 1), 1)
-        self.game_board.heal((x - 1, y), 1)
-        self.game_board.heal((x, y - 1), 1)
+        def tmp(scr):
+            self.game_board.heal((x + 1, y), 1)
+            self.game_board.heal((x, y + 1), 1)
+            self.game_board.heal((x - 1, y), 1)
+            self.game_board.heal((x, y - 1), 1)
+        motion_draw.add_motion(tmp, 13, ())
+        heal_grow((x, y))
+        heal_grow((x+1, y))
+        heal_grow((x, y+1))
+        heal_grow((x-1, y))
+        heal_grow((x, y-1))
         player.heal(1)
         self.used(1)
 

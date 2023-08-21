@@ -86,7 +86,8 @@ class Burn(Buff):
         game_board.register_turnover(self)
 
     def turnover_event(self, game_board):
-        self.target.attack(1, self.target, [TAG_PYRO, TAG_BUFF])
+        self.target.hit(1, self.target, [TAG_PYRO, TAG_BUFF])
+
         self.used(1)
 
 
@@ -260,23 +261,6 @@ class FlameSward(SpecialSkill):
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         caster.specialSkill.energy = 0
         execute_pos_real = transform_pos(execute_pos)
-        caster_pos_real = transform_pos(caster_pos)
-        for i in range(40):
-            img1 = pygame.transform.rotate(flame_sward[14], 270)
-            img2 = pygame.transform.rotate(flame_sward[14], 90)
-            img1 = pygame.transform.scale(img1, (((39 - i) * 40), 2 * ((39 - i) * 40) / 3))
-            img2 = pygame.transform.scale(img2, (((39 - i) * 40), 2 * ((39 - i) * 40) / 3))
-            motion_draw.add_motion(
-                lambda screen, img, pos: screen.blit(img, pos), i,
-                (img1, (caster_pos_real[0] - ((39 - i) * 40) / 2,
-                        caster_pos_real[1] - ((39 - i) * 40) / 3 * 2))
-            )
-            motion_draw.add_motion(
-                lambda screen, img, pos: screen.blit(img, pos), i,
-                (img2, (caster_pos_real[0] - ((39 - i) * 40) / 2,
-                        caster_pos_real[1]))
-            )
-
         def temp_func(screen, damage):
             for i in range(30):
                 if caster_pos[0] > execute_pos[0]:
@@ -299,5 +283,5 @@ class FlameSward(SpecialSkill):
             for observer in caster.observers_attack:
                 observer.attack_event(self, targets, self.game_board, self.atk_type)
 
-        motion_draw.add_motion(temp_func, 80, (4,))
-        motion_draw.add_motion(temp_func, 60, (3,))
+        motion_draw.add_motion(temp_func, 10, (4,))
+        motion_draw.add_motion(temp_func, 0, (3,))

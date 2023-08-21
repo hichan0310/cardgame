@@ -31,7 +31,10 @@ class Sniping(EventCard):
 
     def execute_one(self, pos, target):
         self.game_board.cost.minus(self.cost)
-        if target.hp<=7:
-            target.hit(target.hp-1, None, [TAG_BUFF, TAG_PENETRATE])
-        else:
+        try:
+            if target.hp<=7:
+                target.hit(target.hp-1, None, [TAG_BUFF, TAG_PENETRATE])
+            else:
+                target.hit(7, None, [TAG_BUFF, TAG_PENETRATE])
+        except:
             target.hit(7, None, [TAG_BUFF, TAG_PENETRATE])

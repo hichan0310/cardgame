@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from gameMap import GameMap
 
 img_cursearrow=pygame.transform.scale(pygame.image.load("./PlayerCards/Lucifer/curse_arrow.png"), (150, 100))
-
+curse=
 
 class Curse(Buff):
     def __init__(self, character: "PlayerCard", game_board: "GameMap"):
@@ -115,6 +115,10 @@ class DoomsdayProphecy(Buff):
         self.target.buff.append(Curse(self.target, game_board))
 
 
+doomsday=[
+    pygame.transform.scale(pygame.image.load(f"./PlayerCards/Lucifer/doomsday/{i}.png"), (600, 600)) for i in range(13)
+]
+
 class CommingApocalypse(SpecialSkill):
     def __init__(self, game_board: "GameMap"):
         super().__init__(4, 4, game_board, [TAG_SPECIAL_SKILL, TAG_BUFF])
@@ -142,6 +146,9 @@ class CommingApocalypse(SpecialSkill):
         caster.specialSkill.energy = 0
         for target in targets:
             try:
+                x, y=target.pos_center
+                for i in range(13):
+                    motion_draw.add_motion(lambda scr, ii, xx, yy:scr.blit(doomsday[ii], (xx-300, yy-250)), i, (i, x, y))
                 DoomsdayProphecy(target, 3, target.game_board)
             except:
                 pass

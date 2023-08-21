@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 img_stone=pygame.image.load("./PlayerCards/Petra/turret_stone.png")
 crack_line=pygame.transform.scale(pygame.image.load("./PlayerCards/Petra/crack_line.png"), (30, 30))
+special=pygame.transform.scale(pygame.image.load("./PlayerCards/Petra/special.png"), (1000, 1000))
 
 class BaseInstability(Buff):
     def __init__(self, character: "PlayerCard", game_board):
@@ -171,6 +172,11 @@ class BaseCollapse(SpecialSkill):
         return list(filter(lambda p: p != caster_pos, t))
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
+        x, y=transform_pos((3, 3))
+        pos=(x-500, y-500)
+        for i in range(20):
+            special.set_alpha(min(255, 300-i*15))
+            motion_draw.add_motion(lambda scr, sp:scr.blit(sp, pos), i, (special, ))
         for target in targets:
             caster.attack(2, target, self.atk_type)
         caster.passive[0].destroyed = 0

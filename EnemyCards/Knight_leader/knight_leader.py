@@ -8,7 +8,7 @@ from buff import Buff
 from graphic_manager import motion_draw
 from typing import TYPE_CHECKING
 from settings import *
-from math import sqrt, atan, pi, sin, cos
+from math import sqrt, atan, pi, sin, cos, log
 from EnemyCards.Knight_beginner.knight_beginner import Shield
 from EnemyCards.Shielder.shielder import CounterAttackBuff
 import random
@@ -17,6 +17,25 @@ if TYPE_CHECKING:
     from playerCard import PlayerCard
     from enemy import EnemyCard
 
+
+
+potal=pygame.image.load("./EventCards/WarpGateOpen/potal.png")
+pulse=[
+    pygame.transform.scale(pygame.image.load(f"./pulse/{i}.png"), (500, 500)) for i in range(7)
+]
+
+def draw_pulse(pos):
+    for i in range(7):
+        motion_draw.add_motion(lambda scr, ind:scr.blit(pulse[ind], (pos[0]-250, pos[1]-250)), i, (i, ))
+
+def draw_potal(pos):
+    def tmp(scr, i):
+        size=log(i*3+2)*100
+        img=pygame.transform.scale(potal, (size, size))
+        img.set_alpha(min(255, 300-15*i))
+        scr.blit(img, (pos[0]-size/2, pos[1]-size/2))
+    for i in range(21):
+        motion_draw.add_motion(tmp, i, (i,))
 
 def warp_two(self, pos1, pos2):
     self.game_board.cost.minus(self.cost)
@@ -40,6 +59,9 @@ def warp_two(self, pos1, pos2):
 
 energy_ball = pygame.transform.scale(pygame.image.load("./EnemyCards/Wizard_beginner/energy_ball.png"), (100, 75))
 energy_ball_boom = pygame.image.load("./EnemyCards/Wizard_beginner/energy_bomb.png")
+summon_swords=[
+    pygame.transform.scale(pygame.image.load(f"./EnemyCards/Knight_leader/summon_sword/{i}.png"), CARD_SIZE) for i in range(10)
+]
 
 
 class StrongHit(Skill):
@@ -63,8 +85,12 @@ class StrongHit(Skill):
                [(i + 1, 5) for i in range(5)]
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
-        for target in self.game_board.players:
-            caster.attack(10, target, self.atk_type)
+        for target_list in self.game_board.gameBoard:
+            for target in target_list:
+                if target.team==FLAG_PLAYER_TEAM:
+                    caster.attack(10, target, self.atk_type)
+                if target.name=="sward phantom":
+                    target.die()
 
 
 class Shield(Buff):
@@ -92,9 +118,10 @@ class SwordDestroyed(Buff):
 
 class SwordPhantom(Summons):
     def __init__(self, pos, game_board, group, knight, real):
-        super().__init__(4, transform_pos(pos), game_board, group, knight, "./EnemyCards/Knight_leader/summon_sward.png", pos)
+        super().__init__(4, transform_pos(pos), game_board, group, knight, "./EnemyCards/Knight_leader/summon_sword/9.png", pos)
         self.name = "sward phantom"
         self.team=FLAG_SUMMONS
+        self.real=real
         if real:
             game_board.register_turnstart(self)
 
@@ -105,6 +132,11 @@ class SwordPhantom(Summons):
              (pos[0], pos[1] - 1), pos, (pos[0], pos[1] + 1),
              (pos[0] + 1, pos[1] - 1), (pos[0] + 1, pos[1]), (pos[0] + 1, pos[1] + 1), ]
         ))
+
+    def explode(self):
+        draw_pulse(self.pos_center)
+        for x, y in self.atk_range(self.pos_gameboard):
+            self.game_board.gameBoard[x][y].hit(3, self, [TAG_SUMMON])
 
     def turnstart_event(self, game_board):
         def energyball(scr, caster, target):
@@ -144,11 +176,18 @@ class SwordPhantom(Summons):
             return
         self.count -= 1
         if self.count == 0:
-            if caster.team == FLAG_PLAYER_TEAM:
-                for target in self.game_board.players:
-                    if self.real:
-                        Shield(target, self.game_board, 8)
-            self.die()
+            try:
+                if caster.team == FLAG_PLAYER_TEAM:
+                    for target in self.game_board.players:
+                        if self.real:
+                            Shield(target, self.game_board, 8)
+                self.die()
+            except:
+                self.die()
+
+    def die(self):
+        self.explode()
+        super().die()
 
 
 class ResonanceSword(Skill):
@@ -170,7 +209,9 @@ class ResonanceSword(Skill):
         random.shuffle(arr)
         real = True
         for pos in arr[:4]:
-            self.game_board.add_summons(pos, SwordPhantom(pos, self.game_board, self.game_board.group, caster, real))
+            for i in range(10):
+                motion_draw.add_motion(lambda scr, ii, x, y:scr.blit(summon_swords[ii], (x-CARD_WIDTH/2, y-CARD_HEIGHT/2)), i, (i, *transform_pos(pos)))
+            motion_draw.add_motion(lambda a, poss, realy:self.game_board.add_summons(poss, SwordPhantom(poss, self.game_board, self.game_board.group, caster, realy)), 9, (pos, real))
             real = False
 
 
@@ -249,8 +290,43 @@ class LastSkill(Skill):
         # tmp.execute_two(caster.pos_gameboard, (3, 3),
         #                 self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], self.game_board.gameBoard[3][3])
         # tmp.kill()
+        if caster.pos_gameboard!=(3, 3):
+            draw_potal(caster.pos_center)
+            draw_potal(transform_pos((3, 3)))
         warp_two(self, caster.pos_gameboard, (3, 3))
         LastSkillBuff(caster, self.game_board)
+
+
+class ReverseHpBuff(Buff):
+    def __init__(self, character, game_board):
+        super().__init__(character, 3, game_board, "체력 반전", "./EnemyCards/Knight_leader/knight_leader_card.png")
+        game_board.register_turnover(self)
+
+    def turnover_event(self, game_board):
+        if self.use_num==1:
+            self.target.hp=self.target.max_hp-self.target.hp
+        self.used(1)
+
+
+class ReverseHp(Skill):
+    def __init__(self, game_board):
+        super().__init__(0, game_board, [TAG_SPECIAL_SKILL, TAG_BUFF])
+        self.name="체력 반전"
+        self.explaination=[
+            "체력을 반전시킨다. ",
+            "타겟 2명을 지정하여 2턴 후 최대 체력에서 현재 체력을 뺀 값을 현재 체력으로 설정한다. ",
+            ", ".join(self.atk_type)
+        ]
+        self.skill_image_path="./EnemyCards/Knight_leader/knight_leader_card.png"
+
+    def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
+        for target in targets:
+
+            ReverseHpBuff(target, self.game_board)
+
+
+
+
 
 
 class AI_KnightLeader:
@@ -261,11 +337,15 @@ class AI_KnightLeader:
 
     def execute(self, pos):
         if self.character.hp <= 10:
+            self.character.skills[0].execute(self.character, None, None, None, None)
             self.character.skills[3].execute(self.character, None, None, None, None)
         elif self.turn % 3 == 0:
             self.character.skills[1].execute(self.character, None, None, None, None)
         elif self.turn % 3 == 1:
-            self.character.skills[0].execute(self.character, None, None, None, None)
-        elif self.turn % 3 == 2:
             self.character.skills[2].execute(self.character, None, None, None, None)
+        elif self.turn % 3 == 2:
+            self.character.skills[0].execute(self.character, None, None, None, None)
+        if self.turn % 4 == 3:
+            target=random.choice(self.game_board.players)
+            self.character.skills[4].execute(self.character, [target], None, None, None)
         self.turn+=1

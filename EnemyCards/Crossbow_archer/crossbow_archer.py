@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from enemy import EnemyCard
     from gameMap import GameMap
 
-continueous_firing=pygame.image.load("./EnemyCards/Crossbow_archer/continuous_firing.png")
+continueous_firing=pygame.image.load("./EnemyCards/Crossbow_archer/effect.png")
 continueous_firing_preview=pygame.image.load("./EnemyCards/Crossbow_archer/preview/continuous_firing.png")
 penetrate_arrow_preview=pygame.image.load("./EnemyCards/Crossbow_archer/preview/penetrate_arrow.png")
 arrow=pygame.image.load("./EnemyCards/Archer_beginner/arrow.png")
@@ -105,16 +105,16 @@ class ContinuousFiring(Skill):
             "3턴동안 자신에게 일반 공격을 하면 추가 화살을 발사하는 버프를 건다. ",
             ", ".join(self.atk_type)
         ]
-        self.skill_image_path = "./EnemyCards/Crossbow_archer/multy_shot.png"
+        self.skill_image_path = "./EnemyCards/Crossbow_archer/continuous_firing.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
         ContinuousFiringBuff(caster, 3, self.game_board)
         x, y = transform_pos(caster_pos)
         for i in range(20):
-            size = i * 20
-            img_temp = pygame.transform.scale(continueous_firing, (2*size, size))
+            size = i * 30
+            img_temp = pygame.transform.scale(continueous_firing, (size, size))
             img_temp.set_alpha(min((20 - i) * 15, 255))
-            motion_draw.add_motion(lambda screen, image, size: screen.blit(image, (x - size, y - size / 2)), i,
+            motion_draw.add_motion(lambda screen, image, size: screen.blit(image, (x - size/2, y - size / 2)), i,
                                    (img_temp, size))
 
 

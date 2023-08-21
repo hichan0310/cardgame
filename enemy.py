@@ -15,7 +15,7 @@ class EnemyCard(Cell):
         self.max_energy: int
         self.buff: list[Buff] = []
         self.passive: list[Buff] = []
-        self.name, self.skills, self.max_hp, self.passive, self.ai, self.img_path = character_params
+        self.name, self.skills, self.max_hp, self.passive, self.limit_hp, self.ai, self.img_path = character_params
         t = []
         for passive_buff in self.passive:
             t.append(passive_buff(self, game_board))
@@ -91,6 +91,9 @@ class EnemyCard(Cell):
                 screen.blit(damage_text, damage_text_rect)
 
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 10, self.pos_center[1] + b * 10), _ + 1))
+        if self.limit_hp is not None:
+            if self.hp<self.limit_hp:
+                self.hp=self.limit_hp
         if self.hp <= 0:
             self.die()
         for observer in self.observers_hit[::-1]:
@@ -110,6 +113,9 @@ class EnemyCard(Cell):
                 screen.blit(damage_text, damage_text_rect)
 
             motion_draw.add_motion(temp_func, _, ((self.pos_center[0] + a * 20, self.pos_center[1] + b * 20), _ + 1))
+        if self.limit_hp is not None:
+            if self.hp<self.limit_hp:
+                self.hp=self.limit_hp
         if self.hp <= 0:
             self.die()
         for observer in self.observers_hit[::-1]:

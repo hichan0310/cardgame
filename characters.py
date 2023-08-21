@@ -27,17 +27,17 @@ characters_info = [
 ]
 
 enemies_info = [
-    ["기사 견습생", [Sortie, PrepareDefence], 10, [], AI_KnightBiginner,
+    ["기사 견습생", [Sortie, PrepareDefence], 10, [], None, AI_KnightBiginner,
      "./EnemyCards/Knight_beginner/knight_beginner_card.png"],
-    ["궁수 견습생", [Arrow], 7, [], AI_ArcherBiginner,
+    ["궁수 견습생", [Arrow], 7, [], None, AI_ArcherBiginner,
      "./EnemyCards/Archer_beginner/archer_beginner_card.png"],
-    ["마법사 견습생", [EnergyBall], 6, [], AI_WizardBiginner,
+    ["마법사 견습생", [EnergyBall], 6, [], None, AI_WizardBiginner,
      "./EnemyCards/Wizard_beginner/wizard_beginner_card.png"],
-    ["방패병", [ShieldOfWrath, CounterAttack], 15, [], AI_Shielder,
+    ["방패병", [ShieldOfWrath, CounterAttack], 15, [], None, AI_Shielder,
      "./EnemyCards/Shielder/shielder_card.png"],
-    ["석궁병", [PenetrateArrow, ContinuousFiring], 10, [], AI_Crossbow,
+    ["석궁병", [PenetrateArrow, ContinuousFiring], 10, [], None, AI_Crossbow,
      "./EnemyCards/Crossbow_archer/crossbow_archer_card.png"],
-    ["기사단장", [StrongHit, ResonanceSword, GuardianShield, LastSkill], 50, [], AI_KnightLeader,
+    ["기사단장", [StrongHit, ResonanceSword, GuardianShield, LastSkill, ReverseHp], 50, [], 10, AI_KnightLeader,
      "./EnemyCards/Knight_leader/knight_leader_card.png"]
 ]
 
