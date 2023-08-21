@@ -133,7 +133,7 @@ class DoomsdayProphecy(Buff):
 
 
 doomsday=[
-    pygame.transform.scale(pygame.image.load(f"./PlayerCards/Lucifer/doomsday/{i}.png"), (600, 600)) for i in range(13)
+    pygame.transform.scale(pygame.image.load(f"./PlayerCards/Lucifer/doomsday/{i}.png"), (600, 600)) for i in range(15)
 ]
 
 class CommingApocalypse(SpecialSkill):
@@ -164,8 +164,14 @@ class CommingApocalypse(SpecialSkill):
         for target in targets:
             try:
                 x, y=target.pos_center
-                for i in range(13):
-                    motion_draw.add_motion(lambda scr, ii, xx, yy:scr.blit(doomsday[ii], (xx-300, yy-250)), i, (i, x, y))
+                for i in range(7):
+                    motion_draw.add_motion(lambda scr, ii, xx, yy:scr.blit(doomsday[0], (xx-300, yy-250-20*1.5**(6-ii))), i, (i, x, y))
+                for i in range(15):
+                    motion_draw.add_motion(lambda scr, ii, xx, yy:scr.blit(doomsday[ii], (xx-300, yy-250)), i+7, (i, x, y))
+                for i in range(8):
+                    tmp_img_14=pygame.transform.scale(doomsday[14], (600, 600))
+                    tmp_img_14.set_alpha(255-i*35)
+                    motion_draw.add_motion(lambda scr, img, xx, yy:scr.blit(img, (xx-300, yy-250)), i+22, (tmp_img_14, x, y))
                 DoomsdayProphecy(target, 3, target.game_board)
             except:
                 pass
