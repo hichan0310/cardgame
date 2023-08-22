@@ -14,11 +14,14 @@ class Buff:
 
     def draw(self, centerpos, screen):
         pygame.draw.rect(screen, "#000000",
-                         [centerpos[0] - BUFF_WIDTH / 2, centerpos[1] - BUFF_HEIGHT / 2, BUFF_WIDTH, BUFF_HEIGHT])
+                         [centerpos[0] - BUFF_WIDTH / 2, centerpos[1] - BUFF_HEIGHT / 2-20, BUFF_WIDTH, BUFF_HEIGHT])
         image = pygame.image.load(self.image_path)
         image = pygame.transform.scale(image, (80, 80))
         pos = (centerpos[0] - 40, centerpos[1] - 40 - 30)
         screen.blit(image, pos)
+
+        pygame.draw.circle(screen, "#000000", (pos[0]+80, pos[1]), 10, 10)
+        draw_text(str(self.use_num), center=(pos[0]+80, pos[1]), color="#FFFFFF", size=16)
 
         font = pygame.font.Font("./D2Coding.ttf", 14)
         text = font.render(self.name, True, "#FFFFFF")
@@ -34,7 +37,7 @@ class Buff:
     def hit_buff(self, caster, target, damage: int, atk_type):
         return damage
 
-    def hit_event(self, caster, target, game_board, atk_type):
+    def hit_event(self, caster, target, game_board, atk_type, damage):
         pass
 
     def attack_event(self, caster, targets, game_board, atk_type):

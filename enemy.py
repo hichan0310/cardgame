@@ -46,6 +46,15 @@ class EnemyCard(Cell):
         hp_text_rect = hp_text.get_rect(
             center=(self.pos_center[0] + CARD_WIDTH / 2, self.pos_center[1] - CARD_HEIGHT / 2))
         screen.blit(hp_text, hp_text_rect)
+        if len(self.buff) != 0:
+            pygame.draw.circle(
+                screen, color="#000000",
+                center=(self.pos_center[0] - CARD_WIDTH / 2, self.pos_center[1] + CARD_HEIGHT / 2), radius=20)
+            hp_font = pygame.font.Font("./D2Coding.ttf", 20)
+            hp_text = hp_font.render(str(len(self.buff)), True, "#FFFFFF")
+            hp_text_rect = hp_text.get_rect(
+                center=(self.pos_center[0] - CARD_WIDTH / 2, self.pos_center[1] + CARD_HEIGHT / 2))
+            screen.blit(hp_text, hp_text_rect)
 
     def register_hit(self, observer: "Buff, Cell"):
         self.observers_hit.append(observer)
@@ -69,8 +78,8 @@ class EnemyCard(Cell):
 
     def curse_explode(self, caster):
         if self.dead: return
-        for i in range(len(self.observers_curse)):
-            self.observers_curse[0].curse_event(caster, self, self.game_board)
+        for observer in self.observers_curse[::-1]:
+            observer.curse_event(caster, self, self.game_board)
 
     def hit(self, damage, caster, atk_type):
         if self.dead: return
@@ -97,7 +106,7 @@ class EnemyCard(Cell):
         if self.hp <= 0:
             self.die()
         for observer in self.observers_hit[::-1]:
-            observer.hit_event(caster, self, self.game_board, atk_type)
+            observer.hit_event(caster, self, self.game_board, atk_type, damage)
 
     def penetrateHit(self, damage, caster, atk_type):
         if self.dead: return
@@ -119,7 +128,7 @@ class EnemyCard(Cell):
         if self.hp <= 0:
             self.die()
         for observer in self.observers_hit[::-1]:
-            observer.hit_event(caster, self, self.game_board, atk_type + [TAG_PENETRATE])
+            observer.hit_event(caster, self, self.game_board, atk_type + [TAG_PENETRATE], damage)
 
     def attack(self, damage, target, atk_type):
         if self.dead: return

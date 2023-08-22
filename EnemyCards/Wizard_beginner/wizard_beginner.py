@@ -19,7 +19,7 @@ wizard_energy_ball_preview=pygame.image.load("./EnemyCards/Wizard_beginner/previ
 
 class EnergyBall(Skill):
     def __init__(self, game_board: "GameMap"):
-        super().__init__(3, game_board, [TAG_NORMAL_ATTACK])
+        super().__init__(0, game_board, [TAG_NORMAL_ATTACK])
         self.name = "에너지볼"
         self.explaination = [
             "적군 1명을 중심으로 1의 광역 피해를 가한다. ",
@@ -52,7 +52,7 @@ class AI_WizardBiginner:
     def execute(self, pos):
         target = random.choice(self.game_board.players)
         target_pos = target.pos_center
-        img_arrow = pygame.transform.scale(wizard_energy_ball, (100, 30))
+        img_arrow = pygame.transform.scale(wizard_energy_ball, (200, 200))
         p1 = transform_pos(pos)
         p2 = target_pos
         dx = p2[0] - p1[0]

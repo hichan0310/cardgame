@@ -1,5 +1,4 @@
 import random
-
 import pygame.image
 
 from skill import Skill, SpecialSkill
@@ -7,7 +6,7 @@ from buff import Buff
 from graphic_manager import motion_draw
 from typing import TYPE_CHECKING
 from settings import *
-from math import sqrt, atan, pi, sin, cos
+from math import sin, cos
 
 if TYPE_CHECKING:
     from playerCard import PlayerCard
@@ -49,12 +48,15 @@ class CurtainOfNightSky(Buff):
     def __init__(self, character: "PlayerCard", count, game_board):
         super().__init__(character, count, game_board, "밤하늘의 장막", "./PlayerCards/Lucifer/doomsday_prophecy.png")
         game_board.register_turnover(self)
-        character.register_hit(self)
+        try:
+            character.register_hit(self)
+        except:
+            pass
 
     def turnover_event(self, game_board):
         self.used(1)
 
-    def hit_event(self, caster, target, game_board, atk_type):
+    def hit_event(self, caster, target, game_board, atk_type, damage):
         if TAG_PENETRATE in atk_type:
             return
         x, y = target.pos_center

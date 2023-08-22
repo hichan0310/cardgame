@@ -88,7 +88,7 @@ class CounterAttackBuff(Buff):
         character.register_hit(self)
         game_board.register_turnover(self)
 
-    def hit_event(self, caster: "PlayerCard", target: "PlayerCard", game_board, atk_type):
+    def hit_event(self, caster: "PlayerCard", target: "PlayerCard", game_board, atk_type, damage):
         if TAG_PENETRATE in atk_type: return
         p = target.pos_gameboard
         for x, y in list(filter(lambda p: 0 < p[0] < 6 and 0 < p[1] < 6,

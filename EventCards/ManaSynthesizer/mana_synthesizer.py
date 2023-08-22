@@ -19,18 +19,17 @@ if TYPE_CHECKING:
 
 class ManaSynthesizerBuff(Buff):
     def __init__(self, character, game_board):
-        super().__init__(character, 1, game_board, "마나 합성", "./EventCards/ManaSynthesizer/mana_synthesizer_buff.png")
+        super().__init__(character, 0, game_board, "마나 합성", "./EventCards/ManaSynthesizer/mana_synthesizer_buff.png")
         game_board.register_turnstart(self)
         character.register_hit(self)
-        self.hit_stack=0
 
-    def hit_event(self, caster, target, game_board, atk_type):
-        self.hit_stack+=1
+    def hit_event(self, caster, target, game_board, atk_type, damage):
+        self.use_num=min(3, self.use_num+1)
 
     def turnstart_event(self, game_board):
-        if self.hit_stack>=3:
+        if self.use_num>=3:
             self.game_board.cost.plus(3)
-            self.used(1)
+            self.remove()
 
 class ManaSynthesizer(EventCard):
     def __init__(self, pos_center, game_board: "GameMap", group):

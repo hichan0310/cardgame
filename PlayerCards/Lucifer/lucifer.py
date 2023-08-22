@@ -14,31 +14,60 @@ if TYPE_CHECKING:
 
 img_cursearrow=pygame.transform.scale(pygame.image.load("./PlayerCards/Lucifer/curse_arrow.png"), (150, 100))
 curse_explode=[
-    pygame.transform.scale(pygame.image.load(f"./PlayerCards/Lucifer/curse/{i}.png"), (500, 500)) for i in range(11)
+    pygame.transform.scale(pygame.image.load(f"./PlayerCards/Lucifer/curse/{i}.png"), (350, 350)) for i in range(11)
 ]
 
 class Curse(Buff):
     def __init__(self, character: "PlayerCard", game_board: "GameMap"):
-        super().__init__(character, -1, game_board, "저주", "./PlayerCards/Lucifer/curse.png")
+        for buff in character.buff:
+            if buff.name=="저주":
+                buff.use_num+=1
+                if buff.use_num>6:
+                    buff.use_num=6
+                return
+        super().__init__(character, 1, game_board, "저주", "./PlayerCards/Lucifer/curse.png")
         character.register_curse(self)
 
     def curse_event(self, caster: "PlayerCard", target: "PlayerCard", game_board: "GameMap"):
-        def tmp(scr):
-            caster.attack(4, self.target, [TAG_SKILL, TAG_BUFF])
+        def tmp(scr, dam):
+            caster.attack(dam, self.target, [TAG_SKILL, TAG_BUFF])
             for observer in caster.observers_attack:
                 observer.attack_event(self, [target], self.game_board, [TAG_BUFF])
-        motion_draw.add_motion(tmp, 11, ())
-        x, y=self.target.pos_center
-        for i in range(7):
-            tmp_img_0=pygame.transform.scale(curse_explode[0], (500, 500))
-            tmp_img_0.set_alpha(min(i*51, 255))
-            motion_draw.add_motion(lambda scr, tmpp:scr.blit(tmpp, (x-250, y-250)), i, (tmp_img_0, ))
-        for i in range(11):
-            motion_draw.add_motion(lambda scr, ii:scr.blit(curse_explode[ii], (x-250, y-250)), i+7, (i, ))
-        for i in range(10):
-            tmp_img_10=pygame.transform.scale(curse_explode[10], (500, 500))
-            tmp_img_10.set_alpha(min(255, (10-i)*25))
-            motion_draw.add_motion(lambda scr, tmpp:scr.blit(tmpp, (x-250, y-250)), i+18, (tmp_img_10, ))
+        def draw_explode(s, x, y, dam=4):
+            for i in range(7):
+                tmp_img_0=pygame.transform.scale(curse_explode[0], (350, 350))
+                tmp_img_0.set_alpha(min(i*51, 255))
+                motion_draw.add_motion(lambda scr, tmpp:scr.blit(tmpp, (x-175, y-175)), i, (tmp_img_0, ))
+            for i in range(11):
+                motion_draw.add_motion(lambda scr, ii:scr.blit(curse_explode[ii], (x-175, y-175)), i+7, (i, ))
+            for i in range(10):
+                tmp_img_10=pygame.transform.scale(curse_explode[10], (350, 350))
+                tmp_img_10.set_alpha(min(255, (10-i)*25))
+                motion_draw.add_motion(lambda scr, tmpp:scr.blit(tmpp, (x-175, y-175)), i+18, (tmp_img_10, ))
+            motion_draw.add_motion(tmp, 11, (dam, ))
+        x, y = self.target.pos_center
+        if self.use_num==1:
+            draw_explode(screen, x, y)
+        elif self.use_num==2:
+            draw_explode(screen, x, y-60)
+            motion_draw.add_motion(draw_explode, 5, (x, y+60))
+        elif self.use_num==3:
+            draw_explode(screen, x-30*1.618, y-30)
+            motion_draw.add_motion(draw_explode, 3, (x+30*1.618, y-30))
+            motion_draw.add_motion(draw_explode, 6, (x, y+60))
+        elif self.use_num==4:
+            draw_explode(screen, x, y-60)
+            motion_draw.add_motion(draw_explode, 2, (x + 60, y))
+            motion_draw.add_motion(draw_explode, 4, (x, y+60))
+            motion_draw.add_motion(draw_explode, 6, (x-60, y))
+        elif self.use_num==5:
+            for i in range(5):
+                motion_draw.add_motion(draw_explode, i*2, (x+60*sin(2*pi/5*i), y-60*cos(2*pi/5*i)))
+        else:
+            for i in range(5):
+                motion_draw.add_motion(draw_explode, i*2, (x+60*sin(2*pi/5*i), y-60*cos(2*pi/5*i)))
+            motion_draw.add_motion(draw_explode, 15, (x, y, 8))
+
         self.remove()
 
 
@@ -89,7 +118,7 @@ class CurseArrow(Skill):
                     motion_draw.add_motion(lambda screen, image, size: screen.blit(image, (x - size / 2, y - size / 2)),
                                            i+j,
                                            (img_temp, size))
-                Curse(target, target.game_board)
+                motion_draw.add_motion(lambda scr:Curse(target, target.game_board), i, ())
         for observer in caster.observers_attack:
             observer.attack_event(self, targets, self.game_board, self.atk_type)
 
@@ -123,13 +152,15 @@ class DoomsdayProphecy(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board: "GameMap"):
         super().__init__(character, count, game_board, "종말의 예언", "./PlayerCards/Lucifer/doomsday_prophecy.png")
         game_board.register_turnover(self)
+        game_board.register_turnstart(self)
 
     def turnover_event(self, game_board: "GameMap"):
-        self.target.buff.append(Curse(self.target, game_board))
+        Curse(self.target, game_board)
         self.used(1)
 
     def turnstart_event(self, game_board: "GameMap"):
-        self.target.buff.append(Curse(self.target, game_board))
+        Curse(self.target, game_board)
+        self.used(1)
 
 
 doomsday=[
@@ -172,7 +203,7 @@ class CommingApocalypse(SpecialSkill):
                     tmp_img_14=pygame.transform.scale(doomsday[14], (600, 600))
                     tmp_img_14.set_alpha(255-i*35)
                     motion_draw.add_motion(lambda scr, img, xx, yy:scr.blit(img, (xx-300, yy-250)), i+22, (tmp_img_14, x, y))
-                DoomsdayProphecy(target, 3, target.game_board)
+                DoomsdayProphecy(target, 6, target.game_board)
             except:
                 pass
         for observer in caster.observers_attack:

@@ -57,7 +57,7 @@ def warp_two(self, pos1, pos2):
     self.game_board.gameBoard[pos2[0]][pos2[1]].update_location()
 
 
-energy_ball = pygame.transform.scale(pygame.image.load("./EnemyCards/Wizard_beginner/energy_ball.png"), (100, 75))
+energy_ball = pygame.transform.scale(pygame.image.load("./EnemyCards/Wizard_beginner/energy_ball.png"), (200, 200))
 energy_ball_boom = pygame.image.load("./EnemyCards/Wizard_beginner/energy_bomb.png")
 summon_swords=[
     pygame.transform.scale(pygame.image.load(f"./EnemyCards/Knight_leader/summon_sword/{i}.png"), CARD_SIZE) for i in range(10)
@@ -88,7 +88,7 @@ class StrongHit(Skill):
         for target_list in self.game_board.gameBoard:
             for target in target_list:
                 if target.team==FLAG_PLAYER_TEAM:
-                    caster.attack(10, target, self.atk_type)
+                    caster.attack(8, target, self.atk_type)
                 if target.name=="sward phantom":
                     target.die()
 
@@ -96,15 +96,14 @@ class StrongHit(Skill):
 class Shield(Buff):
     def __init__(self, character, game_board, amount):
         super().__init__(character, amount, game_board, "보호막", "./EnemyCards/Knight_beginner/shield.png")
-        self.amount = amount
 
     def hit_buff(self, caster, target, damage: int, atk_type):
-        if damage < self.amount:
-            self.amount-=damage
+        if damage < self.use_num:
+            self.use_num-=damage
             return 0
         else:
             self.remove()
-            return damage - self.amount
+            return damage - self.use_num
 
 
 class SwordDestroyed(Buff):
@@ -136,7 +135,8 @@ class SwordPhantom(Summons):
     def explode(self):
         draw_pulse(self.pos_center)
         for x, y in self.atk_range(self.pos_gameboard):
-            self.game_board.gameBoard[x][y].hit(3, self, [TAG_SUMMON])
+            if self.game_board.gameBoard[x][y].name!="sward phantom":
+                self.game_board.gameBoard[x][y].hit(3, self, [TAG_SUMMON])
 
     def turnstart_event(self, game_board):
         def energyball(scr, caster, target):
@@ -196,7 +196,7 @@ class ResonanceSword(Skill):
         self.name = "검의 울림"
         self.explaination = [
             "에너지를 검에 담는다. ",
-            "이 과정에서 맵의 무작위 위치에 4개의 검의 환영을 소환한다. ",
+            "이 과정에서 맵의 무작위 위치에 3개의 검의 환영을 소환한다. ",
             "4개의 검의 환영 중 1개만 진짜이다. ",
             "검의 환령은 턴이 시작될 때 적에게 에너지볼을 날리고 진짜 검의 환영만 피해를 준다. ",
             "진짜 검의 환영을 파괴할 경우 파괴한 팀의 모든 아군에게 8의 보호막 버프를 준다. ",
@@ -208,7 +208,7 @@ class ResonanceSword(Skill):
         arr = [(i, j) for i in range(1, 6) for j in range(1, 6) if self.game_board.gameBoard[i][j].team == FLAG_EMPTY]
         random.shuffle(arr)
         real = True
-        for pos in arr[:4]:
+        for pos in arr[:3]:
             for i in range(10):
                 motion_draw.add_motion(lambda scr, ii, x, y:scr.blit(summon_swords[ii], (x-CARD_WIDTH/2, y-CARD_HEIGHT/2)), i, (i, *transform_pos(pos)))
             motion_draw.add_motion(lambda a, poss, realy:self.game_board.add_summons(poss, SwordPhantom(poss, self.game_board, self.game_board.group, caster, realy)), 9, (pos, real))
@@ -246,12 +246,12 @@ class LastSkillBuff(Buff):
         super().__init__(character, 2, game_board, "마지막 일격", "./PlayerCards/Petra/skill_image/summon_turret.png")
         self.over3_attack = 0
         character.register_hit(self)
-        game_board.register_turnstart(self)
+        game_board.register_turnover(self)
 
-    def turnstart_event(self, game_board):
+    def turnover_event(self, game_board):
         self.used(1)
 
-    def hit_buff(self, caster, target, damage: int, atk_type):
+    def hit_event(self, caster, target, game_board, atk_type, damage):
         if damage>=3:
             self.over3_attack+=1
         return 0
@@ -267,15 +267,16 @@ class LastSkillBuff(Buff):
             for x, y in [(i, j) for i in range(1, 6) for j in range(1, 6) if (i, j) != self.target.pos_gameboard]:
                 target = self.game_board.gameBoard[x][y]
                 self.target.attack(5, target, [TAG_SPECIAL_SKILL])
+            print("die")
             motion_draw.add_motion(lambda scr: self.target.die(), 10, ())
 
 
 class LastSkill(Skill):
     def __init__(self, game_board):
         super().__init__(0, game_board, [TAG_BUFF, TAG_SPECIAL_SKILL])
-        self.name = "발악 패턴"
+        self.name = "마지막 결의"
         self.explaination = [
-            "hp 10이하가 되면 자신에게 3개의 반격 버프를 걸고 맵의 중앙으로 워프 게이트를 타고 이동한다. ",
+            "hp 10이하가 되면 자신에게 3개의 반격 버프를 걸고 맵의 중앙으로 이동한다. ",
             "이 다음 턴에 3 이상의 데미지가 2번 이상 들어가면 맵 전체에 5의 피해를 가하고 죽는다. ",
             "만약 2번 이상 들어가지 않으면 맵 전체에 8의 피해를 가하고 체력 10을 회복한다. ",
             ", ".join(self.atk_type)
@@ -290,6 +291,10 @@ class LastSkill(Skill):
         # tmp.execute_two(caster.pos_gameboard, (3, 3),
         #                 self.game_board.gameBoard[caster_pos[0]][caster_pos[1]], self.game_board.gameBoard[3][3])
         # tmp.kill()
+        for target_list in self.game_board.gameBoard:
+            for target in target_list:
+                if target.name=="sward phantom":
+                    target.die()
         if caster.pos_gameboard!=(3, 3):
             draw_potal(caster.pos_center)
             draw_potal(transform_pos((3, 3)))
@@ -327,25 +332,55 @@ class ReverseHp(Skill):
 
 
 
-
+last_skill_preview=pygame.image.load("./EnemyCards/Knight_leader/preview/last_skill.png")
+reverse_hp_preview=pygame.image.load("./EnemyCards/Knight_leader/preview/reverse_hp.png")
+guardian_shield_preview=pygame.image.load("./EnemyCards/Knight_leader/preview/guardian_shield.png")
+strong_hit_preview=pygame.image.load("./EnemyCards/Knight_leader/preview/strong_hit.png")
 
 class AI_KnightLeader:
     def __init__(self, game_board, character):
         self.game_board = game_board
         self.character = character
         self.turn = 0
+        self.last=False
 
     def execute(self, pos):
-        if self.character.hp <= 10:
-            self.character.skills[0].execute(self.character, None, None, None, None)
-            self.character.skills[3].execute(self.character, None, None, None, None)
+        if self.character.hp <= 10 and not self.last:
+            for i in range(15):
+                motion_draw.add_motion(lambda screen, a: screen.blit(last_skill_preview, (1 - 1.4 ** a, 0)),
+                                       14 - i, (i,))
+            for i in range(5):
+                motion_draw.add_motion(lambda screen: screen.blit(last_skill_preview, (0, 0)), 15 + i, tuple())
+            motion_draw.add_motion(lambda scr:self.character.skills[3].execute(self.character, None, None, None, None), 20, ())
+            self.turn=-1
+            self.last=True
+            return
         elif self.turn % 3 == 0:
             self.character.skills[1].execute(self.character, None, None, None, None)
         elif self.turn % 3 == 1:
-            self.character.skills[2].execute(self.character, None, None, None, None)
+            for i in range(15):
+                motion_draw.add_motion(lambda screen, a: screen.blit(guardian_shield_preview, (1 - 1.4 ** a, 0)),
+                                       14 - i, (i,))
+            for i in range(5):
+                motion_draw.add_motion(lambda screen: screen.blit(guardian_shield_preview, (0, 0)), 15 + i, tuple())
+            motion_draw.add_motion(lambda scr:self.character.skills[2].execute(self.character, None, None, None, None), 20, ())
         elif self.turn % 3 == 2:
-            self.character.skills[0].execute(self.character, None, None, None, None)
-        if self.turn % 4 == 3:
-            target=random.choice(self.game_board.players)
-            self.character.skills[4].execute(self.character, [target], None, None, None)
+            for i in range(15):
+                motion_draw.add_motion(lambda screen, a: screen.blit(strong_hit_preview, (1 - 1.4 ** a, 0)),
+                                       14 - i, (i,))
+            for i in range(5):
+                motion_draw.add_motion(lambda screen: screen.blit(strong_hit_preview, (0, 0)), 15 + i, tuple())
+            motion_draw.add_motion(lambda scr:self.character.skills[0].execute(self.character, None, None, None, None), 20, ())
+        if self.turn % 4 == 3 and self.turn>0:
+            try:
+                target=random.choice(self.game_board.players)
+                self.character.skills[4].execute(self.character, [target], None, None, None)
+                for i in range(15):
+                    motion_draw.add_motion(lambda screen, a: screen.blit(reverse_hp_preview, (1 - 1.4 ** a, 0)),
+                                           14 - i+20, (i,))
+                for i in range(5):
+                    motion_draw.add_motion(lambda screen: screen.blit(reverse_hp_preview, (0, 0)), 15 + i+20, tuple())
+            except:
+                pass
+        self.last=False
         self.turn+=1

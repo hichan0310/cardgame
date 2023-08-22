@@ -19,18 +19,17 @@ if TYPE_CHECKING:
 
 class Overheating(Buff):
     def __init__(self, character: "PlayerCard", game_board):
-        super().__init__(character, -1, game_board, "과열", "./EventCards/FireSward/overheating.png")
+        super().__init__(character, 0, game_board, "과열", "./EventCards/FireSward/overheating.png")
         character.register_attack(self)
-        self.overheat = 0
 
     def attack_event(self, caster, targets, game_board, atk_type):
         if TAG_SKILL in atk_type:
-            self.overheat += 1
+            self.use_num += 1
         while True:
-            if self.overheat >= 3:
+            if self.use_num >= 3:
                 self.target.specialSkill.gage_up(1)
                 self.game_board.cost.plus(1)
-                self.overheat -= 3
+                self.use_num -= 3
             else:
                 return
 

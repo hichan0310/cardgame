@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from settings import *
 from math import sqrt, atan, pi, sin, cos
 
+
 if TYPE_CHECKING:
     from playerCard import PlayerCard
 
@@ -201,7 +202,7 @@ class FlameShuriken(Skill):
                     observer.attack_event(self, targets, self.game_board, self.atk_type)
 
             try:
-                Burn(target, 1, target.game_board)
+                motion_draw.add_motion(lambda scr:Burn(target, 1, target.game_board), max(i1, i2, i3)+30, ())
             except:
                 pass
 

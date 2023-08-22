@@ -146,13 +146,14 @@ class SelectEventCard:
     def __init__(self, eventcards_list, game_board):
         self.game_board = game_board
         self.group = pygame.sprite.Group()
-        self.on_gameboard: list(EventCard) = []
-        self.not_on_gameboard = eventcards_list
+        self.on_gameboard = []
+        self.not_on_gameboard = eventcards_list[:]
         random.shuffle(self.not_on_gameboard)
         for i in range(5):
             self.on_gameboard.append(
                 self.not_on_gameboard.pop()(
-                    (250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i-2)+30, 30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10),
+                    (250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i - 2) + 30,
+                     30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10),
                     self.game_board, self.group
                 )
             )
@@ -172,7 +173,7 @@ class SelectEventCard:
                               CELL_WIDTH - 10, CELL_HEIGHT])
         self.group.draw(screen)
         for eventcard in self.on_gameboard:
-            center_pos = (eventcard.pos_center[0] + CARD_WIDTH/2-6, eventcard.pos_center[1] - CARD_HEIGHT/2+6)
+            center_pos = (eventcard.pos_center[0] + CARD_WIDTH / 2 - 6, eventcard.pos_center[1] - CARD_HEIGHT / 2 + 6)
             pygame.draw.circle(screen, "#000000", center_pos, 18, 18)
             draw_text(str(eventcard.cost), center=center_pos, color="#FFFFFF", size=24)
         if self.choose is not None:
@@ -207,7 +208,7 @@ class SelectEventCard:
     def use(self, params, flag=True):
         if not flag:
             self.game_board.cost.plus(1)
-        if self.on_gameboard[self.choose].cost>self.game_board.cost.cost and flag:
+        if self.on_gameboard[self.choose].cost > self.game_board.cost.cost and flag:
             self.game_board.low_cost()
             self.choose = None
             self.execute_pos_first = None
@@ -220,14 +221,14 @@ class SelectEventCard:
                     self.on_gameboard[self.choose].execute_one(*params)
                 if self.on_gameboard[self.choose].execute_type == EVENT_TYPE_2:
                     self.on_gameboard[self.choose].execute_two(*params)
-        temp=self.on_gameboard.pop(self.choose)
-        self.not_on_gameboard=[temp.class_name]+self.not_on_gameboard
+        temp = self.on_gameboard.pop(self.choose)
+        self.not_on_gameboard = [temp.class_name] + self.not_on_gameboard
         temp.kill()
         self.choose = None
         self.execute_pos_first = None
-        self.game_board.selected_skill_range=[]
+        self.game_board.selected_skill_range = []
         for i in range(len(self.on_gameboard)):
-            self.on_gameboard[i].update_location((250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i-2)+30,
+            self.on_gameboard[i].update_location((250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (i - 2) + 30,
                                                   30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10))
 
     def selectedCard(self):
@@ -241,7 +242,7 @@ class SelectEventCard:
                 return
             self.on_gameboard.append(
                 self.not_on_gameboard.pop()(
-                    (250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (len(self.on_gameboard)-2)+30,
+                    (250 + SCREEN_WIDTH / 2 + (CARD_WIDTH + 20) * (len(self.on_gameboard) - 2) + 30,
                      30 - CELL_HEIGHT / 2 - 35 + CELL_HEIGHT + 10),
                     self.game_board, self.group
                 )
@@ -271,7 +272,7 @@ class GameMap:
         self.skill_select = SkillSelectBar([])
         self.selected_skill = None
         self.enemys, self.players = [], []
-        self.executing_ai=None
+        self.executing_ai = None
 
     def addItem(self, item, pos):
         self.gameBoard[pos[0]][pos[1]].item = item
@@ -289,7 +290,7 @@ class GameMap:
         observer.observing(self.observers_move)
 
     def turnover(self):
-        self.executing_ai=None
+        self.executing_ai = None
         for observer in self.observers_turnover[::-1]:
             observer.turnover_event(self)
         random.shuffle(self.enemys)
@@ -325,7 +326,7 @@ class GameMap:
             return
 
     def AI_execute(self, i):
-        self.executing_ai=self.enemys[i]
+        self.executing_ai = self.enemys[i]
         self.enemys[i].ai.execute(self.enemys[i].pos_gameboard)
 
     def heal(self, pos, heal_amount):
@@ -337,7 +338,7 @@ class GameMap:
             self.gameBoard[pos[0]][pos[1]].pos_center,
             self, self.group, pos
         )
-        a=self.gameBoard[pos[0]][pos[1]]
+        a = self.gameBoard[pos[0]][pos[1]]
         self.gameBoard[pos[0]][pos[1]] = temp
         self.players.append(temp)
         a.kill()
@@ -348,20 +349,26 @@ class GameMap:
             self.gameBoard[pos[0]][pos[1]].pos_center,
             self, self.group, pos
         )
-        a=self.gameBoard[pos[0]][pos[1]]
+        a = self.gameBoard[pos[0]][pos[1]]
         self.gameBoard[pos[0]][pos[1]] = temp
         self.enemys.append(temp)
         a.kill()
 
     def add_summons(self, pos, summons):
-        temp=self.gameBoard[pos[0]][pos[1]]
+        temp = self.gameBoard[pos[0]][pos[1]]
         self.gameBoard[pos[0]][pos[1]] = summons
         temp.kill()
 
     def draw(self):
         if self.executing_ai is not None:
-            j, i=self.executing_ai.pos_gameboard
+            j, i = self.executing_ai.pos_gameboard
             pygame.draw.rect(self.screen, "#777777",
+                             [30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i - (CELL_WIDTH - 10) / 2,
+                              30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j - CELL_HEIGHT / 2, CELL_WIDTH - 10,
+                              CELL_HEIGHT])
+        if self.selected_card is not None:
+            j, i = self.selected_card
+            pygame.draw.rect(self.screen, "#FF6B6B",
                              [30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i - (CELL_WIDTH - 10) / 2,
                               30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j - CELL_HEIGHT / 2, CELL_WIDTH - 10,
                               CELL_HEIGHT])
@@ -370,12 +377,13 @@ class GameMap:
                 for j, i in self.selected_skill_range:
                     pygame.draw.rect(self.screen, "#777777",
                                      [30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i - (CELL_WIDTH - 10) / 2,
-                                      30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j - CELL_HEIGHT / 2, CELL_WIDTH - 10,
+                                      30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j - CELL_HEIGHT / 2,
+                                      CELL_WIDTH - 10,
                                       CELL_HEIGHT])
             self.event_card_manager.draw(self.screen)
-        self.group.draw(self.screen)
         self.skill_select.group.draw(self.screen)
         self.skill_select.draw(self.screen)
+        self.group.draw(self.screen)
         for cells in self.gameBoard:
             for cell in cells:
                 cell.draw_hp_energy(self.screen)
@@ -595,8 +603,8 @@ class GameMap:
                 for i in range(1, 6):
                     for j in range(1, 6):
                         if (pos[0] - CARD_WIDTH / 2 < self.gameBoard[i][j].pos_center[0] < pos[0] + CARD_WIDTH / 2
-                                and pos[1] - CARD_HEIGHT / 2 < self.gameBoard[i][j].pos_center[1] < pos[
-                                    1] + CARD_HEIGHT / 2) and (i, j) in self.selected_skill_range:
+                            and pos[1] - CARD_HEIGHT / 2 < self.gameBoard[i][j].pos_center[1] < pos[
+                                1] + CARD_HEIGHT / 2) and (i, j) in self.selected_skill_range:
                             if self.event_card_manager.selectedCard().execute_type == EVENT_TYPE_1:
                                 self.event_card_manager.use(((i, j), self.gameBoard[i][j]))
                                 return
@@ -609,5 +617,5 @@ class GameMap:
                                     self.event_card_manager.use(((x, y), (i, j),
                                                                  self.gameBoard[x][y], self.gameBoard[i][j]))
                                     return
-            self.event_card_manager.choose=None
-            self.event_card_manager.execute_pos_first=None
+            self.event_card_manager.choose = None
+            self.event_card_manager.execute_pos_first = None

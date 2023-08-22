@@ -79,7 +79,7 @@ def gacha():
         pygame.transform.scale(pygame.image.load("./gacha/charactercard_gacha_banner.png"), SCREEN_SIZE),
         pygame.transform.scale(pygame.image.load("./gacha/eventcard_gacha_banner.png"), SCREEN_SIZE)
     ]
-    button=pygame.transform.scale(pygame.image.load("./gacha/gacha_button.png"), (500, 300))
+    button=pygame.transform.scale(pygame.image.load("./gacha/gacha_button.png"), (400, 160))
     gachamode = 0
     while True:
         for event in pygame.event.get():
@@ -94,6 +94,8 @@ def gacha():
                 #     return gacha_eventcard, ()
                 # if gachamode==0 and 1090<x<1590 and 700<y<1000:
                 #     return gacha_charactercard, ()
+                if 70<x<240 and 40<y<110:
+                    return main, ()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                     return main, ()

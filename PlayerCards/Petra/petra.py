@@ -17,15 +17,14 @@ special=pygame.transform.scale(pygame.image.load("./PlayerCards/Petra/special.pn
 
 class BaseInstability(Buff):
     def __init__(self, character: "PlayerCard", game_board):
-        super().__init__(character, -1, game_board, "기반 불안정", "./PlayerCards/Petra/base_instability.png")
-        self.destroyed = 0
+        super().__init__(character, 0, game_board, "기반 불안정", "./PlayerCards/Petra/base_instability.png")
 
     def turret_die_event(self):
-        self.destroyed += 1
+        self.use_num += 1
 
     def atk_buff(self, caster, target, damage: int, atk_type: list[str]):
         if TAG_SPECIAL_SKILL in atk_type:
-            damage += self.destroyed
+            damage += self.use_num*3
         return damage
 
 
