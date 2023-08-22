@@ -20,7 +20,7 @@ from EventCards.WarpGateOpen.warp_gate import WarpGate
 
 from characters import *
 
-"""
+
 def loading(p):
     screen.fill("#000000")
     draw_text(f"loading : {p}%", size=30, center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), color="#FFFFFF")
@@ -28,20 +28,50 @@ def loading(p):
     pygame.display.update()
 
 
-gacha_yonchool = [
-    [(pygame.transform.scale(pygame.image.load(f"./gacha/tania/frame_{i}.png"), SCREEN_SIZE),
-      loading(100 * (i) / (383 * 6)))[0] for i in range(383)],
-    [(pygame.transform.scale(pygame.image.load(f"./gacha/chloe/frame_{i}.png"), SCREEN_SIZE),
-      loading(100 * (i + 383) / (383 * 6)))[0] for i in range(383)],
-    [(pygame.transform.scale(pygame.image.load(f"./gacha/lucifer/frame_{i}.png"), SCREEN_SIZE),
-      loading(100 * (i + 383 * 2) / (383 * 6)))[0] for i in range(383)],
-    [(pygame.transform.scale(pygame.image.load(f"./gacha/gidon/frame_{i}.png"), SCREEN_SIZE),
-      loading(100 * (i + 383 * 3) / (383 * 6)))[0] for i in range(383)],
-    [(pygame.transform.scale(pygame.image.load(f"./gacha/astin/frame_{i}.png"), SCREEN_SIZE),
-      loading(100 * (i + 383 * 4) / (383 * 6)))[0] for i in range(383)],
-    [(pygame.transform.scale(pygame.image.load(f"./gacha/petra/frame_{i}.png"), SCREEN_SIZE),
-      loading(100 * (i + 383 * 5) / (383 * 6)))[0] for i in range(383)]
-]
+# gacha_yonchool = [
+#     [(pygame.transform.scale(pygame.image.load(f"./gacha/tania/frame_{i}.png"), SCREEN_SIZE),
+#       loading(100 * (i) / (383 * 6)))[0] for i in range(383)],
+#     [(pygame.transform.scale(pygame.image.load(f"./gacha/chloe/frame_{i}.png"), SCREEN_SIZE),
+#       loading(100 * (i + 383) / (383 * 6)))[0] for i in range(383)],
+#     [(pygame.transform.scale(pygame.image.load(f"./gacha/lucifer/frame_{i}.png"), SCREEN_SIZE),
+#       loading(100 * (i + 383 * 2) / (383 * 6)))[0] for i in range(383)],
+#     [(pygame.transform.scale(pygame.image.load(f"./gacha/gidon/frame_{i}.png"), SCREEN_SIZE),
+#       loading(100 * (i + 383 * 3) / (383 * 6)))[0] for i in range(383)],
+#     [(pygame.transform.scale(pygame.image.load(f"./gacha/astin/frame_{i}.png"), SCREEN_SIZE),
+#       loading(100 * (i + 383 * 4) / (383 * 6)))[0] for i in range(383)],
+#     [(pygame.transform.scale(pygame.image.load(f"./gacha/petra/frame_{i}.png"), SCREEN_SIZE),
+#       loading(100 * (i + 383 * 5) / (383 * 6)))[0] for i in range(383)]
+# ]
+#
+#
+# def gacha_charactercard():
+#     result = random.randint(1, 10)
+#     if result > 5:
+#         result = 0
+#     for i in range(170):
+#         screen.blit(gacha_yonchool[result][i], (0, 0))
+#         pygame.display.update()
+#         clock.tick(FPS / 2)
+#     draw_text("클릭하여 카드 확인", size=30, color="#FFFFFF")
+#     pygame.display.update()
+#     click = False
+#     while not click:
+#         for event in pygame.event.get():
+#             if event.type == pygame.MOUSEBUTTONDOWN:
+#                 click = True
+#     for i in range(230, 383):
+#         screen.blit(gacha_yonchool[result][i], (0, 0))
+#         pygame.display.update()
+#         clock.tick(FPS/2)
+#     click = False
+#     while not click:
+#         for event in pygame.event.get():
+#             if event.type == pygame.MOUSEBUTTONDOWN:
+#                 click = True
+#     return gacha, ()
+
+
+
 
 
 def gacha():
@@ -49,57 +79,31 @@ def gacha():
         pygame.transform.scale(pygame.image.load("./gacha/charactercard_gacha_banner.png"), SCREEN_SIZE),
         pygame.transform.scale(pygame.image.load("./gacha/eventcard_gacha_banner.png"), SCREEN_SIZE)
     ]
-    button = [
-        pygame.transform.scale(pygame.image.load("gacha/gacha_button_character.png"), (300, 150)),
-        pygame.transform.scale(pygame.image.load("gacha/gacha_button_event.png"), (300, 150))
-    ]
+    button=pygame.transform.scale(pygame.image.load("./gacha/gacha_button.png"), (500, 300))
     gachamode = 0
     while True:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
-                if 100 < x < 400 and 200 < y < 350:
+                print(x, y)
+                if 560 < x < 932 and 60 < y < 160:
                     gachamode = 0
-                if 100 < x < 400 and 400 < y < 550:
+                if 1003 < x < 1336 and 60 < y < 160:
                     gachamode = 1
+                # if gachamode==1 and 490<x<990 and 700<y<1000:
+                #     return gacha_eventcard, ()
+                # if gachamode==0 and 1090<x<1590 and 700<y<1000:
+                #     return gacha_charactercard, ()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                     return main, ()
         screen.blit(images_banner[gachamode], (0, 0))
-        screen.blit(button[0], (100, 200))
-        screen.blit(button[1], (100, 400))
+        if gachamode==1:
+            screen.blit(button, (490, 700))
+        else:
+            screen.blit(button, (1090, 700))
         pygame.display.update()
         clock.tick(FPS)
-
-
-def gacha_charactercard():
-    result = random.randint(1, 10)
-    if result > 5:
-        result = 0
-    for i in range(170):
-        screen.blit(gacha_yonchool[result][i], (0, 0))
-        pygame.display.update()
-        clock.tick(FPS / 2)
-    draw_text("클릭하여 카드 확인", size=30, color="#FFFFFF")
-    pygame.display.update()
-    click = False
-    while not click:
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                click = True
-    for i in range(230, 383):
-        screen.blit(gacha_yonchool[result][i], (0, 0))
-        pygame.display.update()
-        clock.tick(FPS/2)
-    click = False
-    while not click:
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                click = True
-    return gacha, ()
-"""
-
-
 
 
 def end(*_):
@@ -122,7 +126,7 @@ def main(*_):
                 if 706 < x < 1216 and 684 < y < 800:
                     return dogam, ()
                 if 706 < x < 1216 and 829 < y < 943:
-                    pass
+                    return gacha, ()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
@@ -233,31 +237,32 @@ def forming():
     return main, ()
 
 
-def draw_skill(skill, index):
+def draw_skill(skill, index, char=False):
+    a, b=(200, 0) if char else (170, 100)
     background = pygame.Surface(((SKILL_WIDTH + 20) * 4 - 20, SKILL_HEIGHT))
     background.fill("#000000")
     bg_rect = background.get_rect(
         center=(
             SCREEN_WIDTH / 2 + 30 - SKILL_WIDTH / 2 + (SKILL_WIDTH + 20) * 2 - 100,
-            SCREEN_HEIGHT - 100 - 600 + index * 170 - 100))
+            SCREEN_HEIGHT - 100 - 600 + index * a - b))
     screen.blit(background, bg_rect)
 
     font = pygame.font.Font("./D2Coding.ttf", 26)
     text = font.render(skill.name, True, "#FFFFFF")
-    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40 - 100, SCREEN_HEIGHT - 50 - 600 + index * 170 - 100))
+    text_rect = text.get_rect(center=(SCREEN_WIDTH / 2 + 40 - 100, SCREEN_HEIGHT - 50 - 600 + index * a - b))
     screen.blit(text, text_rect)
 
     image = pygame.image.load(skill.skill_image_path)
     image = pygame.transform.scale(image, (80, 80))
-    pos = (SCREEN_WIDTH / 2 + 40 - 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 170 - 100)
+    pos = (SCREEN_WIDTH / 2 + 40 - 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * a - b)
     screen.blit(image, pos)
 
-    center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * 170 - 100)
+    center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 - 600 + index * a - b)
     pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
     draw_text(str(skill.cost), center=center_pos, color="#FFFFFF", size=16)
     try:
         if skill.max_energy is not None:
-            center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 + 20 - 600 + index * 170 - 100)
+            center_pos = (SCREEN_WIDTH / 2 + 40 + 40 - 100, SCREEN_HEIGHT - 60 - 35 - 60 + 20 - 600 + index * a - b)
             pygame.draw.circle(screen, "#000000", center_pos, 12, 12)
             draw_text(str(skill.max_energy), center=center_pos, color="#FFFFFF", size=16)
     except:
@@ -267,7 +272,7 @@ def draw_skill(skill, index):
     for t in skill.explaination:
         font = pygame.font.Font("./D2Coding.ttf", 14)
         text = font.render(t, True, "#FFFFFF")
-        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 600 + index * 170 - 100, left=SCREEN_WIDTH / 2 + 40)
+        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 600 + index * a - b, left=SCREEN_WIDTH / 2 + 40)
         screen.blit(text, text_rect)
         i += 1
 
@@ -316,13 +321,13 @@ def dogam_character(*_):
                 if 59 < x < 351 and 144 < y < 1015:
                     return dogam_character_index, (0,)
                 if 360 < x < 652 and 144 < y < 1015:
-                    return dogam_character_index, (1,)
-                if 662 < x < 955 and 144 < y < 1015:
-                    return dogam_character_index, (2,)
-                if 964 < x < 1257 and 144 < y < 1015:
-                    return dogam_character_index, (3,)
-                if 1265 < x < 1558 and 144 < y < 1015:
                     return dogam_character_index, (4,)
+                if 662 < x < 955 and 144 < y < 1015:
+                    return dogam_character_index, (1,)
+                if 964 < x < 1257 and 144 < y < 1015:
+                    return dogam_character_index, (2,)
+                if 1265 < x < 1558 and 144 < y < 1015:
+                    return dogam_character_index, (3,)
                 if 1565 < x < 1859 and 144 < y < 1015:
                     return dogam_character_index, (5,)
                 if 60 < x < 292 and 38 < y < 103:
@@ -342,9 +347,9 @@ def dogam_character_index(index):
                 if 1713 < x < 1872 and 42 < y < 88:
                     return dogam_character, ()
         screen.blit(bg_img, (0, 0))
-        draw_skill(skills[0](None), 0)
-        draw_skill(skills[1](None), 1)
-        draw_skill(specialskill(None), 2)
+        draw_skill(skills[0](None), 0, char=True)
+        draw_skill(skills[1](None), 1, char=True)
+        draw_skill(specialskill(None), 2, char=True)
         motion_draw.draw(screen)
         pygame.display.update()
         clock.tick(FPS)
