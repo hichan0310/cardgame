@@ -88,7 +88,7 @@ class StrongHit(Skill):
         for target_list in self.game_board.gameBoard:
             for target in target_list:
                 if target.team==FLAG_PLAYER_TEAM:
-                    caster.attack(8, target, self.atk_type)
+                    caster.attack(10, target, self.atk_type)
                 if target.name=="sward phantom":
                     target.die()
 
@@ -227,6 +227,10 @@ class GuardianShieldBuff(Buff):
         return 0
 
 
+shield=[
+    pygame.transform.scale(pygame.image.load(f"./EnemyCards/Knight_leader/shield/{i}.png"), (2000, 2000)) for i in range(15)
+]
+
 class GuardianShield(Skill):
     def __init__(self, game_board):
         super().__init__(0, game_board, [TAG_BUFF, TAG_SPECIAL_SKILL])
@@ -238,7 +242,12 @@ class GuardianShield(Skill):
         self.skill_image_path = "./EnemyCards/Knight_leader/guardian_shield.png"
 
     def execute(self, caster, targets, caster_pos, targets_pos, execute_pos):
-        GuardianShieldBuff(caster, self.game_board)
+        x, y=caster.pos_center
+        for i in range(15):
+            motion_draw.add_motion(lambda scr, ii:scr.blit(shield[ii], (x-1000, y-1000)), i, (i, ))
+        for i in range(5):
+            motion_draw.add_motion(lambda scr:scr.blit(shield[14], (x-1000, y-1000)), i+15, ())
+        motion_draw.add_motion(lambda scr:GuardianShieldBuff(caster, self.game_board), 20, ())
 
 
 class LastSkillBuff(Buff):
@@ -267,7 +276,6 @@ class LastSkillBuff(Buff):
             for x, y in [(i, j) for i in range(1, 6) for j in range(1, 6) if (i, j) != self.target.pos_gameboard]:
                 target = self.game_board.gameBoard[x][y]
                 self.target.attack(5, target, [TAG_SPECIAL_SKILL])
-            print("die")
             motion_draw.add_motion(lambda scr: self.target.die(), 10, ())
 
 
@@ -355,23 +363,23 @@ class AI_KnightLeader:
             self.turn=-1
             self.last=True
             return
-        elif self.turn % 3 == 0:
+        elif self.turn % 3 == 0 and not self.last:
             self.character.skills[1].execute(self.character, None, None, None, None)
-        elif self.turn % 3 == 1:
+        elif self.turn % 3 == 1 and not self.last:
             for i in range(15):
                 motion_draw.add_motion(lambda screen, a: screen.blit(guardian_shield_preview, (1 - 1.4 ** a, 0)),
                                        14 - i, (i,))
             for i in range(5):
                 motion_draw.add_motion(lambda screen: screen.blit(guardian_shield_preview, (0, 0)), 15 + i, tuple())
             motion_draw.add_motion(lambda scr:self.character.skills[2].execute(self.character, None, None, None, None), 20, ())
-        elif self.turn % 3 == 2:
+        elif self.turn % 3 == 2 and not self.last:
             for i in range(15):
                 motion_draw.add_motion(lambda screen, a: screen.blit(strong_hit_preview, (1 - 1.4 ** a, 0)),
                                        14 - i, (i,))
             for i in range(5):
                 motion_draw.add_motion(lambda screen: screen.blit(strong_hit_preview, (0, 0)), 15 + i, tuple())
             motion_draw.add_motion(lambda scr:self.character.skills[0].execute(self.character, None, None, None, None), 20, ())
-        if self.turn % 4 == 3 and self.turn>0:
+        if self.turn % 4 == 3 and self.turn>0 and not self.last:
             try:
                 target=random.choice(self.game_board.players)
                 self.character.skills[4].execute(self.character, [target], None, None, None)

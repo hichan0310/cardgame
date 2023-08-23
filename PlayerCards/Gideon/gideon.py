@@ -99,7 +99,10 @@ class BloodRage(Buff):
 
     def atk_buff(self, caster, target, damage: int, atk_type: list[str]):
         if TAG_NORMAL_ATTACK in atk_type:
-            return damage + min(caster.max_hp - caster.hp, 5)
+            if damage + min(caster.max_hp - caster.hp, 5)>36:
+                return max(36, damage)
+            else:
+                return damage + min(caster.max_hp - caster.hp, 5)
         return damage
 
     def attack_event(self, caster, target, game_board, atk_type):
