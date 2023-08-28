@@ -21,13 +21,13 @@ from EventCards.WarpGateOpen.warp_gate import WarpGate
 from characters import *
 
 
-def loading(p):
-    screen.fill("#000000")
-    draw_text(f"loading : {p}%", size=30, center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), color="#FFFFFF")
-    pygame.draw.rect(screen, "#FFFFFF", (0, 1040, p*SCREEN_WIDTH/100, 40), 40)
-    pygame.display.update()
-
-
+# def loading(p):
+#     screen.fill("#000000")
+#     draw_text(f"loading : {p}%", size=30, center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), color="#FFFFFF")
+#     pygame.draw.rect(screen, "#FFFFFF", (0, 1040, p*SCREEN_WIDTH/100, 40), 40)
+#     pygame.display.update()
+#
+#
 # gacha_yonchool = [
 #     [(pygame.transform.scale(pygame.image.load(f"./gacha/tania/frame_{i}.png"), SCREEN_SIZE),
 #       loading(100 * (i) / (383 * 6)))[0] for i in range(383)],
@@ -69,43 +69,43 @@ def loading(p):
 #             if event.type == pygame.MOUSEBUTTONDOWN:
 #                 click = True
 #     return gacha, ()
-
-
-
-
-
-def gacha():
-    images_banner = [
-        pygame.transform.scale(pygame.image.load("./gacha/charactercard_gacha_banner.png"), SCREEN_SIZE),
-        pygame.transform.scale(pygame.image.load("./gacha/eventcard_gacha_banner.png"), SCREEN_SIZE)
-    ]
-    button=pygame.transform.scale(pygame.image.load("./gacha/gacha_button.png"), (400, 160))
-    gachamode = 0
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = event.pos
-                print(x, y)
-                if 560 < x < 932 and 60 < y < 160:
-                    gachamode = 0
-                if 1003 < x < 1336 and 60 < y < 160:
-                    gachamode = 1
-                # if gachamode==1 and 490<x<990 and 700<y<1000:
-                #     return gacha_eventcard, ()
-                # if gachamode==0 and 1090<x<1590 and 700<y<1000:
-                #     return gacha_charactercard, ()
-                if 70<x<240 and 40<y<110:
-                    return main, ()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
-                    return main, ()
-        screen.blit(images_banner[gachamode], (0, 0))
-        if gachamode==1:
-            screen.blit(button, (490, 700))
-        else:
-            screen.blit(button, (1090, 700))
-        pygame.display.update()
-        clock.tick(FPS)
+#
+#
+#
+#
+#
+# def gacha():
+#     images_banner = [
+#         pygame.transform.scale(pygame.image.load("./gacha/charactercard_gacha_banner.png"), SCREEN_SIZE),
+#         pygame.transform.scale(pygame.image.load("./gacha/eventcard_gacha_banner.png"), SCREEN_SIZE)
+#     ]
+#     button=pygame.transform.scale(pygame.image.load("./gacha/gacha_button.png"), (400, 160))
+#     gachamode = 0
+#     while True:
+#         for event in pygame.event.get():
+#             if event.type == pygame.MOUSEBUTTONDOWN:
+#                 x, y = event.pos
+#                 print(x, y)
+#                 if 560 < x < 932 and 60 < y < 160:
+#                     gachamode = 0
+#                 if 1003 < x < 1336 and 60 < y < 160:
+#                     gachamode = 1
+#                 # if gachamode==1 and 490<x<990 and 700<y<1000:
+#                 #     return gacha_eventcard, ()
+#                 # if gachamode==0 and 1090<x<1590 and 700<y<1000:
+#                 #     return gacha_charactercard, ()
+#                 if 70<x<240 and 40<y<110:
+#                     return main, ()
+#             if event.type == pygame.KEYDOWN:
+#                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+#                     return main, ()
+#         screen.blit(images_banner[gachamode], (0, 0))
+#         if gachamode==1:
+#             screen.blit(button, (490, 700))
+#         else:
+#             screen.blit(button, (1090, 700))
+#         pygame.display.update()
+#         clock.tick(FPS)
 
 
 def end(*_):
@@ -136,15 +136,16 @@ def main(*_):
 
 
 def select_stage(stage=0):
+    bg=pygame.image.load("stage_background.png")
     stage_num = stage
     while True:
-        screen.fill("#000000")
+        screen.blit(bg, (0, 0))
         screen.blit(
             pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % (len(stage_list) + 1)}.png"),
-                                   (800, 800)),
-            (SCREEN_WIDTH / 2 - 400, SCREEN_HEIGHT / 2 - 500))
-        draw_text("방향키로 스테이지 이동, 스테이지를 클릭하여 시작하기",
-                  center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150), size=50, color="#FFFFFF")
+                                   (600, 600)),
+            (SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2 - 300))
+        # draw_text("방향키로 스테이지 이동, 스테이지를 클릭하여 시작하기",
+        #           center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150), size=50, color="#FFFFFF")
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -154,9 +155,14 @@ def select_stage(stage=0):
                 if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
                     return main, ()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if SCREEN_WIDTH / 2 - 400 < event.pos[0] < SCREEN_WIDTH / 2 + 400 and SCREEN_HEIGHT / 2 - 500 < \
+                x, y=event.pos
+                if SCREEN_WIDTH / 2 - 300 < event.pos[0] < SCREEN_WIDTH / 2 + 300 and SCREEN_HEIGHT / 2 - 300 < \
                         event.pos[1] < SCREEN_HEIGHT / 2 + 300 and -1 < stage_num < len(stage_list):
                     return select_character, (stage_num,)
+                if 1770<x<1850 and 470<y<580:
+                    stage_num += 1 if stage_num < len(stage_list) else 0
+                if 50<x<140 and 470<y<580:
+                    stage_num -= 1 if stage_num >= 0 else 0
         motion_draw.draw(screen)
         pygame.display.update()
 

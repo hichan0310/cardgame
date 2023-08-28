@@ -2,6 +2,27 @@ import pygame.draw
 from settings import *
 
 
+class EventTag:
+    def __init__(self, name):
+        self.name=name
+class HitEvent(EventTag):
+    def __init__(self, caster, target, damage, tag):
+        super(HitEvent, self).__init__("hit")
+        self.caster=caster
+        self.target=target
+        self.damage=damage
+        self.tag=tag
+class AtkEvent(EventTag):
+    def __init__(self, caster, target, damage, tag):
+        super(AtkEvent, self).__init__("attack")
+        self.caster=caster
+        self.target=target
+        self.damage=damage
+        self.tag=tag
+class TurnoverEvent(EventTag):
+    def __init__(self):
+        super(TurnoverEvent, self).__init__("turnover")
+
 class Buff:
     def __init__(self, character, use_num, game_board, name, img_path):
         self.image_path = img_path
@@ -27,6 +48,9 @@ class Buff:
         text = font.render(self.name, True, "#FFFFFF")
         text_rect = text.get_rect(center=(centerpos[0], centerpos[1] + 20))
         screen.blit(text, text_rect)
+
+    def event(self, event_tag:list[EventTag]):
+        pass
 
     def observing(self, observed_event):
         self.observing_list.append(observed_event)

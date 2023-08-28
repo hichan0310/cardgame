@@ -98,7 +98,7 @@ class FlameShuriken(Skill):
         self.name = "불꽃 수리검"
         self.explaination = [
             "cost : 3",
-            "적 1명에게 불꽃 수리검을 날려서 3의 피해를 가하고 1턴간 화상 효과를 부여한다. ",
+            "적 1명에게 불꽃 수리검을 날려서 1의 피해를 3번 가하고 1턴간 화상 효과를 부여한다. ",
             "화상 효과가 부여된 적은 턴 종료 시 체력이 1 감소한다. ",
             "화상 효과는 중첩될 수 있다. ",
             ", ".join(self.atk_type)
@@ -218,7 +218,8 @@ class FlameSward(SpecialSkill):
         self.explaination = [
             "cost : 4, energy : 5",
             "전방에 넓은 범위에 불의 칼날을 휘둘러 3의 관통 피해를 2번 입힌다. ",
-            "관통 피해는 버프를 통해서 피해가 오르거나 내려가지 않는다. "
+            "관통 피해는 버프를 통해서 피해가 오르거나 내려가지 않는다. ",
+            ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Tania/skill_image/flame_sward.png"
 

@@ -129,8 +129,9 @@ class ExplodeCurse(Skill):
         self.name = "저주 폭발"
         self.explaination = [
             "cost : 3",
-            "적들의 저주를 모두 폭주시킨다. ",
-            "1개의 저주 버프는 적에게 2씩 피해를 준다. ",
+            "필드 위에 있는 적들의 저주를 모두 폭주시킨다. ",
+            "1개의 저주 버프는 적에게 4씩 피해를 준다. ",
+            "저주가 6번 중첩되면 마지막 저주는 8의 피해를 준다. ",
             ", ".join(self.atk_type)
         ]
         self.skill_image_path = "./PlayerCards/Lucifer/skill_image/explode_curse.png"
