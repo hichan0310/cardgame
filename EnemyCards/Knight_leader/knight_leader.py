@@ -231,7 +231,7 @@ class ResonanceSword(Skill):
 
 class GuardianShieldBuff(Buff):
     def __init__(self, character, game_board):
-        super().__init__(character, 3, game_board, "수호신의 방패", "./PlayerCards/Petra/skill_image/summon_turret.png")
+        super().__init__(character, 3, game_board, "수호신의 방패", "./EnemyCards/Knight_leader/guardian_shield_buff.png")
         game_board.register_turnstart(self)
 
     def turnstart_event(self, game_board):
@@ -268,7 +268,7 @@ class GuardianShield(Skill):
 
 class LastSkillBuff(Buff):
     def __init__(self, character, game_board):
-        super().__init__(character, 2, game_board, "마지막 일격", "./PlayerCards/Petra/skill_image/summon_turret.png")
+        super().__init__(character, 2, game_board, "마지막 일격", "./EnemyCards/Knight_leader/last_skill.png")
         self.over3_attack = 0
         character.register_hit(self)
         game_board.register_turnover(self)
@@ -405,6 +405,7 @@ class AI_KnightLeader:
                                            14 - i + 20, (i,))
                 for i in range(5):
                     motion_draw.add_motion(lambda screen: screen.blit(reverse_hp_preview, (0, 0)), 15 + i + 20, tuple())
+
             except:
                 pass
         self.last = False

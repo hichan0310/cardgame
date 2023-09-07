@@ -121,7 +121,7 @@ class PrepareDefence(Skill):
              (caster_pos[0], caster_pos[1] - 1)]
         )))
         self.game_board.move_card(caster_pos, pos)
-        Shield(caster, 1, caster.game_board)
+        Shield(caster, 2, caster.game_board)
 
 
 class AI_KnightBiginner:

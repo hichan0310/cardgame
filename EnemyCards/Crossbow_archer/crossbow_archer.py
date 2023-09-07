@@ -96,6 +96,9 @@ class ContinuousFiringBuff(Buff):
             , i, tuple()
         )
 
+    def turnover_event(self, game_board):
+        self.used(1)
+
 
 class ContinuousFiring(Skill):
     def __init__(self, game_board):

@@ -4,7 +4,9 @@ from gameMap import GameMap
 from select_character import SelectCharacter
 from settings import *
 import sys
+import csv
 from graphic_manager import motion_draw
+
 pygame.init()
 
 from EventCards.BombThrowing.bomb_throwing import BombThrowing
@@ -23,24 +25,29 @@ from characters import *
 
 # def loading(p):
 #     screen.fill("#000000")
-#     draw_text(f"loading : {p}%", size=30, center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), color="#FFFFFF")
-#     pygame.draw.rect(screen, "#FFFFFF", (0, 1040, p*SCREEN_WIDTH/100, 40), 40)
+#     draw_text(f"loading : {p}%", size=30, center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), color="#FFFFFF")
+#     pygame.draw.rect(screen, "#FFFFFF", (0, 1040, p * SCREEN_WIDTH / 100, 40), 40)
 #     pygame.display.update()
 #
 #
-# gacha_yonchool = [
+# gacha_loading = [
+#     (pygame.transform.scale(pygame.image.load(f"./gacha/tania/frame_{i}.png"), SCREEN_SIZE),
+#      loading(100 * (i) / 1088))[0] for i in range(170)
+# ]
+#
+# gacha_yonchool_char = [
 #     [(pygame.transform.scale(pygame.image.load(f"./gacha/tania/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i) / (383 * 6)))[0] for i in range(383)],
+#       loading(100 * (i - 60) / 1088))[0] for i in range(230, 383)],
 #     [(pygame.transform.scale(pygame.image.load(f"./gacha/chloe/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 383) / (383 * 6)))[0] for i in range(383)],
+#       loading(100 * (i + 93) / 1088))[0] for i in range(230, 383)],
 #     [(pygame.transform.scale(pygame.image.load(f"./gacha/lucifer/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 383 * 2) / (383 * 6)))[0] for i in range(383)],
+#       loading(100 * (i + 246) / 1088))[0] for i in range(230, 383)],
 #     [(pygame.transform.scale(pygame.image.load(f"./gacha/gidon/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 383 * 3) / (383 * 6)))[0] for i in range(383)],
+#       loading(100 * (i + 399) / 1088))[0] for i in range(230, 383)],
 #     [(pygame.transform.scale(pygame.image.load(f"./gacha/astin/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 383 * 4) / (383 * 6)))[0] for i in range(383)],
+#       loading(100 * (i + 552) / 1088))[0] for i in range(230, 383)],
 #     [(pygame.transform.scale(pygame.image.load(f"./gacha/petra/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 383 * 5) / (383 * 6)))[0] for i in range(383)]
+#       loading(100 * (i + 705) / 1088))[0] for i in range(230, 383)]
 # ]
 #
 #
@@ -49,9 +56,9 @@ from characters import *
 #     if result > 5:
 #         result = 0
 #     for i in range(170):
-#         screen.blit(gacha_yonchool[result][i], (0, 0))
+#         screen.blit(gacha_loading[i], (0, 0))
 #         pygame.display.update()
-#         clock.tick(FPS / 2)
+#         clock.tick(45)
 #     draw_text("클릭하여 카드 확인", size=30, color="#FFFFFF")
 #     pygame.display.update()
 #     click = False
@@ -59,10 +66,10 @@ from characters import *
 #         for event in pygame.event.get():
 #             if event.type == pygame.MOUSEBUTTONDOWN:
 #                 click = True
-#     for i in range(230, 383):
-#         screen.blit(gacha_yonchool[result][i], (0, 0))
+#     for i in range(153):
+#         screen.blit(gacha_yonchool_char[result][i], (0, 0))
 #         pygame.display.update()
-#         clock.tick(FPS/2)
+#         clock.tick(45)
 #     click = False
 #     while not click:
 #         for event in pygame.event.get():
@@ -71,39 +78,31 @@ from characters import *
 #     return gacha, ()
 #
 #
-#
-#
-#
 # def gacha():
 #     images_banner = [
 #         pygame.transform.scale(pygame.image.load("./gacha/charactercard_gacha_banner.png"), SCREEN_SIZE),
 #         pygame.transform.scale(pygame.image.load("./gacha/eventcard_gacha_banner.png"), SCREEN_SIZE)
 #     ]
-#     button=pygame.transform.scale(pygame.image.load("./gacha/gacha_button.png"), (400, 160))
+#     button = pygame.transform.scale(pygame.image.load("./gacha/gacha_button.png"), (400, 160))
 #     gachamode = 0
 #     while True:
 #         for event in pygame.event.get():
 #             if event.type == pygame.MOUSEBUTTONDOWN:
 #                 x, y = event.pos
-#                 print(x, y)
 #                 if 560 < x < 932 and 60 < y < 160:
 #                     gachamode = 0
 #                 if 1003 < x < 1336 and 60 < y < 160:
 #                     gachamode = 1
 #                 # if gachamode==1 and 490<x<990 and 700<y<1000:
 #                 #     return gacha_eventcard, ()
-#                 # if gachamode==0 and 1090<x<1590 and 700<y<1000:
-#                 #     return gacha_charactercard, ()
-#                 if 70<x<240 and 40<y<110:
+#                 if gachamode==0 and 1300<x<1550 and 860<y<930:
+#                     return gacha_charactercard, ()
+#                 if 70 < x < 240 and 40 < y < 110:
 #                     return main, ()
 #             if event.type == pygame.KEYDOWN:
 #                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
 #                     return main, ()
 #         screen.blit(images_banner[gachamode], (0, 0))
-#         if gachamode==1:
-#             screen.blit(button, (490, 700))
-#         else:
-#             screen.blit(button, (1090, 700))
 #         pygame.display.update()
 #         clock.tick(FPS)
 
@@ -136,34 +135,52 @@ def main(*_):
 
 
 def select_stage(stage=0):
-    bg=pygame.image.load("stage_background.png")
+    star_img = pygame.transform.scale(pygame.image.load("star.png"), (100, 100))
+    emptystar_img = pygame.transform.scale(pygame.image.load("emptystar.png"), (100, 100))
+    record = []
+    with open("record.csv", "r") as file:
+        for line in csv.reader(file):
+            record = list(map(int, line))
+            break
     stage_num = stage
+    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
     while True:
         screen.blit(bg, (0, 0))
-        screen.blit(
-            pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % (len(stage_list) + 1)}.png"),
-                                   (600, 600)),
-            (SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2 - 300))
-        # draw_text("방향키로 스테이지 이동, 스테이지를 클릭하여 시작하기",
-        #           center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150), size=50, color="#FFFFFF")
+        # screen.blit(
+        #     pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % (len(stage_list) + 1)}.png"),
+        #                            (600, 600)),
+        #     (SCREEN_WIDTH / 2 - 300, SCREEN_HEIGHT / 2 - 300))
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     stage_num -= 1 if stage_num >= 0 else 0
+                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
                 if event.key == pygame.K_RIGHT:
                     stage_num += 1 if stage_num < len(stage_list) else 0
+                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
                 if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
                     return main, ()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y=event.pos
+                x, y = event.pos
                 if SCREEN_WIDTH / 2 - 300 < event.pos[0] < SCREEN_WIDTH / 2 + 300 and SCREEN_HEIGHT / 2 - 300 < \
                         event.pos[1] < SCREEN_HEIGHT / 2 + 300 and -1 < stage_num < len(stage_list):
                     return select_character, (stage_num,)
-                if 1770<x<1850 and 470<y<580:
+                if 1646 < x < 1781 and 403 < y < 687:
                     stage_num += 1 if stage_num < len(stage_list) else 0
-                if 50<x<140 and 470<y<580:
+                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
+                if 123 < x < 276 and 403 < y < 687:
                     stage_num -= 1 if stage_num >= 0 else 0
+                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
         motion_draw.draw(screen)
+        try:
+            star = record[stage_num]
+            emptystar = 3 - star
+            for i in range(star):
+                screen.blit(star_img, (SCREEN_WIDTH / 2 + (i - 1) * 200 - 50, 100))
+            for i in range(emptystar):
+                screen.blit(emptystar_img, (SCREEN_WIDTH / 2 + (-i + 1) * 200 - 50, 100))
+        except:
+            pass
         pygame.display.update()
 
 
@@ -184,22 +201,20 @@ e_card_list = e_card_list * 2
 
 
 def select_character(stage_num):
+    background = pygame.transform.scale(pygame.image.load("before_game.png"), SCREEN_SIZE)
     game_board = SelectCharacter(stage_num, screen)
     while True:
-        screen.fill("#333333")
+        screen.blit(background, (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 game_board.click(event.pos)
                 x, y = event.pos
-                if SCREEN_WIDTH - 500 < x < SCREEN_WIDTH - 100 and SCREEN_HEIGHT - 300 < y < SCREEN_HEIGHT - 100:
+                if 1460 < x < 1790 and 800 < y < 970:
                     if len(game_board.result) != 0:
-                        return game, (game_board.result, stage_list[stage_num], e_card_list)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                        return game, (game_board.result, stage_list[stage_num], e_card_list, stage_num)
+                if 1850 < x < 1900 and 1000 < y < 1060:
                     return select_stage, (stage_num,)
         game_board.draw()
-        screen.blit(pygame.transform.scale(pygame.image.load("start.png"), (400, 200)),
-                    (SCREEN_WIDTH - 500, SCREEN_HEIGHT - 300))
         motion_draw.draw(screen)
         pygame.display.update()
         clock.tick(FPS)
@@ -246,7 +261,7 @@ def forming():
 
 
 def draw_skill(skill, index, char=False):
-    a, b=(200, 0) if char else (170, 100)
+    a, b = (200, 0) if char else (170, 100)
     background = pygame.Surface(((SKILL_WIDTH + 20) * 4 - 20, SKILL_HEIGHT))
     background.fill("#000000")
     bg_rect = background.get_rect(
@@ -280,7 +295,8 @@ def draw_skill(skill, index, char=False):
     for t in skill.explaination:
         font = pygame.font.Font("./D2Coding.ttf", 14)
         text = font.render(t, True, "#FFFFFF")
-        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 600 + index * a - b, left=SCREEN_WIDTH / 2 + 40)
+        text_rect = text.get_rect(centery=SCREEN_HEIGHT - 150 + i * 19 - 600 + index * a - b,
+                                  left=SCREEN_WIDTH / 2 + 40)
         screen.blit(text, text_rect)
         i += 1
 
@@ -364,20 +380,27 @@ def dogam_character_index(index):
 
 
 def dogam_enemy(*_):
-    screen.fill("#333333")
+    bg_img = pygame.image.load(f"./dogam_enemy.png")
     index = 0
     while True:
+        screen.blit(bg_img, (0, 0))
         for event in pygame.event.get():
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                print(event.pos)
+                x,y=event.pos
+                if 1848<x<1900 and 470<y<540:
+                    index = min(len(enemies_info) - 1, index + 1)
+                if 20<x<74 and 470<y<540:
+                    index = max(0, index - 1)
+                if 25<x<100 and 20<y<70:
+                    return dogam, ()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     index = min(len(enemies_info) - 1, index + 1)
-                    screen.fill("#333333")
                 if event.key == pygame.K_LEFT:
                     index = max(0, index - 1)
-                    screen.fill("#333333")
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
-                        return dogam, ()
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                    return dogam, ()
         name, skills, hp, passive, _, ai, img_path = enemies_info[index]
         img = pygame.transform.scale(pygame.image.load(img_path), (600, 900))
         font = pygame.font.Font("./D2Coding.ttf", 60)
@@ -393,7 +416,8 @@ def dogam_enemy(*_):
 
 
 def dogam_eventcard(*_):
-    screen.fill("#333333")
+    background = pygame.transform.scale(pygame.image.load("dogam_event.png"), SCREEN_SIZE)
+    screen.blit(background, (0, 0))
     i = 0
     for key in event_card_info.keys():
         draw_eventcard(key, (70 + 920 * (i % 2), (i // 2) * 180 - 150))
@@ -404,30 +428,46 @@ def dogam_eventcard(*_):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                     return dogam, ()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if 60 < x < 180 and 20 < y < 70:
+                    return dogam, ()
         clock.tick(FPS)
 
 
 def dogam():
-    background = pygame.transform.scale(pygame.image.load("dogam.png"), SCREEN_SIZE)
+    background = pygame.transform.scale(pygame.image.load("dogambg.png"), SCREEN_SIZE)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if 203 < event.pos[0] < 645 and 420 < event.pos[1] < 833:
+                if 500 < event.pos[0] < 1340 and 178 < event.pos[1] < 400:
                     return dogam_character, ()
-                if 750 < event.pos[0] < 1189 and 420 < event.pos[1] < 833:
+                if 500 < event.pos[0] < 1340 and 430 < event.pos[1] < 650:
                     return dogam_enemy, ()
-                if 1262 < event.pos[0] < 1676 and 434 < event.pos[1] < 815:
+                if 500 < event.pos[0] < 1340 and 678 < event.pos[1] < 900:
                     return dogam_eventcard, ()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                if 67 < event.pos[0] < 240 and 40 < event.pos[1] < 114:
                     return main, ()
         screen.blit(background, (0, 0))
         pygame.display.update()
         clock.tick(FPS)
 
 
-def game_end(win):
+def game_end(win, stage_num, turn):
     screen.fill("#000000")
+    star = 1 if win else 0
+    if turn <= 6:
+        star *= 3
+    elif turn <= 10:
+        star *= 2
+    now = []
+    with open("record.csv", "r") as file:
+        for line in csv.reader(file):
+            now = list(map(int, line))
+            break
+    now[stage_num] = max(star, now[stage_num])
+    with open("record.csv", "w", newline='') as file:
+        csv.writer(file).writerow(now)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -441,7 +481,7 @@ def game_end(win):
         clock.tick(FPS)
 
 
-def game(p_info, e_info, eventcard_list):
+def game(p_info, e_info, eventcard_list, stage_num):
     game_board = GameMap(screen, eventcard_list)
     bg = pygame.image.load("background.png")
     bg = pygame.transform.scale(bg, (1920, 1080))
@@ -450,11 +490,34 @@ def game(p_info, e_info, eventcard_list):
     for num, pos in e_info:
         game_board.add_enemy(enemies_info[num], pos)
     ai_enemy_index = 0
+    exit_game = False
     while True:
+        if exit_game:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    if 800 < x < 930 and 560 < y < 627:
+                        return main, ()
+                    if 980 < x < 1120 and 550 < y < 627:
+                        exit_game = False
+            clock.tick(FPS)
+            continue
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if 1850 < x < 1900 and 1000 < y < 1060:
+                    exit_game = True
+                    img = pygame.image.load("stop.png")
+                    x, y = img.get_size()
+                    screen.blit(img, ((SCREEN_WIDTH - x) / 2, (SCREEN_HEIGHT - y) / 2))
+                    pygame.display.update()
+                    clock.tick(FPS)
+        if exit_game:
+            continue
         if len(game_board.players) == 0 and not motion_draw.motion_playing():
-            return game_end, (False,)
+            return game_end, (False, stage_num, game_board.turn_count)
         if len(game_board.enemys) == 0 and not motion_draw.motion_playing():
-            return game_end, (True,)
+            return game_end, (True, stage_num, game_board.turn_count)
         screen.blit(bg, (-1, -1))
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -489,12 +552,6 @@ def game(p_info, e_info, eventcard_list):
         motion_draw.draw(screen)
         pygame.display.update()
         clock.tick(FPS)
-
-
-
-
-
-
 
 
 func = main
