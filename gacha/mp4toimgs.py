@@ -2,7 +2,7 @@ import cv2
 
 
 
-for name in ["tania", "chloe", "lucifer", "gidon", "astin", "petra"]:
+for name in ["ending"]:
     # 동영상 파일 경로 설정
     video_path = f'{name}.mp4'
 
@@ -10,8 +10,8 @@ for name in ["tania", "chloe", "lucifer", "gidon", "astin", "petra"]:
     cap = cv2.VideoCapture(video_path)
 
     # 저장될 이미지 파일 경로와 이름 패턴 설정
-    output_folder = f'C:/Users/maxma/PycharmProjects/cardgame/gacha/{name}/frame'
-    image_name_pattern = '_{}.png'
+    output_folder = f'C:/Users/maxma/PycharmProjects/cardgame/gacha/{name}/'
+    image_name_pattern = '{}.png'
 
     # 이미지 파일 저장을 위한 카운터 초기화
     frame_count = 0

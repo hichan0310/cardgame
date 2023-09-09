@@ -28,5 +28,9 @@ class GraphicManager:
     def motion_length(self):
         return len(self.__graphics)
 
+    def clear(self):
+        self.__graphics: list[list[Callable[[pygame.Surface, *Any], None]]] = []
+        self.__graphic_params: list[list[tuple[Any]]] = []
+
 
 motion_draw = GraphicManager()

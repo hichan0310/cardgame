@@ -388,8 +388,8 @@ class GameMap:
             for cell in cells:
                 cell.draw_hp_energy(self.screen)
 
-        draw_text(f"현재 턴 : {self.turn_count + 1}", center=(100, SCREEN_HEIGHT - 15), color="#000000", size=20)
-        draw_text(f"남은 행동 : {4 - self.turn}", center=(300, SCREEN_HEIGHT - 15), color="#000000", size=20)
+        draw_text(f"현재 턴 : {self.turn_count + 1}", center=(100, SCREEN_HEIGHT - 15), color="#FFFFFF", size=20)
+        draw_text(f"남은 행동 : {4 - self.turn}", center=(300, SCREEN_HEIGHT - 15), color="#FFFFFF", size=20)
 
         if self.selected_card is not None:
             for i in range(len((self.gameBoard[self.selected_card[0]][self.selected_card[1]]).buff)):

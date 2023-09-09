@@ -5,9 +5,12 @@ from select_character import SelectCharacter
 from settings import *
 import sys
 import csv
+import threading
 from graphic_manager import motion_draw
+import pygame.mixer
 
 pygame.init()
+pygame.mixer.init()
 
 from EventCards.BombThrowing.bomb_throwing import BombThrowing
 from EventCards.EnergyRecharge.energy_recharge import EnergyRecharge
@@ -22,89 +25,138 @@ from EventCards.WarpGateOpen.warp_gate import WarpGate
 
 from characters import *
 
+gacha_loading = []
+gacha_yonchool_char = []
 
-# def loading(p):
-#     screen.fill("#000000")
-#     draw_text(f"loading : {p}%", size=30, center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), color="#FFFFFF")
-#     pygame.draw.rect(screen, "#FFFFFF", (0, 1040, p * SCREEN_WIDTH / 100, 40), 40)
-#     pygame.display.update()
-#
-#
-# gacha_loading = [
-#     (pygame.transform.scale(pygame.image.load(f"./gacha/tania/frame_{i}.png"), SCREEN_SIZE),
-#      loading(100 * (i) / 1088))[0] for i in range(170)
-# ]
-#
-# gacha_yonchool_char = [
-#     [(pygame.transform.scale(pygame.image.load(f"./gacha/tania/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i - 60) / 1088))[0] for i in range(230, 383)],
-#     [(pygame.transform.scale(pygame.image.load(f"./gacha/chloe/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 93) / 1088))[0] for i in range(230, 383)],
-#     [(pygame.transform.scale(pygame.image.load(f"./gacha/lucifer/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 246) / 1088))[0] for i in range(230, 383)],
-#     [(pygame.transform.scale(pygame.image.load(f"./gacha/gidon/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 399) / 1088))[0] for i in range(230, 383)],
-#     [(pygame.transform.scale(pygame.image.load(f"./gacha/astin/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 552) / 1088))[0] for i in range(230, 383)],
-#     [(pygame.transform.scale(pygame.image.load(f"./gacha/petra/frame_{i}.png"), SCREEN_SIZE),
-#       loading(100 * (i + 705) / 1088))[0] for i in range(230, 383)]
-# ]
-#
-#
-# def gacha_charactercard():
-#     result = random.randint(1, 10)
-#     if result > 5:
-#         result = 0
-#     for i in range(170):
-#         screen.blit(gacha_loading[i], (0, 0))
-#         pygame.display.update()
-#         clock.tick(45)
-#     draw_text("클릭하여 카드 확인", size=30, color="#FFFFFF")
-#     pygame.display.update()
-#     click = False
-#     while not click:
-#         for event in pygame.event.get():
-#             if event.type == pygame.MOUSEBUTTONDOWN:
-#                 click = True
-#     for i in range(153):
-#         screen.blit(gacha_yonchool_char[result][i], (0, 0))
-#         pygame.display.update()
-#         clock.tick(45)
-#     click = False
-#     while not click:
-#         for event in pygame.event.get():
-#             if event.type == pygame.MOUSEBUTTONDOWN:
-#                 click = True
-#     return gacha, ()
-#
-#
-# def gacha():
-#     images_banner = [
-#         pygame.transform.scale(pygame.image.load("./gacha/charactercard_gacha_banner.png"), SCREEN_SIZE),
-#         pygame.transform.scale(pygame.image.load("./gacha/eventcard_gacha_banner.png"), SCREEN_SIZE)
-#     ]
-#     button = pygame.transform.scale(pygame.image.load("./gacha/gacha_button.png"), (400, 160))
-#     gachamode = 0
-#     while True:
-#         for event in pygame.event.get():
-#             if event.type == pygame.MOUSEBUTTONDOWN:
-#                 x, y = event.pos
-#                 if 560 < x < 932 and 60 < y < 160:
-#                     gachamode = 0
-#                 if 1003 < x < 1336 and 60 < y < 160:
-#                     gachamode = 1
-#                 # if gachamode==1 and 490<x<990 and 700<y<1000:
-#                 #     return gacha_eventcard, ()
-#                 if gachamode==0 and 1300<x<1550 and 860<y<930:
-#                     return gacha_charactercard, ()
-#                 if 70 < x < 240 and 40 < y < 110:
-#                     return main, ()
-#             if event.type == pygame.KEYDOWN:
-#                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
-#                     return main, ()
-#         screen.blit(images_banner[gachamode], (0, 0))
-#         pygame.display.update()
-#         clock.tick(FPS)
+
+def loading(p):
+    print(f"\rloading : {p}%", end='')
+
+
+def load_gacha():
+    for i in range(170):
+        gacha_loading.append(pygame.image.load(f"./gacha/tania/frame_{i}.png"))
+        loading(100 * (i + 1) / 1088)
+    for i in range(230, 383):
+        gacha_yonchool_char.append(pygame.image.load(f"./gacha/tania/frame_{i}.png"))
+        loading(100 * (i + 1 - 60) / 1088)
+    for i in range(230, 383):
+        gacha_yonchool_char.append(pygame.image.load(f"./gacha/chloe/frame_{i}.png"))
+        loading(100 * (i + 1 + 93) / 1088)
+    for i in range(230, 383):
+        gacha_yonchool_char.append(pygame.image.load(f"./gacha/lucifer/frame_{i}.png"))
+        loading(100 * (i + 1 + 246) / 1088)
+    for i in range(230, 383):
+        gacha_yonchool_char.append(pygame.image.load(f"./gacha/gidon/frame_{i}.png"))
+        loading(100 * (i + 1 + 399) / 1088)
+    for i in range(230, 383):
+        gacha_yonchool_char.append(pygame.image.load(f"./gacha/astin/frame_{i}.png"))
+        loading(100 * (i + 1 + 552) / 1088)
+    for i in range(230, 383):
+        gacha_yonchool_char.append(pygame.image.load(f"./gacha/petra/frame_{i}.png"))
+        loading(100 * (i + 1 + 705) / 1088)
+
+
+loadgacha = threading.Thread(target=load_gacha)
+loadgacha.start()
+
+opening = []
+
+
+def load_opening():
+    for i in range(605):
+        opening.append(pygame.image.load(f"./opening/{i}.png"))
+
+
+loadopening = threading.Thread(target=load_opening)
+loadopening.start()
+time.sleep(2)
+
+degi_music = pygame.mixer.Sound("degi.mp3")
+degi_music.set_volume(0.2)
+opening_music = pygame.mixer.Sound("opening.mp3")
+opening_music.set_volume(0.2)
+gaming_music = pygame.mixer.Sound("gaming.mp3")
+gaming_music.set_volume(0.2)
+opening_music.play()
+
+
+def playmusic_gaming():
+    while True:
+        gaming_music.play()
+        time.sleep(6 * 60 + 5)
+
+
+gaming_music_thread = threading.Thread(target=playmusic_gaming)
+gaming_music_thread.start()
+gaming_music.set_volume(0)
+
+
+def playmusic_degi():
+    while True:
+        degi_music.play()
+        time.sleep(3 * 60 + 27)
+
+
+degi_music_thread = threading.Thread(target=playmusic_degi)
+degi_music_thread.start()
+degi_music.set_volume(0)
+
+ind = 0
+while ind < 605:
+    try:
+        screen.blit(opening[ind], (0, 0))
+        pygame.display.update()
+        clock.tick(FPS)
+        ind += 1
+    except:
+        pass
+opening_music.stop()
+
+
+def gacha_charactercard():
+    result = random.randint(1, 10)
+    if result > 5:
+        result = 0
+    for i in range(170):
+        screen.blit(gacha_loading[i], (0, 0))
+        pygame.display.update()
+        clock.tick(45)
+    draw_text("클릭하여 카드 확인", size=30, color="#FFFFFF")
+    pygame.display.update()
+    click = False
+    while not click:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                click = True
+    for i in range(153):
+        screen.blit(gacha_yonchool_char[result][i], (0, 0))
+        pygame.display.update()
+        clock.tick(45)
+    click = False
+    while not click:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                click = True
+    return gacha, ()
+
+
+def gacha():
+    images_banner = pygame.transform.scale(pygame.image.load("./gacha/charactercard_gacha_banner.png"), SCREEN_SIZE)
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if 1300 < x < 1550 and 860 < y < 930:
+                    return gacha_charactercard, ()
+                if 70 < x < 240 and 40 < y < 110:
+                    return main, ()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                    return main, ()
+        screen.blit(images_banner, (0, 0))
+        pygame.display.update()
+        clock.tick(FPS)
 
 
 def end(*_):
@@ -115,6 +167,8 @@ def end(*_):
 def main(*_):
     background = pygame.image.load("main_background.png")
     screen.blit(background, (0, 0))
+    gaming_music.set_volume(0)
+    degi_music.set_volume(0.2)
     pygame.display.update()
     while True:
         for event in pygame.event.get():
@@ -123,10 +177,10 @@ def main(*_):
                 if 706 < x < 1216 and 392 < y < 505:
                     return select_stage, ()
                 if 706 < x < 1216 and 537 < y < 651:
-                    return forming, ()
-                if 706 < x < 1216 and 684 < y < 800:
                     return dogam, ()
-                if 706 < x < 1216 and 829 < y < 943:
+                if 706 < x < 1216 and 684 < y < 800:
+                    return forming, ()
+                if 706 < x < 1216 and 829 < y < 943 and not loadgacha.is_alive():
                     return gacha, ()
 
             if event.type == pygame.KEYDOWN:
@@ -143,7 +197,7 @@ def select_stage(stage=0):
             record = list(map(int, line))
             break
     stage_num = stage
-    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
+    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % 11}.png"), SCREEN_SIZE)
     while True:
         screen.blit(bg, (0, 0))
         # screen.blit(
@@ -154,23 +208,28 @@ def select_stage(stage=0):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     stage_num -= 1 if stage_num >= 0 else 0
-                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
+                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % 11}.png"),
+                                                SCREEN_SIZE)
                 if event.key == pygame.K_RIGHT:
                     stage_num += 1 if stage_num < len(stage_list) else 0
-                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
+                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % 11}.png"),
+                                                SCREEN_SIZE)
                 if event.key == pygame.K_BACKSPACE or event.key == pygame.K_ESCAPE:
                     return main, ()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
-                if SCREEN_WIDTH / 2 - 300 < event.pos[0] < SCREEN_WIDTH / 2 + 300 and SCREEN_HEIGHT / 2 - 300 < \
-                        event.pos[1] < SCREEN_HEIGHT / 2 + 300 and -1 < stage_num < len(stage_list):
+                if 340 < x < 1580 and 335 < y < 716:
                     return select_character, (stage_num,)
-                if 1646 < x < 1781 and 403 < y < 687:
-                    stage_num += 1 if stage_num < len(stage_list) else 0
-                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
-                if 123 < x < 276 and 403 < y < 687:
-                    stage_num -= 1 if stage_num >= 0 else 0
-                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num+1)%11}.png"), SCREEN_SIZE)
+                if 1784 < x < 1851 and 486 < y < 582:
+                    stage_num += 1 if stage_num < len(stage_list) - 1 else 0
+                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % 11}.png"),
+                                                SCREEN_SIZE)
+                if 67 < x < 144 and 486 < y < 582:
+                    stage_num -= 1 if stage_num >= 1 else 0
+                    bg = pygame.transform.scale(pygame.image.load(f"./stage_img/{(stage_num + 1) % 11}.png"),
+                                                SCREEN_SIZE)
+                if 72 < x < 283 and 50 < y < 105:
+                    return main, ()
         motion_draw.draw(screen)
         try:
             star = record[stage_num]
@@ -226,8 +285,9 @@ def forming():
     cards = e_cards
     images = [pygame.transform.scale(pygame.image.load(img_path), (200, 300))
               for _, _, img_path, _, _ in event_card_info.values()]
+    bg = pygame.image.load("pyonsoung_bg.png")
     while True:
-        screen.fill("#333333")
+        screen.blit(bg, (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
@@ -385,14 +445,13 @@ def dogam_enemy(*_):
     while True:
         screen.blit(bg_img, (0, 0))
         for event in pygame.event.get():
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                print(event.pos)
-                x,y=event.pos
-                if 1848<x<1900 and 470<y<540:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if 1848 < x < 1900 and 470 < y < 540:
                     index = min(len(enemies_info) - 1, index + 1)
-                if 20<x<74 and 470<y<540:
+                if 20 < x < 74 and 470 < y < 540:
                     index = max(0, index - 1)
-                if 25<x<100 and 20<y<70:
+                if 25 < x < 100 and 20 < y < 70:
                     return dogam, ()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
@@ -453,6 +512,26 @@ def dogam():
         clock.tick(FPS)
 
 
+ending_img = []
+
+
+def load_ending():
+    for i in range(292):
+        ending_img.append(pygame.image.load(f"./ending/{i}.png"))
+
+
+threading.Thread(target=load_ending).start()
+
+
+def ending():
+    opening_music.play()
+    for i in range(292):
+        screen.blit(ending_img[i], (0, 0))
+        pygame.display.update()
+        clock.tick(FPS)
+    return main, ()
+
+
 def game_end(win, stage_num, turn):
     screen.fill("#000000")
     star = 1 if win else 0
@@ -465,25 +544,31 @@ def game_end(win, stage_num, turn):
         for line in csv.reader(file):
             now = list(map(int, line))
             break
+    before = now[stage_num]
     now[stage_num] = max(star, now[stage_num])
     with open("record.csv", "w", newline='') as file:
         csv.writer(file).writerow(now)
+    if stage_num == 9 and star == 3 and before != 3:
+        return ending, ()
     while True:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 return main, ()
-        draw_text("WIN" if win else "LOSE", size=100, center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 40),
-                  color="#FFFFFF")
-        draw_text("마우스 클릭으로 나가기" if win else "LOSE", size=40, center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 40),
-                  color="#FFFFFF")
+        if win:
+            screen.blit(pygame.image.load(f"win_{star}star.png"), (0, 0))
+        else:
+            screen.blit(pygame.image.load("lose.png"), (0, 0))
         motion_draw.draw(screen)
         pygame.display.update()
         clock.tick(FPS)
 
 
 def game(p_info, e_info, eventcard_list, stage_num):
+    degi_music.stop()
     game_board = GameMap(screen, eventcard_list)
     bg = pygame.image.load("background.png")
+    gaming_music.set_volume(0.2)
+    degi_music.set_volume(0)
     bg = pygame.transform.scale(bg, (1920, 1080))
     for num, pos in p_info:
         game_board.add_character(characters_info[num], pos)
@@ -496,33 +581,32 @@ def game(p_info, e_info, eventcard_list, stage_num):
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = event.pos
-                    if 800 < x < 930 and 560 < y < 627:
+                    if 824 < x < 922 and 542 < y < 590:
+                        motion_draw.clear()
                         return main, ()
-                    if 980 < x < 1120 and 550 < y < 627:
+                    if 1000 < x < 1100 and 542 < y < 590:
                         exit_game = False
             clock.tick(FPS)
-            continue
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                x, y = event.pos
-                if 1850 < x < 1900 and 1000 < y < 1060:
-                    exit_game = True
-                    img = pygame.image.load("stop.png")
-                    x, y = img.get_size()
-                    screen.blit(img, ((SCREEN_WIDTH - x) / 2, (SCREEN_HEIGHT - y) / 2))
-                    pygame.display.update()
-                    clock.tick(FPS)
-        if exit_game:
             continue
         if len(game_board.players) == 0 and not motion_draw.motion_playing():
             return game_end, (False, stage_num, game_board.turn_count)
         if len(game_board.enemys) == 0 and not motion_draw.motion_playing():
             return game_end, (True, stage_num, game_board.turn_count)
-        screen.blit(bg, (-1, -1))
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if game_board.turn != 4:
+                x, y = event.pos
+                if 1840 < x < 1900 and 1000 < y < 1060:
+                    exit_game = True
+                    img = pygame.image.load("pause.png")
+                    x, y = img.get_size()
+                    screen.blit(img, ((SCREEN_WIDTH - x) / 2, (SCREEN_HEIGHT - y) / 2))
+                    pygame.display.update()
+                    clock.tick(FPS)
+                elif game_board.turn != 4:
                     game_board.click(event.pos)
+        if exit_game:
+            continue
+        screen.blit(bg, (-1, -1))
         if game_board.turn == 4:
             if len(game_board.enemys) > ai_enemy_index:
                 if not motion_draw.motion_playing():
