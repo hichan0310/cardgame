@@ -26,7 +26,7 @@ from EventCards.WarpGateOpen.warp_gate import WarpGate
 from characters import *
 
 gacha_loading = []
-gacha_yonchool_char = []
+gacha_yonchool_char = [[], [], [], [], [], []]
 
 
 def loading(p):
@@ -38,22 +38,22 @@ def load_gacha():
         gacha_loading.append(pygame.image.load(f"./gacha/tania/frame_{i}.png"))
         loading(100 * (i + 1) / 1088)
     for i in range(230, 383):
-        gacha_yonchool_char.append(pygame.image.load(f"./gacha/tania/frame_{i}.png"))
+        gacha_yonchool_char[0].append(pygame.image.load(f"./gacha/tania/frame_{i}.png"))
         loading(100 * (i + 1 - 60) / 1088)
     for i in range(230, 383):
-        gacha_yonchool_char.append(pygame.image.load(f"./gacha/chloe/frame_{i}.png"))
+        gacha_yonchool_char[1].append(pygame.image.load(f"./gacha/chloe/frame_{i}.png"))
         loading(100 * (i + 1 + 93) / 1088)
     for i in range(230, 383):
-        gacha_yonchool_char.append(pygame.image.load(f"./gacha/lucifer/frame_{i}.png"))
+        gacha_yonchool_char[2].append(pygame.image.load(f"./gacha/lucifer/frame_{i}.png"))
         loading(100 * (i + 1 + 246) / 1088)
     for i in range(230, 383):
-        gacha_yonchool_char.append(pygame.image.load(f"./gacha/gidon/frame_{i}.png"))
+        gacha_yonchool_char[3].append(pygame.image.load(f"./gacha/gidon/frame_{i}.png"))
         loading(100 * (i + 1 + 399) / 1088)
     for i in range(230, 383):
-        gacha_yonchool_char.append(pygame.image.load(f"./gacha/astin/frame_{i}.png"))
+        gacha_yonchool_char[4].append(pygame.image.load(f"./gacha/astin/frame_{i}.png"))
         loading(100 * (i + 1 + 552) / 1088)
     for i in range(230, 383):
-        gacha_yonchool_char.append(pygame.image.load(f"./gacha/petra/frame_{i}.png"))
+        gacha_yonchool_char[5].append(pygame.image.load(f"./gacha/petra/frame_{i}.png"))
         loading(100 * (i + 1 + 705) / 1088)
 
 
@@ -174,6 +174,7 @@ def main(*_):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
+                print(x, y)
                 if 706 < x < 1216 and 392 < y < 505:
                     return select_stage, ()
                 if 706 < x < 1216 and 537 < y < 651:
@@ -182,6 +183,8 @@ def main(*_):
                     return forming, ()
                 if 706 < x < 1216 and 829 < y < 943 and not loadgacha.is_alive():
                     return gacha, ()
+                if 1768 < x < 1892 and 1024 < y < 1059:
+                    return end, ()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:

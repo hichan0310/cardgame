@@ -94,7 +94,7 @@ class BloodyBlow(Skill):
 
 class BloodRage(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
-        super().__init__(character, count, game_board, "피의 분노", "./PlayerCards/Tania/burn.png")
+        super().__init__(character, count, game_board, "피의 분노", "./PlayerCards/Gideon/skill_image/vengeance_eye.png")
         character.register_attack(self)
 
     def atk_buff(self, caster, target, damage: int, atk_type: list[str]):

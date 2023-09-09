@@ -46,7 +46,7 @@ class StarFall(Skill):
 
 class CurtainOfNightSky(Buff):
     def __init__(self, character: "PlayerCard", count, game_board):
-        super().__init__(character, count, game_board, "밤하늘의 장막", "./PlayerCards/Lucifer/doomsday_prophecy.png")
+        super().__init__(character, count, game_board, "밤하늘의 장막", "./PlayerCards/Astin/skill_image/night_sky.png")
         game_board.register_turnover(self)
         try:
             character.register_hit(self)
