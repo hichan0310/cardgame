@@ -9,3 +9,5 @@ if response.status_code==200:
         subprocess.check_output(["python", "game_exe.py"])
     except:
         print("와이파이에 연결하세요")
+else:
+    print("error")
