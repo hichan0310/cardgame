@@ -96,6 +96,7 @@ def playmusic_degi():
     while True:
         degi_music.play()
         time.sleep(3 * 60 + 27)
+        print("replay")
 
 
 degi_music_thread = threading.Thread(target=playmusic_degi)
@@ -567,7 +568,6 @@ def game_end(win, stage_num, turn):
 
 
 def game(p_info, e_info, eventcard_list, stage_num):
-    degi_music.stop()
     game_board = GameMap(screen, eventcard_list)
     bg = pygame.image.load("background.png")
     gaming_music.set_volume(0.2)
