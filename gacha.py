@@ -3,9 +3,6 @@ import random
 from settings import *
 
 
-
-
-
 def gacha_eventcard():
     for i in range(74):
         screen.blit(images[i], (0, 0))
