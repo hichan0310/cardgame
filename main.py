@@ -25,6 +25,11 @@ from EventCards.WarpGateOpen.warp_gate import WarpGate
 
 from characters import *
 
+screen.fill("#000000")
+draw_text("캐릭터에 대한 자세한 설명은 영상 설명란 링크에 있습니다", size=30, color="#FFFFFF", center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2-20))
+draw_text("도감의 내용을 분석하여 알 수는 있지만 어려울 수도 있습니다", size=30, color="#FFFFFF", center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2+20))
+pygame.display.update()
+
 gacha_loading = []
 gacha_yonchool_char = [[], [], [], [], [], []]
 

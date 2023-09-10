@@ -17,7 +17,7 @@ special=pygame.transform.scale(pygame.image.load("./PlayerCards/Petra/special.pn
 
 class BaseInstability(Buff):
     def __init__(self, character: "PlayerCard", game_board):
-        super().__init__(character, 0, game_board, "기반 불안정", "./PlayerCards/Petra/base_instability.png")
+        super().__init__(character, 0, game_board, "기반 불안정", "./PlayerCards/Petra/crack.png")
 
     def turret_die_event(self):
         self.use_num += 1
