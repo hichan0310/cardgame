@@ -24,9 +24,11 @@ def transform_pos(pos):
     j, i = pos
     return (30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i, 30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j)
 
+
 screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
 
 clock = pygame.time.Clock()
+
 
 def draw_text(text, *, center=None, size=None, color=None):
     font = pygame.font.Font("./D2Coding.ttf", size or 24)
@@ -43,8 +45,6 @@ def draw_text(text, *, center=None, size=None, color=None):
 EVENT_TYPE_0 = "zero"
 EVENT_TYPE_1 = "one"
 EVENT_TYPE_2 = "two"
-
-
 
 BUFF_WIDTH = 120
 BUFF_HEIGHT = 160
