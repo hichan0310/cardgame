@@ -30,7 +30,7 @@ gacha_yonchool_char = [[], [], [], [], [], []]
 
 
 def loading(p):
-    print(f"\rloading : {p}%", end='')
+    print(f"\rloading : {p}%                             ", end='')
 
 
 def load_gacha():
@@ -96,7 +96,6 @@ def playmusic_degi():
     while True:
         degi_music.play()
         time.sleep(3 * 60 + 27)
-        print("replay")
 
 
 degi_music_thread = threading.Thread(target=playmusic_degi)
@@ -175,7 +174,6 @@ def main(*_):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
-                print(x, y)
                 if 706 < x < 1216 and 392 < y < 505:
                     return select_stage, ()
                 if 706 < x < 1216 and 537 < y < 651:
