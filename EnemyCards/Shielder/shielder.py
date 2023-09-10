@@ -84,7 +84,7 @@ class ShieldOfWrath(Skill):
 
 class CounterAttackBuff(Buff):
     def __init__(self, character: "PlayerCard", count: int, game_board):
-        super().__init__(character, count, game_board, "반격", "./EnemyCards/Shielder/counter_attack.png")
+        super().__init__(character, count, game_board, "반격", "./EnemyCards/Shielder/counterattack.png")
         character.register_hit(self)
         game_board.register_turnover(self)
 
