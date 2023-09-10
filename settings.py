@@ -25,7 +25,7 @@ def transform_pos(pos):
     return (30 - CELL_WIDTH / 2 + (CARD_WIDTH + 30) * i, 30 - CELL_HEIGHT / 2 - 35 + (CELL_HEIGHT + 10) * j)
 
 
-screen = pygame.display.set_mode(SCREEN_SIZE)
+screen = pygame.display.set_mode(SCREEN_SIZE, pygame.FULLSCREEN)
 
 clock = pygame.time.Clock()
 
