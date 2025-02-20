@@ -1,6 +1,28 @@
 # cardgame
 한양대학교 게임 만드는 대회<br>
-내 파이썬이 이렇게 귀여울 리가 없어<br>
-이제 그림 좀 그리고 이벤트 카드 시스템 만들면 끝이다<br>
+팀명 : 내 파이썬이 이렇게 귀여울 리가 없어<br>
+미완성인데 딱히 더 만들거나 하지는 않을듯<br>
 
 <img src="cardgame.jpeg">
+
+git을 설치한 후
+아래 코드를 실행하면 자동으로 설치, 실행됩니다. 
+
+```python
+import requests
+import subprocess
+import os
+
+response=requests.get("https://github.com/hichan0310/cardgame")
+if response.status_code==200:
+    if 'cardgame' not in os.listdir("./"):
+        subprocess.check_output(["git", "clone", "https://github.com/hichan0310/cardgame"])
+    try:
+        result=subprocess.check_output(["git", "pull"], cwd='./cardgame')
+        print(str(result))
+        subprocess.check_output(["python", "game_exe.py"], cwd='./cardgame')
+    except:
+        print("git error")
+else:
+    print("network error")
+```
