@@ -3,16 +3,16 @@
 팀명 : 내 파이썬이 이렇게 귀여울 리가 없어<br>
 미완성인데 딱히 더 만들거나 하지는 않을듯<br>
 
-art : magicdragon48, yunho06lee(미소녀 Stable Diffusion 모델 제공)
-character design : hichan0310
-enemy design : hichan0310
-special card design : hichan0310
-coding : hichan0310
+art : magicdragon48, yunho06lee(미소녀 Stable Diffusion 모델 제공)<br>
+character design : hichan0310<br>
+enemy design : hichan0310<br>
+special card design : hichan0310<br>
+coding : hichan0310<br>
 
 <img src="cardgame.jpeg">
 
-git을 설치한 후
-아래 코드를 실행하면 자동으로 설치, 실행됩니다. 
+git을 설치한 후<br>
+아래 코드를 실행하면 자동으로 설치, 실행됩니다. <br>
 
 ```python
 import requests
