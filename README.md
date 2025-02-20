@@ -3,6 +3,12 @@
 팀명 : 내 파이썬이 이렇게 귀여울 리가 없어<br>
 미완성인데 딱히 더 만들거나 하지는 않을듯<br>
 
+art : magicdragon48, yunho06lee(미소녀 Stable Diffusion 모델 제공)
+character design : hichan0310
+enemy design : hichan0310
+special card design : hichan0310
+coding : hichan0310
+
 <img src="cardgame.jpeg">
 
 git을 설치한 후
